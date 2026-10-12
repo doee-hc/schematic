@@ -1,0 +1,57 @@
+{
+  "palette": {
+    "family:top": "#F4F6F8",
+    "family:logic": "#E7F6E7",
+    "clock:clk": "#E6A23C",
+    "port:scan": "#3D7ECC"
+  },
+  "swatches": [
+    {"key": "family:top", "label": "Top", "group": "Modules"},
+    {"key": "family:logic", "label": "Logic", "group": "Modules"},
+    {"key": "clock:clk", "label": "clk", "group": "Clocks"},
+    {"key": "port:scan", "label": "Scan", "group": "Ports"}
+  ],
+  "root": {
+    "id": "top",
+    "title": "top",
+    "shape": "box",
+    "swatch": "family:top",
+    "ports": [
+      {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+      {"name": "si", "side": "west", "dir": "in", "swatch": "port:scan"},
+      {"name": "so", "side": "east", "dir": "out", "swatch": "port:scan", "keep": true}
+    ],
+    "edges": [
+      {"from": "top.clk", "to": "top.reg.clk", "swatch": "clock:clk"},
+      {"from": "top.si", "to": "top.mux.a", "swatch": "port:scan"},
+      {"from": "top.mux.y", "to": "top.reg.d"},
+      {"from": "top.reg.q", "to": "top.so", "swatch": "port:scan"}
+    ],
+    "children": [
+      {
+        "id": "top.mux",
+        "title": "mux",
+        "shape": "mux",
+        "badge": "DATA",
+        "ports": [
+          {"name": "a", "side": "west", "dir": "in", "label": "0"},
+          {"name": "b", "side": "west", "dir": "in", "label": "1"},
+          {"name": "sel", "side": "south", "dir": "in"},
+          {"name": "y", "side": "east", "dir": "out"}
+        ]
+      },
+      {
+        "id": "top.reg",
+        "title": "reg",
+        "shape": "reg",
+        "note": "RST=0",
+        "swatch": "family:logic",
+        "ports": [
+          {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+          {"name": "d", "side": "west", "dir": "in"},
+          {"name": "q", "side": "east", "dir": "out", "swatch": "port:scan"}
+        ]
+      }
+    ]
+  }
+}

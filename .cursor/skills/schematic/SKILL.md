@@ -12,7 +12,7 @@ description: >-
 
 ## 文档
 
-写一份 JSON，交给 `schematic draw` 或 `schematic view`。字段的完整说明在 schematic 仓库的 `docs/schema.md`（安装目录旁的同一文件）。这里只记形状，避免两份长文档。
+写一份 JSON，交给 `schematic draw` 或 `schematic view`。字段的完整说明在 schematic 仓库的 `docs/schema.md`（英文为 `docs/schema.en.md`）。这里只记形状，避免再抄一份长文档。
 
 根对象有可选的 `palette`（配色键到 `#hex`）、可选的 `swatches`（查看器里的名字和分组），以及必填的 `root`。
 
