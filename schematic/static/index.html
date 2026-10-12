@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schematic</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Schematic</h1>
+    <p class="tagline">正交电路图</p>
+    <div class="topbar-tools">
+      <label class="check-row" title="隐藏 mux、reg、logic，只留下 box">
+        <input id="simple-mode" type="checkbox">
+        只留方框
+      </label>
+    </div>
+    <span id="file-meta" class="file-meta">正在加载…</span>
+  </header>
+
+  <section class="toolbar" id="toolbar">
+    <div class="toolbar-head">
+      <span class="toolbar-title">配色 / Port filter</span>
+      <button id="toolbar-fold" class="ghost" type="button" aria-expanded="true">收起</button>
+    </div>
+    <div class="toolbar-body">
+      <section class="palette-section">
+        <div class="tree-header">
+          <label>配色</label>
+          <button id="palette-reset" class="ghost" type="button">重置</button>
+        </div>
+        <div id="palette" class="palette empty">文档中的配色键</div>
+      </section>
+
+      <section class="filter-section">
+        <div class="tree-header">
+          <label>Port filter</label>
+          <p class="filter-hint">Include 优先于 Exclude，支持 <code>*</code> 通配。未命中的端口默认保留。带 keep 的端口始终保留。</p>
+          <button id="port-filter-reset" class="ghost" type="button">清空</button>
+        </div>
+        <div class="filter-grid">
+          <div class="filter-card is-include">
+            <div class="filter-card-head">
+              <div>
+                <span class="filter-kicker">Include</span>
+                <span class="muted">始终保留</span>
+              </div>
+              <span id="port-include-count" class="filter-count">0</span>
+            </div>
+            <div id="port-include-list" class="filter-chips"></div>
+            <form id="port-include-form" class="filter-add">
+              <input id="port-include-input" type="text" spellcheck="false" autocomplete="off"
+                     placeholder="例如 *clk*" aria-label="添加 Include 规则">
+              <button class="ghost" type="submit">Add</button>
+            </form>
+          </div>
+
+          <div class="filter-card is-exclude">
+            <div class="filter-card-head">
+              <div>
+                <span class="filter-kicker">Exclude</span>
+                <span class="muted">命中则隐藏</span>
+              </div>
+              <span id="port-exclude-count" class="filter-count">0</span>
+            </div>
+            <div id="port-exclude-list" class="filter-chips"></div>
+            <form id="port-exclude-form" class="filter-add">
+              <input id="port-exclude-input" type="text" spellcheck="false" autocomplete="off"
+                     placeholder="例如 unused*" aria-label="添加 Exclude 规则">
+              <button class="ghost" type="submit">Add</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <main class="layout">
+    <aside class="panel">
+      <button id="draw-btn" type="button" disabled>Draw</button>
+      <p id="status" class="status" hidden></p>
+      <section class="tree-section">
+        <div class="tree-header">
+          <label>Hierarchy</label>
+          <span id="checked-count" class="muted">0 selected</span>
+        </div>
+        <div id="tree" class="tree empty">加载 JSON 后显示层次</div>
+      </section>
+    </aside>
+
+    <section class="preview-wrap" id="preview-wrap">
+      <div class="preview-toolbar">
+        <div class="preview-title">
+          <span>Preview</span>
+          <span class="muted preview-hint">滚轮缩放 · 拖动平移 · 点击高亮通路 · 双击端口跳转上游 · Esc 清除</span>
+        </div>
+        <div class="preview-actions">
+          <button id="zoom-out-btn" class="ghost" type="button" title="缩小" disabled>−</button>
+          <span id="zoom-label" class="zoom-label">100%</span>
+          <button id="zoom-in-btn" class="ghost" type="button" title="放大" disabled>+</button>
+          <button id="zoom-fit-btn" class="ghost" type="button" disabled>适应</button>
+          <button id="zoom-reset-btn" class="ghost" type="button" disabled>1:1</button>
+          <button id="fullscreen-btn" class="ghost" type="button">全屏</button>
+          <button id="download-btn" type="button" disabled>Download SVG</button>
+        </div>
+      </div>
+      <div id="preview" class="preview empty">
+        <div id="preview-placeholder" class="preview-placeholder">出图结果将显示在这里</div>
+        <div id="preview-content" class="preview-content" hidden></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "schematic"
+version = "0.1.0"
+description = "Orthogonal circuit diagrams from a neutral JSON netlist"
+readme = "README.md"
+requires-python = ">=3.7"
+
+[project.scripts]
+schematic = "schematic.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["schematic*"]
+
+[tool.setuptools.package-data]
+schematic = ["static/*", "vendor/elkjs/*"]
