@@ -8,6 +8,7 @@ from schematic.document import load_document, normalize_document
 from schematic.elaborate import load_schematic
 from schematic.engine import layout
 from schematic.graph import document_to_elk
+from schematic.drawio import svg_to_drawio
 from schematic.svg import render_svg
 
 _HEX = re.compile(r"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")
@@ -68,23 +69,42 @@ def draw(document, options=None):
     return render_svg(laid, palette)
 
 
-def draw_sources(json_paths, out_path, options=None, filelists=None, top=None):
-    document = load_schematic(json_paths, filelists=filelists, top=top)
+def draw_drawio(document, options=None, *, title="diagram"):
+    """Return draw.io XML for a schematic document (same layout as :func:`draw`)."""
     svg = draw(document, options)
+    return svg_to_drawio(svg, title=title)
+
+
+def _write_text(out_path, text):
     folder = os.path.dirname(os.path.abspath(out_path))
     if folder and not os.path.isdir(folder):
         os.makedirs(folder)
     with open(out_path, "w", encoding="utf-8") as handle:
-        handle.write(svg)
+        handle.write(text)
     return out_path
+
+
+def _out_stem(out_path):
+    base = os.path.basename(out_path)
+    stem, _ = os.path.splitext(base)
+    return stem or "graph"
+
+
+def draw_sources(json_paths, out_path, options=None, filelists=None, top=None):
+    document = load_schematic(json_paths, filelists=filelists, top=top)
+    options = dict(options or {})
+    if out_path.lower().endswith(".drawio"):
+        text = draw_drawio(document, options, title=_out_stem(out_path))
+    else:
+        text = draw(document, options)
+    return _write_text(out_path, text)
 
 
 def draw_file(path, out_path, options=None):
     document = load_document(path)
-    svg = draw(document, options)
-    folder = os.path.dirname(os.path.abspath(out_path))
-    if folder and not os.path.isdir(folder):
-        os.makedirs(folder)
-    with open(out_path, "w", encoding="utf-8") as handle:
-        handle.write(svg)
-    return out_path
+    options = dict(options or {})
+    if out_path.lower().endswith(".drawio"):
+        text = draw_drawio(document, options, title=_out_stem(out_path))
+    else:
+        text = draw(document, options)
+    return _write_text(out_path, text)

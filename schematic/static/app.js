@@ -25,6 +25,7 @@ const els = {
   status: document.getElementById("status"),
   drawBtn: document.getElementById("draw-btn"),
   downloadBtn: document.getElementById("download-btn"),
+  downloadDrawioBtn: document.getElementById("download-drawio-btn"),
   previewWrap: document.getElementById("preview-wrap"),
   preview: document.getElementById("preview"),
   previewPlaceholder: document.getElementById("preview-placeholder"),
@@ -50,6 +51,9 @@ const ZOOM_STEP = 1.2;
 
 let lastSvg = "";
 let lastSvgName = "graph.svg";
+let lastDrawio = "";
+let lastDrawioName = "graph.drawio";
+let lastDrawioError = "";
 let basePalette = {};
 let baseSwatches = [];
 let view = { scale: 1, x: 0, y: 0 };
@@ -548,12 +552,23 @@ function applyView() {
   els.zoomLabel.textContent = `${Math.round(view.scale * 100)}%`;
 }
 
+function syncDrawioDownload() {
+  const hasDrawio = Boolean(lastDrawio);
+  if (els.downloadDrawioBtn) {
+    els.downloadDrawioBtn.disabled = !hasSvg() || !hasDrawio;
+    els.downloadDrawioBtn.title = hasDrawio
+      ? "下载 draw.io 可编辑图"
+      : (lastDrawioError || "需服务端 Python 3.11+ 与 pip install svg-to-drawio");
+  }
+}
+
 function setViewControls(enabled) {
   els.zoomInBtn.disabled = !enabled;
   els.zoomOutBtn.disabled = !enabled;
   els.zoomFitBtn.disabled = !enabled;
   els.zoomResetBtn.disabled = !enabled;
   els.downloadBtn.disabled = !enabled;
+  syncDrawioDownload();
   els.preview.classList.toggle("has-svg", enabled);
   els.preview.classList.toggle("empty", !enabled);
 }
@@ -1442,8 +1457,17 @@ function notePreviewClick(clientX, clientY) {
   handlePickAt(clientX, clientY);
 }
 
+function applyDrawPayload(data) {
+  lastDrawio = data.drawio || "";
+  lastDrawioName = data.drawio_filename || "graph.drawio";
+  lastDrawioError = data.drawio_error || "";
+  syncDrawioDownload();
+}
+
 function resetPreview() {
   lastSvg = "";
+  lastDrawio = "";
+  lastDrawioError = "";
   pointers.clear();
   pinchStart = null;
   panSession = null;
@@ -1509,6 +1533,7 @@ async function runDraw(manual) {
       if (!resp.ok || !data.ok) throw new Error(data.error || "出图失败");
       lastSvg = data.svg;
       lastSvgName = data.filename || "graph.svg";
+      applyDrawPayload(data);
       renderSvg(lastSvg);
       if (data.tree) {
         renderTree(data.tree);
@@ -1519,7 +1544,8 @@ async function runDraw(manual) {
         expandedPaths = new Set(data.expanded_paths);
       }
       syncNavUi();
-      setStatus(manual ? "出图完成" : "层次视图已更新", "ok");
+      const drawioNote = lastDrawio ? "" : (lastDrawioError ? " · draw.io 未生成" : "");
+      setStatus((manual ? "出图完成" : "层次视图已更新") + drawioNote, "ok");
     } catch (err) {
       setStatus(err.message, "error");
     } finally {
@@ -1551,8 +1577,10 @@ async function runDraw(manual) {
     if (!resp.ok || !data.ok) throw new Error(data.error || "出图失败");
     lastSvg = data.svg;
     lastSvgName = data.filename || "graph.svg";
+    applyDrawPayload(data);
     renderSvg(lastSvg);
-    setStatus("出图完成", "ok");
+    const drawioNote = lastDrawio ? "" : (lastDrawioError ? " · draw.io 未生成" : "");
+    setStatus("出图完成" + drawioNote, "ok");
   } catch (err) {
     setStatus(err.message, "error");
   } finally {
@@ -1737,6 +1765,22 @@ els.downloadBtn.addEventListener("click", () => {
   a.click();
   URL.revokeObjectURL(url);
 });
+
+if (els.downloadDrawioBtn) {
+  els.downloadDrawioBtn.addEventListener("click", () => {
+    if (!lastDrawio) {
+      setStatus(lastDrawioError || "draw.io 不可用", "error");
+      return;
+    }
+    const blob = new Blob([lastDrawio], { type: "application/xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = lastDrawioName;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
 
 els.zoomInBtn.addEventListener("click", () => zoomBy(ZOOM_STEP));
 els.zoomOutBtn.addEventListener("click", () => zoomBy(1 / ZOOM_STEP));

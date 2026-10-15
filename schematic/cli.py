@@ -50,7 +50,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(prog="schematic", description="正交电路图")
     sub = parser.add_subparsers(dest="cmd")
 
-    draw_p = sub.add_parser("draw", help="把 JSON 画成 SVG")
+    draw_p = sub.add_parser("draw", help="把 JSON 画成 SVG 或 draw.io（-o 后缀 .drawio）")
     _add_source_args(draw_p)
     draw_p.add_argument("-o", "--output", required=True, help="输出 SVG 路径")
     draw_p.add_argument("--include", action="append", default=None, help="只画这些节点 id，可重复")

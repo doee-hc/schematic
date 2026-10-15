@@ -10,6 +10,7 @@ from urllib.parse import unquote, urlparse
 from schematic.graph import tree_of
 from schematic.document import normalize_document
 from schematic.elaborate import elaborate_view, needs_elaboration, resolve_view_module
+from schematic.drawio import svg_to_drawio
 from schematic.render import draw
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -251,6 +252,12 @@ def make_handler():
                 return
             stem = os.path.splitext(filename)[0] or "graph"
             payload = {"ok": True, "filename": stem + ".svg", "svg": svg}
+            try:
+                payload["drawio"] = svg_to_drawio(svg, title=stem)
+                payload["drawio_filename"] = stem + ".drawio"
+            except (RuntimeError, ValueError) as exc:
+                payload["drawio"] = None
+                payload["drawio_error"] = str(exc)
             if hierarchical:
                 payload["tree"] = tree_of(document["root"])
                 payload["view_module"] = view_module

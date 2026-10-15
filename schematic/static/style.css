@@ -639,7 +639,8 @@ button:disabled {
   padding: 6px 10px;
 }
 
-.preview-toolbar #download-btn {
+.preview-toolbar #download-btn,
+.preview-toolbar #download-drawio-btn {
   background: #111827;
 }
 

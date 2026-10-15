@@ -15,7 +15,7 @@ from schematic.graph import (
     port_id,
 )
 from schematic.document import load_document, normalize_document
-from schematic.render import draw
+from schematic.render import draw, draw_drawio
 from schematic.server import QuietThreadingHTTPServer, document_api_payload, make_handler
 from schematic.svg import (
     BUBBLE_R,
@@ -679,6 +679,29 @@ class GateTests(unittest.TestCase):
             self.assertIn(title, svg)
             self.assertIn("<svg", svg)
 
+    def test_drawio_export_adder(self):
+        try:
+            from svg_to_drawio import convert_svg_string  # noqa: F401
+        except ImportError:
+            self.skipTest("svg-to-drawio 未安装（需 Python 3.11+）")
+        import os
+        root = os.path.join(os.path.dirname(__file__), "..", "examples")
+        xml = draw_drawio(load_document(os.path.join(root, "adder.json")), title="adder")
+        self.assertIn("<mxfile", xml)
+        self.assertIn("<mxGraphModel", xml)
+
+    def test_drawio_export_occ(self):
+        try:
+            from svg_to_drawio import convert_svg_string  # noqa: F401
+        except ImportError:
+            self.skipTest("svg-to-drawio 未安装（需 Python 3.11+）")
+        import os
+        from schematic.elaborate import load_schematic
+        occ_f = os.path.join(os.path.dirname(__file__), "..", "examples", "tessent_occ", "occ.f")
+        doc = load_schematic([], filelists=[occ_f], top="processor_core_rtl2_tessent_occ")
+        xml = draw_drawio(doc, title="occ")
+        self.assertIn("<mxfile", xml)
+        self.assertIn("processor_core_rtl2_tessent_occ", doc["root"].get("title", "") + doc["root"].get("id", ""))
 
     def test_inline_mux_title_hover_svg(self):
         doc = normalize_document({

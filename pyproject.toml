@@ -9,6 +9,9 @@ description = "Orthogonal circuit diagrams from a neutral JSON netlist"
 readme = "README.md"
 requires-python = ">=3.7"
 
+[project.optional-dependencies]
+drawio = ["svg-to-drawio>=3.9.1; python_version>='3.11'"]
+
 [project.scripts]
 schematic = "schematic.cli:main"
 
