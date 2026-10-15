@@ -10,7 +10,7 @@ This document separates **lib / cell** (atomic schematic symbols) from **module 
 
 | Term | Meaning | In JSON |
 |------|---------|---------|
-| **lib** | Definition of an instantiable **symbol** (fixed `shape`, pin rules) | Built-in lib files + optional user `libs` |
+| **lib** | Instantiable **symbol** (`symbol` SVG + anchors, `ports`, metadata) | Built-in lib files + optional user `libs` |
 | **cell** | One **instance of a lib**; not a expandable user netlist | `use_lib` in `children`; after elaboration `meta.kind = "cell"` |
 | **module** | User **hierarchical block**; may be **black box** (ports only) | Entry in `modules` |
 | **instance** | One **instance of a module** | `use` in `children`; `meta.kind = "instance"` |
@@ -39,7 +39,7 @@ This document separates **lib / cell** (atomic schematic symbols) from **module 
 
 | Shape | Fields | Meaning |
 |-------|--------|---------|
-| Classic | `root` object | Same as today; may contain inline gates (legacy) |
+| Classic | `root` object | `use_lib` / `use`; gates via `use_lib` only |
 | Library | `modules` / `libs` | Named definitions |
 | Top name | `root` string | Key in `modules` only |
 
@@ -52,10 +52,10 @@ Each entry in `libs` is a symbol template, not a hierarchical module.
 | Field | Required | Notes |
 |-------|----------|-------|
 | Key | yes | Lib name, e.g. `and`, `xor2`, `mux2` |
-| `shape` | yes | As in [schema.en.md](schema.en.md) |
+| `symbol` | **yes** | `viewBox`, `svg` (`__FILL__` / `__STROKE__`), `anchors` per port |
 | `desc` | **yes** | One-line cell purpose; shown on hover in viewer/SVG |
-| `title`, `swatch` | no | Defaults |
-| `ports` | depends | Required for user libs; built-in lib supplies templates; **each port needs `desc`** |
+| `title`, `swatch`, `badge` | no | Defaults / optional mux label |
+| `ports` | **yes** | Names must match `symbol.anchors`; **each port needs `desc`** |
 
 **Lib rules (draft)**
 
@@ -83,7 +83,7 @@ After elaboration (conceptual):
 "meta": { "kind": "cell", "lib": "xor2" }
 ```
 
-Inline `{ "shape": "xor", "ports": [...] }` in source JSON is **rejected** at elaboration; use `{ "use_lib": "xor2" }`. Elaborated flat JSON (output of `schematic elaborate`) may still contain expanded gate nodes for draw/view.
+Inline `{ "shape": "xor", "ports": [...] }` in source JSON is **rejected** at elaboration; use `{ "use_lib": "xor2" }`. Elaborated nodes are `shape: cell` with embedded `symbol`.
 
 ## Module definition
 
@@ -112,7 +112,7 @@ module definition
   children[]
     cell     → use_lib → libs
     instance → use     → modules
-    inline   → legacy shape + ports
+    inline   → box / reg / logic (+ ports)
 ```
 
 Top is always a **module**. Black box modules yield instances with no expandable interior.

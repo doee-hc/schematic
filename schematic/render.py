@@ -5,10 +5,11 @@ import os
 import re
 
 from schematic.document import load_document, normalize_document
-from schematic.elaborate import load_schematic
+from schematic.elaborate import load_builtin_libs, load_schematic
 from schematic.engine import layout
 from schematic.graph import document_to_elk
 from schematic.drawio import svg_to_drawio
+from schematic.drawio_native import render_drawio_native
 from schematic.svg import render_svg
 
 _HEX = re.compile(r"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")
@@ -28,6 +29,17 @@ def clean_palette(raw):
             continue
         out[key] = text
     return out
+
+
+def document_libs(document):
+    import copy
+
+    libs = document.get("libs") if isinstance(document, dict) else None
+    if not isinstance(libs, dict) or not libs:
+        libs = load_builtin_libs()
+    else:
+        libs = copy.deepcopy(libs)
+    return libs
 
 
 def merged_palette(document, override=None):
@@ -63,16 +75,29 @@ def draw(document, options=None):
     """Return an SVG string for a schematic document."""
     options = dict(options or {})
     palette = merged_palette(document, options.get("palette"))
+    libs = document_libs(document)
     graph = document_to_elk(document, options)
     laid = layout(graph)
     _preserve_edge_metadata(graph, laid)
-    return render_svg(laid, palette)
+    return render_svg(laid, palette, libs=libs)
 
 
 def draw_drawio(document, options=None, *, title="diagram"):
     """Return draw.io XML for a schematic document (same layout as :func:`draw`)."""
-    svg = draw(document, options)
-    return svg_to_drawio(svg, title=title)
+    options = dict(options or {})
+    if options.get("drawio_via_svg"):
+        return svg_to_drawio(draw(document, options), title=title)
+    palette = merged_palette(document, options.get("palette"))
+    libs = document_libs(document)
+    graph = document_to_elk(document, options)
+    laid = layout(graph)
+    _preserve_edge_metadata(graph, laid)
+    return render_drawio_native(laid, palette, title=title, libs=libs)
+
+
+def draw_drawio_via_svg(document, options=None, *, title="diagram"):
+    """Scheme B: SVG decomposed through svg-to-drawio."""
+    return svg_to_drawio(draw(document, options), title=title)
 
 
 def _write_text(out_path, text):

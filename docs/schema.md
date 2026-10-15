@@ -30,9 +30,10 @@
 |------|------|
 | `id` | 文档内唯一。层次用 `.` 分隔，例如 `top.u.mux`。 |
 | `title` | 框上的标题。省略时使用 `id` 的最后一段。 |
-| `shape` | `box`、`mux`、`reg`、`logic`、`and`、`or`、`xor`、`buf`、`icg` 之一。 |
+| `shape` | `box`、`reg`、`logic`、`cell` 之一。门与 mux 等标准符号须通过 `use_lib` 例化为 `cell`。 |
+| `symbol` | **`shape: cell` 必填**。`viewBox`、`svg`、`anchors`；SVG 与 draw.io 共用同一嵌入矢量。 |
 | `swatch` | 配色键。渲染时到 `palette` 中取色。 |
-| `badge` | 画在 `mux` 内的短标签，例如 `CLK`、`DATA`、`1H`。 |
+| `badge` | 画在符号内的短标签，例如 `CLK`（多来自 lib 定义）。 |
 | `note` | 悬停提示。 |
 | `expr` | `logic` 框内的表达式。超出宽度时折行。 |
 | `kind` | 仅 `shape: logic`：`comb`（组合，**默认**）或 `seq`（时序）。`seq` 在框底画与 `reg` 相同的时钟缺口，表示行为由时钟沿/update 触发，而非纯组合。 |
@@ -40,13 +41,9 @@
 | `edges` | 以本节点为公共父节点的连线。 |
 | `children` | 子节点数组。 |
 
-`box` 为矩形。存在子节点时它是复合框，端口画成边框上的五边形。`mux` 为梯形，标题在图形外侧。`reg` 底部有时钟缺口，西侧端口按固定顺序排布。`logic` 为圆角矩形；`kind: seq` 时同样画时钟缺口，与 `reg` 区分语义（多输入/多输出的表达式块 vs 单寄存器符号）。
+`box` 为矩形。存在子节点时它是复合框，端口画成边框上的五边形。`reg` 底部有时钟缺口，西侧端口按固定顺序排布。`logic` 为圆角矩形；`kind: seq` 时同样画时钟缺口，与 `reg` 区分语义（多输入/多输出的表达式块 vs 单寄存器符号）。
 
-`and`、`or`、`xor`、`buf`、`icg` 是叶子外形，不能有 `children`。标题画在符号上方，不改变符号宽度。端口不画成五边形，连线贴到轮廓上。
-
-- `and` 为 D 形，`or` 为盾形，`xor` 在盾形输入侧再加一条弧。三者至少两个西侧输入、恰好一个东侧输出，不要北侧或南侧端口。西侧端口的书写顺序是从上到下。
-- `buf` 为朝右的三角，恰好一个西侧输入和一个东侧输出。输出端口 `"bubble": true` 就是反相器。
-- `icg` 为矩形。`en` 在西侧；`clk` 在南侧；可选的 `te` 在西侧；恰好一个东侧输出，名字自定。
+`cell` 为 lib 例化后的叶子符号：几何来自 `symbol.svg`，端口吸附来自 `symbol.anchors`，不能有 `children`。内置门、mux、ICG 等均在 [schematic/lib/gates.json](../schematic/lib/gates.json) 中以 `symbol` 定义；源 JSON 里用 `{ "use_lib": "and2" }` 例化，勿再写 `shape: and` 等内联门形。
 
 ## 端口
 
@@ -61,7 +58,7 @@
 | `keep` | 为 `true` 时，端口过滤仍保留该端口。 |
 | `bubble` | 为 `true` 时，在该引脚上画气泡，连线接到气泡外侧。 |
 
-`mux`、`reg`、`logic`、`and`、`or`、`xor`、`buf`、`icg` 的端口不参与 Include / Exclude 过滤。
+`cell`、`reg`、`logic` 的端口不参与 Include / Exclude 过滤。
 
 ## 连线
 
@@ -75,7 +72,7 @@
 
 ## 配色
 
-`palette` 的形式为「键 → `#hex`」。键缺失时使用该 `shape` 的默认填充色。`and`、`or`、`xor`、`buf` 共用一组颜色，`icg` 使用偏时钟的暖色。
+`palette` 的形式为「键 → `#hex`」。键缺失时使用该 `shape` 的默认填充色；`cell` 使用与门级符号相同的默认填充/描边（由 `swatch` 覆盖）。
 
 `swatches` 只供查看器的配色列表使用，字段为 `key`、`label`、`group`。`group` 为任意字符串。若某一组的名字为 `内部逻辑`，查看器在「只留方框」时不显示该组。
 

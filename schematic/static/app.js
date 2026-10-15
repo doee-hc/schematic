@@ -558,7 +558,7 @@ function syncDrawioDownload() {
     els.downloadDrawioBtn.disabled = !hasSvg() || !hasDrawio;
     els.downloadDrawioBtn.title = hasDrawio
       ? "下载 draw.io 可编辑图"
-      : (lastDrawioError || "需服务端 Python 3.11+ 与 pip install svg-to-drawio");
+      : (lastDrawioError || "draw.io 未生成");
   }
 }
 

@@ -56,12 +56,21 @@ class ElaborateTests(unittest.TestCase):
             body = {
                 "libs": {
                     "and2": {
-                        "shape": "and",
+                        "desc": "dup",
                         "ports": [
-                            {"name": "a", "side": "west", "dir": "in"},
-                            {"name": "b", "side": "west", "dir": "in"},
-                            {"name": "y", "side": "east", "dir": "out"},
+                            {"name": "a", "side": "west", "dir": "in", "desc": "a"},
+                            {"name": "b", "side": "west", "dir": "in", "desc": "b"},
+                            {"name": "y", "side": "east", "dir": "out", "desc": "y"},
                         ],
+                        "symbol": {
+                            "viewBox": "0 0 10 10",
+                            "svg": "<rect width='10' height='10' fill='__FILL__' stroke='__STROKE__'/>",
+                            "anchors": {
+                                "a": {"tip": [0, 5], "side": "WEST"},
+                                "b": {"tip": [0, 7], "side": "WEST"},
+                                "y": {"tip": [10, 5], "side": "EAST"},
+                            },
+                        },
                     }
                 }
             }
@@ -70,18 +79,52 @@ class ElaborateTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 merge_sources([a])
 
+    def test_lib_custom_symbol(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "sym.json")
+            body = {
+                "libs": {
+                    "chip": {
+                        "desc": "自定义块",
+                        "ports": [
+                            {"name": "a", "side": "west", "dir": "in", "desc": "入"},
+                            {"name": "y", "side": "east", "dir": "out", "desc": "出"},
+                        ],
+                        "symbol": {
+                            "viewBox": "0 0 40 20",
+                            "svg": '<rect x="1" y="1" width="38" height="18" fill="__FILL__" stroke="__STROKE__"/>',
+                            "anchors": {
+                                "a": {"tip": [0, 10], "side": "WEST"},
+                                "y": {"tip": [40, 10], "side": "EAST"},
+                            },
+                        },
+                    }
+                }
+            }
+            with open(path, "w", encoding="utf-8") as handle:
+                json.dump(body, handle)
+            merged = merge_sources([path])
+            self.assertIn("svg", merged["libs"]["chip"]["symbol"])
+
     def test_lib_desc_required(self):
         with tempfile.TemporaryDirectory() as tmp:
             a = os.path.join(tmp, "a.json")
             body = {
                 "libs": {
                     "mybuf": {
-                        "shape": "buf",
                         "desc": "测试缓冲",
                         "ports": [
-                            {"name": "a", "side": "west", "dir": "in"},
-                            {"name": "y", "side": "east", "dir": "out", "desc": "输出"},
+                            {"name": "a", "side": "west", "dir": "in", "desc": "输入"},
+                            {"name": "y", "side": "east", "dir": "out"},
                         ],
+                        "symbol": {
+                            "viewBox": "0 0 10 10",
+                            "svg": "<rect width='10' height='10' fill='__FILL__' stroke='__STROKE__'/>",
+                            "anchors": {
+                                "a": {"tip": [0, 5], "side": "WEST"},
+                                "y": {"tip": [10, 5], "side": "EAST"},
+                            },
+                        },
                     }
                 }
             }
@@ -103,10 +146,11 @@ class ElaborateTests(unittest.TestCase):
         u1 = nodes["top.u1"]
         u2 = nodes["top.u2"]
         self.assertEqual(u1.get("meta", {}).get("lib"), "acme_and3")
+        self.assertIn("svg", (u1.get("symbol") or {}))
         self.assertEqual(u1.get("desc"), "Acme 三输入与门")
         self.assertEqual(u1.get("swatch"), "acme:alu")
         self.assertEqual(u2.get("meta", {}).get("lib"), "acme_or2")
-        self.assertEqual(u2.get("shape"), "or")
+        self.assertEqual(u2.get("shape"), "cell")
         self.assertEqual(doc.get("palette", {}).get("acme:alu"), "#FFE8F0")
         bub = [
             p for p in u2.get("ports") or []
@@ -139,7 +183,7 @@ class ElaborateTests(unittest.TestCase):
         nodes, _ = index_nodes(doc["root"])
         mux = nodes["top.m"]
         self.assertEqual(mux.get("meta", {}).get("lib"), "mux2")
-        self.assertEqual(mux.get("shape"), "mux")
+        self.assertEqual(mux.get("shape"), "cell")
         self.assertEqual(mux.get("desc"), "二选一数据多路器")
 
     def test_gates_use_lib_elaborates(self):
@@ -148,7 +192,7 @@ class ElaborateTests(unittest.TestCase):
         nodes, _ = index_nodes(doc["root"])
         and3 = nodes["top.and3"]
         self.assertEqual(and3.get("meta", {}).get("lib"), "and3_b_bub_y_bub")
-        self.assertEqual(and3.get("shape"), "and")
+        self.assertEqual(and3.get("shape"), "cell")
 
     def test_duplicate_module_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:

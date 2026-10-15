@@ -7,7 +7,8 @@ import json
 import os
 
 from schematic.document import normalize_document
-from schematic.graph import GATE_SHAPES, index_nodes
+from schematic.graph import index_nodes
+from schematic.symbol import validate_symbol
 
 _PKG_DIR = os.path.dirname(os.path.abspath(__file__))
 BUILTIN_LIB_PATH = os.path.join(_PKG_DIR, "lib", "gates.json")
@@ -90,13 +91,14 @@ def _validate_lib_body(name: str, lib: dict) -> None:
     for key in _LIB_FORBIDDEN:
         if lib.get(key):
             raise ValueError("lib %s 不能包含 %s" % (name, key))
-    shape = lib.get("shape")
-    if not shape:
-        raise ValueError("lib %s 缺少 shape" % name)
+    symbol = lib.get("symbol")
+    if not symbol:
+        raise ValueError("lib %s 缺少 symbol" % name)
     _require_desc(lib.get("desc"), "lib %s" % name)
     ports = lib.get("ports")
-    if shape in GATE_SHAPES and not ports:
+    if not ports:
         raise ValueError("lib %s 缺少 ports" % name)
+    validate_symbol(name, symbol, ports)
     if ports is not None:
         if not isinstance(ports, list):
             raise ValueError("lib %s 的 ports 必须是数组" % name)
@@ -317,11 +319,14 @@ def _validate_cell(cell: dict) -> None:
         raise ValueError("cell %s 缺少 use_lib" % cell.get("id"))
 
 
+_LEGACY_CELL_SHAPES = frozenset(("and", "or", "xor", "buf", "icg", "mux"))
+
+
 def _reject_inline_gate(child: dict) -> None:
     shape = child.get("shape")
-    if shape in GATE_SHAPES:
+    if shape in _LEGACY_CELL_SHAPES:
         raise ValueError(
-            "门电路请用 use_lib 例化（内置库 %s）: %s"
+            "门级符号请用 use_lib 例化（内置库 %s）: %s"
             % (BUILTIN_LIB_PATH, child.get("id"))
         )
 
@@ -336,9 +341,11 @@ def _expand_cell(cell: dict, libs: dict, parent_prefix: str) -> dict:
     lib = libs[lib_name]
     prefix = parent_prefix + "." + cell["id"]
     node = {}
-    for key in ("shape", "badge", "expr"):
+    for key in ("badge", "expr"):
         if key in lib:
             node[key] = copy.deepcopy(lib[key])
+    node["shape"] = "cell"
+    node["symbol"] = copy.deepcopy(lib["symbol"])
     node["id"] = prefix
     node["title"] = cell.get("title") if cell.get("title") is not None else lib.get("title")
     if node["title"] is None:
@@ -591,6 +598,7 @@ def elaborate_view(
     doc = {
         "palette": merged.get("palette") or {},
         "swatches": merged.get("swatches") or [],
+        "libs": copy.deepcopy(libs),
         "root": root,
     }
     doc = normalize_document(doc)
@@ -657,6 +665,7 @@ def elaborate_merged(merged: dict, top_cli: str | None) -> dict:
     doc = {
         "palette": merged.get("palette") or {},
         "swatches": merged.get("swatches") or [],
+        "libs": copy.deepcopy(libs),
         "root": root,
     }
     doc = normalize_document(doc)

@@ -157,18 +157,11 @@
         {"id": "bypass_d", "use_lib": "and2", "title": "scan_in&en", "swatch": "gate"},
         {
           "id": "so_d_mux",
+          "use_lib": "mux2",
           "title": "SCAN_OUT_d",
-          "desc": "扫描链输出数据 mux：bypass 与 shift 两路择一",
-          "shape": "mux",
           "badge": "SO",
           "swatch": "port:scan",
-          "note": "sel=test_mode 时选 bypass，否则选 shift",
-          "ports": [
-            {"name": "a", "side": "west", "dir": "in", "label": "bypass", "swatch": "port:scan", "desc": "旁路移位寄存器输出"},
-            {"name": "b", "side": "west", "dir": "in", "label": "shift", "swatch": "port:scan", "desc": "capture shift 寄存器 scan_out"},
-            {"name": "sel", "side": "south", "dir": "in", "desc": "选择 0=bypass / 1=shift"},
-            {"name": "y", "side": "east", "dir": "out", "swatch": "port:scan", "desc": "mux 后的 SCAN_OUT_d"}
-          ]
+          "note": "sel=test_mode 时选 bypass，否则选 shift"
         },
         {"id": "so_gate", "use_lib": "and2", "title": "so&en", "swatch": "gate"},
         {

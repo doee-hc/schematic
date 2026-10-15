@@ -10,8 +10,7 @@ from urllib.parse import unquote, urlparse
 from schematic.graph import tree_of
 from schematic.document import normalize_document
 from schematic.elaborate import elaborate_view, needs_elaboration, resolve_view_module
-from schematic.drawio import svg_to_drawio
-from schematic.render import draw
+from schematic.render import draw, draw_drawio
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(ROOT, "static")
@@ -253,7 +252,7 @@ def make_handler():
             stem = os.path.splitext(filename)[0] or "graph"
             payload = {"ok": True, "filename": stem + ".svg", "svg": svg}
             try:
-                payload["drawio"] = svg_to_drawio(svg, title=stem)
+                payload["drawio"] = draw_drawio(document, options, title=stem)
                 payload["drawio_filename"] = stem + ".drawio"
             except (RuntimeError, ValueError) as exc:
                 payload["drawio"] = None

@@ -4,23 +4,13 @@
 SHAPE_FILL = {
     "box": "#ffffff",
     "reg": "#eee8f8",
-    "mux": "#fff3e0",
     "logic": "#e7f6e7",
-    "and": "#e7f0fb",
-    "or": "#e7f0fb",
-    "xor": "#e7f0fb",
-    "buf": "#e7f0fb",
-    "icg": "#fff3e0",
+    "cell": "#e7f0fb",
 }
 SHAPE_STROKE = {
     "reg": "#6b4ea0",
-    "mux": "#c47a1a",
     "logic": "#3d8b40",
-    "and": "#3d6ea8",
-    "or": "#3d6ea8",
-    "xor": "#3d6ea8",
-    "buf": "#3d6ea8",
-    "icg": "#c47a1a",
+    "cell": "#3d6ea8",
 }
 
 # Edge color prefers a net swatch over a generic module fill.

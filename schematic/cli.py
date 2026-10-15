@@ -30,6 +30,8 @@ def _add_source_args(parser):
 
 def _draw_options(args):
     options = {"boxes_only": args.boxes_only}
+    if getattr(args, "drawio_via_svg", False):
+        options["drawio_via_svg"] = True
     if args.include:
         options["include"] = args.include
     if args.port_include is not None:
@@ -56,8 +58,13 @@ def main(argv=None):
     draw_p.add_argument("--include", action="append", default=None, help="只画这些节点 id，可重复")
     draw_p.add_argument("--port-include", action="append", default=None, help="端口 Include 通配，可重复")
     draw_p.add_argument("--port-exclude", action="append", default=None, help="端口 Exclude 通配，可重复")
-    draw_p.add_argument("--boxes-only", action="store_true", help="隐藏 mux、reg、logic、and、or、xor、buf、icg")
+    draw_p.add_argument("--boxes-only", action="store_true", help="隐藏 cell、reg、logic，只留 box")
     draw_p.add_argument("--palette", action="append", default=None, help="覆盖配色 key=#hex，可重复")
+    draw_p.add_argument(
+        "--drawio-via-svg",
+        action="store_true",
+        help="draw.io 导出走 SVG 转换（方案 B），默认原生 mxGraph（方案 C）",
+    )
 
     view_p = sub.add_parser("view", help="打开交互查看器")
     _add_source_args(view_p)

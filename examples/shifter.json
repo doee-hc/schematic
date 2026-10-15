@@ -382,7 +382,7 @@
           {
             "id": "top.shl.t0",
             "title": "t0",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH1",
             "ports": [
               {
@@ -408,12 +408,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shl.t1",
             "title": "t1",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH1",
             "ports": [
               {
@@ -439,12 +477,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shl.t2",
             "title": "t2",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH1",
             "ports": [
               {
@@ -470,12 +546,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shl.t3",
             "title": "t3",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH1",
             "ports": [
               {
@@ -501,12 +615,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shl.u0",
             "title": "u0",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH2",
             "ports": [
               {
@@ -532,12 +684,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shl.u1",
             "title": "u1",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH2",
             "ports": [
               {
@@ -563,12 +753,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shl.u2",
             "title": "u2",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH2",
             "ports": [
               {
@@ -594,12 +822,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shl.u3",
             "title": "u3",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH2",
             "ports": [
               {
@@ -625,7 +891,45 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           }
         ]
       },
@@ -811,7 +1115,7 @@
           {
             "id": "top.shr.t0",
             "title": "t0",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH1",
             "ports": [
               {
@@ -837,12 +1141,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shr.t1",
             "title": "t1",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH1",
             "ports": [
               {
@@ -868,12 +1210,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shr.t2",
             "title": "t2",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH1",
             "ports": [
               {
@@ -899,12 +1279,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shr.t3",
             "title": "t3",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH1",
             "ports": [
               {
@@ -930,12 +1348,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shr.u0",
             "title": "u0",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH2",
             "ports": [
               {
@@ -961,12 +1417,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shr.u1",
             "title": "u1",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH2",
             "ports": [
               {
@@ -992,12 +1486,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shr.u2",
             "title": "u2",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH2",
             "ports": [
               {
@@ -1023,12 +1555,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.shr.u3",
             "title": "u3",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "SH2",
             "ports": [
               {
@@ -1054,7 +1624,45 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           }
         ]
       },
@@ -1201,7 +1809,7 @@
           {
             "id": "top.pick.m0",
             "title": "y0",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "DIR",
             "ports": [
               {
@@ -1227,12 +1835,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.pick.m1",
             "title": "y1",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "DIR",
             "ports": [
               {
@@ -1258,12 +1904,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.pick.m2",
             "title": "y2",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "DIR",
             "ports": [
               {
@@ -1289,12 +1973,50 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           },
           {
             "id": "top.pick.m3",
             "title": "y3",
-            "shape": "mux",
+            "shape": "cell",
             "badge": "DIR",
             "ports": [
               {
@@ -1320,11 +2042,482 @@
                 "side": "east",
                 "dir": "out"
               }
-            ]
+            ],
+            "symbol": {
+              "viewBox": "0 0 96.0000 76.0000",
+              "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    3.0,
+                    18.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    3.0,
+                    54.0
+                  ],
+                  "side": "WEST"
+                },
+                "sel": {
+                  "tip": [
+                    48.0,
+                    64.52
+                  ],
+                  "side": "SOUTH"
+                },
+                "y": {
+                  "tip": [
+                    93.0,
+                    38.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "mux2"
+            }
           }
         ]
       }
     ],
     "note": "4-bit logical barrel shifter. dir=1 shifts left, dir=0 shifts right. z is the fill bit."
+  },
+  "libs": {
+    "and2": {
+      "title": "and2",
+      "desc": "两输入与门",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 A"
+        },
+        {
+          "name": "b",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 B"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "与输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 60.0000 56.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,4.00 L8.00,52.00 L28.00,52.00 A24.00,24.00 0 0 0 28.00,4.00 Z\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              8.0,
+              14.0
+            ],
+            "side": "WEST"
+          },
+          "b": {
+            "tip": [
+              8.0,
+              42.0
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              52.0,
+              28.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "and3": {
+      "title": "and3",
+      "desc": "三输入与门",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 A"
+        },
+        {
+          "name": "b",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 B"
+        },
+        {
+          "name": "c",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 C"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "与输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 69.0000 74.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,4.00 L8.00,70.00 L28.00,70.00 A33.00,33.00 0 0 0 28.00,4.00 Z\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              8.0,
+              14.0
+            ],
+            "side": "WEST"
+          },
+          "b": {
+            "tip": [
+              8.0,
+              37.0
+            ],
+            "side": "WEST"
+          },
+          "c": {
+            "tip": [
+              8.0,
+              60.0
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              61.0,
+              37.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "or2": {
+      "title": "or2",
+      "desc": "两输入或门",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 A"
+        },
+        {
+          "name": "b",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 B"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "或输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 62.0000 56.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M10.30,4.00 C31.00,6.40 48.48,9.76 54.00,28.00 C48.48,46.24 31.00,49.60 10.30,52.00 Q23.74,28.00 10.30,4.00 Z\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              14.733333333333334,
+              14.0
+            ],
+            "side": "WEST"
+          },
+          "b": {
+            "tip": [
+              14.733333333333334,
+              41.99999999999999
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              54.0,
+              28.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "xor2": {
+      "title": "xor2",
+      "desc": "两输入异或门",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 A"
+        },
+        {
+          "name": "b",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 B"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "异或输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 72.0000 56.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M20.30,4.00 C41.00,6.40 58.48,9.76 64.00,28.00 C58.48,46.24 41.00,49.60 20.30,52.00 Q33.74,28.00 20.30,4.00 Z\"/><path class=\"gate-stroke\" fill=\"none\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M10.30,4.00 Q23.74,28.00 10.30,52.00\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              14.73333333333333,
+              14.0
+            ],
+            "side": "WEST"
+          },
+          "b": {
+            "tip": [
+              14.733333333333334,
+              41.99999999999999
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              64.0,
+              28.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "buf": {
+      "title": "buf",
+      "desc": "缓冲器（同相驱动）",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "同相输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 44.0000 40.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,6.00 L36.00,20.00 L8.00,34.00 Z\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              8.0,
+              20.0
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              36.0,
+              20.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "inv": {
+      "title": "inv",
+      "desc": "反相器",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "bubble": true,
+          "desc": "反相输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 44.0000 40.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,6.00 L36.00,20.00 L8.00,34.00 Z\"/><circle fill=\"#ffffff\" stroke=\"__STROKE__\" stroke-width=\"1.2\" cx=\"39.50\" cy=\"20.00\" r=\"3.50\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              8.0,
+              20.0
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              43.0,
+              20.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "icg": {
+      "title": "icg",
+      "desc": "集成时钟门控",
+      "ports": [
+        {
+          "name": "en",
+          "side": "west",
+          "dir": "in",
+          "desc": "功能使能"
+        },
+        {
+          "name": "te",
+          "side": "west",
+          "dir": "in",
+          "desc": "测试使能 TE"
+        },
+        {
+          "name": "clk",
+          "side": "south",
+          "dir": "in",
+          "desc": "时钟输入"
+        },
+        {
+          "name": "gclk",
+          "side": "east",
+          "dir": "out",
+          "desc": "门控时钟输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 76.0000 88.0000",
+        "svg": "<rect class=\"swatch-fill\" x=\"8.00\" y=\"4.00\" width=\"60.00\" height=\"76.00\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\"/>",
+        "anchors": {
+          "en": {
+            "tip": [
+              8.0,
+              12.0
+            ],
+            "side": "WEST"
+          },
+          "te": {
+            "tip": [
+              8.0,
+              60.0
+            ],
+            "side": "WEST"
+          },
+          "clk": {
+            "tip": [
+              38.0,
+              80.0
+            ],
+            "side": "SOUTH"
+          },
+          "gclk": {
+            "tip": [
+              68.0,
+              44.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "mux2": {
+      "title": "mux2",
+      "desc": "二选一数据多路器",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "label": "0",
+          "desc": "数据输入 0"
+        },
+        {
+          "name": "b",
+          "side": "west",
+          "dir": "in",
+          "label": "1",
+          "desc": "数据输入 1"
+        },
+        {
+          "name": "sel",
+          "side": "south",
+          "dir": "in",
+          "desc": "选择：0 选 a，1 选 b"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "选中数据输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 96.0000 76.0000",
+        "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              3.0,
+              18.0
+            ],
+            "side": "WEST"
+          },
+          "b": {
+            "tip": [
+              3.0,
+              54.0
+            ],
+            "side": "WEST"
+          },
+          "sel": {
+            "tip": [
+              48.0,
+              64.52
+            ],
+            "side": "SOUTH"
+          },
+          "y": {
+            "tip": [
+              93.0,
+              38.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    }
   }
 }

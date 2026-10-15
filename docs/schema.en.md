@@ -30,9 +30,10 @@ The file is one JSON object. `root` is required. `palette` and `swatches` are op
 |-------|-------------|
 | `id` | Unique in the document. Dots separate hierarchy levels, for example `top.u.mux`. |
 | `title` | Label drawn on the node. Defaults to the last segment of `id`. |
-| `shape` | One of `box`, `mux`, `reg`, `logic`, `and`, `or`, `xor`, `buf`, `icg`. |
+| `shape` | One of `box`, `reg`, `logic`, `cell`. Gates and muxes use `use_lib` and elaborate to `cell`. |
+| `symbol` | **Required for `shape: cell`**. `viewBox`, `svg`, `anchors`; shared embedded vector in SVG and draw.io. |
 | `swatch` | Palette key. The renderer looks the key up in `palette`. |
-| `badge` | Short label inside a `mux`, such as `CLK`, `DATA`, or `1H`. |
+| `badge` | Short in-symbol label such as `CLK` (often from lib). |
 | `note` | Tooltip text. |
 | `expr` | Expression drawn inside a `logic` node. Long text wraps. |
 | `kind` | Only for `shape: logic`: `comb` (combinational, **default**) or `seq` (sequential). `seq` draws the same clock notch as `reg` at the bottom of the rounded box. |
@@ -40,13 +41,9 @@ The file is one JSON object. `root` is required. `palette` and `swatches` are op
 | `edges` | Edges whose common parent is this node. |
 | `children` | Child nodes. |
 
-A `box` is a rectangle. With children it is a compound frame, and its ports are pentagons on the border. A `mux` is a trapezoid with the title outside the shape. A `reg` has a clock notch; west ports use a fixed order. A `logic` node is a rounded rectangle; with `kind: seq` it also gets a clock notch to mean clocked/update behavior rather than pure combinational logic.
+A `box` is a rectangle. With children it is a compound frame, and its ports are pentagons on the border. A `reg` has a clock notch; west ports use a fixed order. A `logic` node is a rounded rectangle; with `kind: seq` it also gets a clock notch to mean clocked/update behavior rather than pure combinational logic.
 
-`and`, `or`, `xor`, `buf`, and `icg` are leaves. They cannot have `children`. The title sits above the symbol and does not change its width. Ports are not pentagons; wires meet the outline.
-
-- `and` is a D, `or` is a shield, and `xor` adds a second arc on the input side. Each needs at least two west inputs and exactly one east output. North and south ports are not allowed. West ports are ordered top to bottom as written.
-- `buf` is a triangle pointing right, with exactly one west input and one east output. `"bubble": true` on the output draws an inverter.
-- `icg` is a rectangle. `en` is west, `clk` is south, optional `te` is west, and exactly one east output uses any other name.
+A `cell` is a lib instantiation: geometry from `symbol.svg`, wire attachment from `symbol.anchors`; no `children`. Built-in gates, mux, ICG, etc. live in [schematic/lib/gates.json](../schematic/lib/gates.json) as `symbol` entries; source JSON uses `{ "use_lib": "and2" }` instead of inline gate shapes.
 
 ## Ports
 
@@ -61,7 +58,7 @@ A `box` is a rectangle. With children it is a compound frame, and its ports are 
 | `keep` | When `true`, port filters still draw the port. |
 | `bubble` | When `true`, a bubble is drawn on that pin and the wire meets the outside of the bubble. |
 
-Ports on `mux`, `reg`, `logic`, `and`, `or`, `xor`, `buf`, and `icg` nodes are not subject to include / exclude filters.
+Ports on `cell`, `reg`, and `logic` nodes are not subject to include / exclude filters.
 
 ## Edges
 
@@ -75,7 +72,7 @@ Store an edge on the common parent of its endpoints.
 
 ## Palette
 
-`palette` maps a key to a `#hex` color. A missing key uses the default fill of that `shape`. `and`, `or`, `xor`, and `buf` share one fill. `icg` uses a warm clock color.
+`palette` maps a key to a `#hex` color. A missing key uses the default fill of that `shape`; `cell` uses the same gate defaults (overridable via `swatch`).
 
 `swatches` is only the viewer’s legend: `key`, `label`, and `group`. `group` is an arbitrary string. A group named `内部逻辑` is hidden in the viewer when boxes-only is on.
 

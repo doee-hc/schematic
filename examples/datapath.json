@@ -8,12 +8,36 @@
     "port:scan": "#3D7ECC"
   },
   "swatches": [
-    {"key": "family:top", "label": "Core", "group": "Modules"},
-    {"key": "family:mac", "label": "MAC", "group": "Modules"},
-    {"key": "gate", "label": "Gate", "group": "Gates"},
-    {"key": "clock:clk", "label": "clk", "group": "Clocks"},
-    {"key": "reset:rst", "label": "rst", "group": "Reset"},
-    {"key": "port:scan", "label": "Scan", "group": "Ports"}
+    {
+      "key": "family:top",
+      "label": "Core",
+      "group": "Modules"
+    },
+    {
+      "key": "family:mac",
+      "label": "MAC",
+      "group": "Modules"
+    },
+    {
+      "key": "gate",
+      "label": "Gate",
+      "group": "Gates"
+    },
+    {
+      "key": "clock:clk",
+      "label": "clk",
+      "group": "Clocks"
+    },
+    {
+      "key": "reset:rst",
+      "label": "rst",
+      "group": "Reset"
+    },
+    {
+      "key": "port:scan",
+      "label": "Scan",
+      "group": "Ports"
+    }
   ],
   "root": {
     "id": "top",
@@ -21,84 +45,408 @@
     "shape": "box",
     "swatch": "family:top",
     "ports": [
-      {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
-      {"name": "rst_n", "side": "west", "dir": "in", "swatch": "reset:rst"},
-      {"name": "scan_en", "side": "west", "dir": "in", "swatch": "port:scan"},
-      {"name": "si", "side": "west", "dir": "in", "swatch": "port:scan"},
-      {"name": "te", "side": "west", "dir": "in"},
-      {"name": "ce", "side": "west", "dir": "in"},
-      {"name": "a", "side": "west", "dir": "in"},
-      {"name": "b", "side": "west", "dir": "in"},
-      {"name": "c", "side": "west", "dir": "in"},
-      {"name": "gclk", "side": "east", "dir": "out", "swatch": "clock:clk", "keep": true},
-      {"name": "so", "side": "east", "dir": "out", "swatch": "port:scan", "keep": true},
-      {"name": "y", "side": "east", "dir": "out", "keep": true}
+      {
+        "name": "clk",
+        "side": "west",
+        "dir": "in",
+        "swatch": "clock:clk"
+      },
+      {
+        "name": "rst_n",
+        "side": "west",
+        "dir": "in",
+        "swatch": "reset:rst"
+      },
+      {
+        "name": "scan_en",
+        "side": "west",
+        "dir": "in",
+        "swatch": "port:scan"
+      },
+      {
+        "name": "si",
+        "side": "west",
+        "dir": "in",
+        "swatch": "port:scan"
+      },
+      {
+        "name": "te",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "ce",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "a",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "c",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "gclk",
+        "side": "east",
+        "dir": "out",
+        "swatch": "clock:clk",
+        "keep": true
+      },
+      {
+        "name": "so",
+        "side": "east",
+        "dir": "out",
+        "swatch": "port:scan",
+        "keep": true
+      },
+      {
+        "name": "y",
+        "side": "east",
+        "dir": "out",
+        "keep": true
+      }
     ],
     "edges": [
-      {"from": "top.clk", "to": "top.icg.clk", "swatch": "clock:clk"},
-      {"from": "top.te", "to": "top.icg.te"},
-      {"from": "top.ce", "to": "top.ice.a"},
-      {"from": "top.scan_en", "to": "top.ice.b", "swatch": "port:scan"},
-      {"from": "top.ice.y", "to": "top.icg.en"},
-      {"from": "top.icg.gclk", "to": "top.reg.clk", "swatch": "clock:clk"},
-      {"from": "top.icg.gclk", "to": "top.gclk", "swatch": "clock:clk"},
-      {"from": "top.rst_n", "to": "top.rst_inv.a", "swatch": "reset:rst"},
-      {"from": "top.rst_inv.y", "to": "top.reg.rst", "swatch": "reset:rst"},
-      {"from": "top.si", "to": "top.scan_mux.a", "swatch": "port:scan"},
-      {"from": "top.mac.y", "to": "top.scan_mux.b"},
-      {"from": "top.scan_en", "to": "top.scan_mux.sel", "swatch": "port:scan"},
-      {"from": "top.scan_mux.y", "to": "top.reg.d", "swatch": "port:scan"},
-      {"from": "top.reg.q", "to": "top.so", "swatch": "port:scan"},
-      {"from": "top.reg.q", "to": "top.mac.q", "invert": true, "swatch": "port:scan"},
-      {"from": "top.a", "to": "top.mac.a"},
-      {"from": "top.b", "to": "top.mac.b"},
-      {"from": "top.c", "to": "top.mac.c"},
-      {"from": "top.mac.y", "to": "top.y"}
+      {
+        "from": "top.clk",
+        "to": "top.icg.clk",
+        "swatch": "clock:clk"
+      },
+      {
+        "from": "top.te",
+        "to": "top.icg.te"
+      },
+      {
+        "from": "top.ce",
+        "to": "top.ice.a"
+      },
+      {
+        "from": "top.scan_en",
+        "to": "top.ice.b",
+        "swatch": "port:scan"
+      },
+      {
+        "from": "top.ice.y",
+        "to": "top.icg.en"
+      },
+      {
+        "from": "top.icg.gclk",
+        "to": "top.reg.clk",
+        "swatch": "clock:clk"
+      },
+      {
+        "from": "top.icg.gclk",
+        "to": "top.gclk",
+        "swatch": "clock:clk"
+      },
+      {
+        "from": "top.rst_n",
+        "to": "top.rst_inv.a",
+        "swatch": "reset:rst"
+      },
+      {
+        "from": "top.rst_inv.y",
+        "to": "top.reg.rst",
+        "swatch": "reset:rst"
+      },
+      {
+        "from": "top.si",
+        "to": "top.scan_mux.a",
+        "swatch": "port:scan"
+      },
+      {
+        "from": "top.mac.y",
+        "to": "top.scan_mux.b"
+      },
+      {
+        "from": "top.scan_en",
+        "to": "top.scan_mux.sel",
+        "swatch": "port:scan"
+      },
+      {
+        "from": "top.scan_mux.y",
+        "to": "top.reg.d",
+        "swatch": "port:scan"
+      },
+      {
+        "from": "top.reg.q",
+        "to": "top.so",
+        "swatch": "port:scan"
+      },
+      {
+        "from": "top.reg.q",
+        "to": "top.mac.q",
+        "invert": true,
+        "swatch": "port:scan"
+      },
+      {
+        "from": "top.a",
+        "to": "top.mac.a"
+      },
+      {
+        "from": "top.b",
+        "to": "top.mac.b"
+      },
+      {
+        "from": "top.c",
+        "to": "top.mac.c"
+      },
+      {
+        "from": "top.mac.y",
+        "to": "top.y"
+      }
     ],
     "children": [
       {
         "id": "top.ice",
         "title": "ice",
-        "shape": "and",
+        "shape": "cell",
         "swatch": "gate",
         "ports": [
-          {"name": "a", "side": "west", "dir": "in", "label": "ce"},
-          {"name": "b", "side": "west", "dir": "in", "label": "scan", "bubble": true, "swatch": "port:scan"},
-          {"name": "y", "side": "east", "dir": "out", "label": "en"}
-        ]
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "label": "ce"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in",
+            "label": "scan",
+            "bubble": true,
+            "swatch": "port:scan"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out",
+            "label": "en"
+          }
+        ],
+        "symbol": {
+          "viewBox": "0 0 60.0000 56.0000",
+          "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,4.00 L8.00,52.00 L28.00,52.00 A24.00,24.00 0 0 0 28.00,4.00 Z\"/>",
+          "anchors": {
+            "a": {
+              "tip": [
+                8.0,
+                14.0
+              ],
+              "side": "WEST"
+            },
+            "b": {
+              "tip": [
+                8.0,
+                42.0
+              ],
+              "side": "WEST"
+            },
+            "y": {
+              "tip": [
+                52.0,
+                28.0
+              ],
+              "side": "EAST"
+            }
+          }
+        },
+        "meta": {
+          "kind": "cell",
+          "lib": "and2"
+        }
       },
       {
         "id": "top.icg",
         "title": "icg",
-        "shape": "icg",
+        "shape": "cell",
         "ports": [
-          {"name": "en", "side": "west", "dir": "in"},
-          {"name": "te", "side": "west", "dir": "in"},
-          {"name": "clk", "side": "south", "dir": "in", "swatch": "clock:clk"},
-          {"name": "gclk", "side": "east", "dir": "out", "swatch": "clock:clk"}
-        ]
+          {
+            "name": "en",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "te",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "clk",
+            "side": "south",
+            "dir": "in",
+            "swatch": "clock:clk"
+          },
+          {
+            "name": "gclk",
+            "side": "east",
+            "dir": "out",
+            "swatch": "clock:clk"
+          }
+        ],
+        "symbol": {
+          "viewBox": "0 0 76.0000 88.0000",
+          "svg": "<rect class=\"swatch-fill\" x=\"8.00\" y=\"4.00\" width=\"60.00\" height=\"76.00\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\"/>",
+          "anchors": {
+            "en": {
+              "tip": [
+                8.0,
+                12.0
+              ],
+              "side": "WEST"
+            },
+            "te": {
+              "tip": [
+                8.0,
+                60.0
+              ],
+              "side": "WEST"
+            },
+            "clk": {
+              "tip": [
+                38.0,
+                80.0
+              ],
+              "side": "SOUTH"
+            },
+            "gclk": {
+              "tip": [
+                68.0,
+                44.0
+              ],
+              "side": "EAST"
+            }
+          }
+        },
+        "meta": {
+          "kind": "cell",
+          "lib": "icg"
+        }
       },
       {
         "id": "top.rst_inv",
         "title": "rst",
-        "shape": "buf",
+        "shape": "cell",
         "swatch": "gate",
         "ports": [
-          {"name": "a", "side": "west", "dir": "in", "swatch": "reset:rst"},
-          {"name": "y", "side": "east", "dir": "out", "bubble": true, "swatch": "reset:rst"}
-        ]
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "swatch": "reset:rst"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out",
+            "bubble": true,
+            "swatch": "reset:rst"
+          }
+        ],
+        "symbol": {
+          "viewBox": "0 0 44.0000 40.0000",
+          "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,6.00 L36.00,20.00 L8.00,34.00 Z\"/><circle fill=\"#ffffff\" stroke=\"__STROKE__\" stroke-width=\"1.2\" cx=\"39.50\" cy=\"20.00\" r=\"3.50\"/>",
+          "anchors": {
+            "a": {
+              "tip": [
+                8.0,
+                20.0
+              ],
+              "side": "WEST"
+            },
+            "y": {
+              "tip": [
+                43.0,
+                20.0
+              ],
+              "side": "EAST"
+            }
+          }
+        },
+        "meta": {
+          "kind": "cell",
+          "lib": "inv"
+        }
       },
       {
         "id": "top.scan_mux",
         "title": "scan_mux",
-        "shape": "mux",
+        "shape": "cell",
         "badge": "SCAN",
         "ports": [
-          {"name": "a", "side": "west", "dir": "in", "label": "0", "swatch": "port:scan"},
-          {"name": "b", "side": "west", "dir": "in", "label": "1"},
-          {"name": "sel", "side": "south", "dir": "in", "swatch": "port:scan"},
-          {"name": "y", "side": "east", "dir": "out", "swatch": "port:scan"}
-        ]
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "label": "0",
+            "swatch": "port:scan"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in",
+            "label": "1"
+          },
+          {
+            "name": "sel",
+            "side": "south",
+            "dir": "in",
+            "swatch": "port:scan"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out",
+            "swatch": "port:scan"
+          }
+        ],
+        "symbol": {
+          "viewBox": "0 0 96.0000 76.0000",
+          "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+          "anchors": {
+            "a": {
+              "tip": [
+                3.0,
+                18.0
+              ],
+              "side": "WEST"
+            },
+            "b": {
+              "tip": [
+                3.0,
+                54.0
+              ],
+              "side": "WEST"
+            },
+            "sel": {
+              "tip": [
+                48.0,
+                64.52
+              ],
+              "side": "SOUTH"
+            },
+            "y": {
+              "tip": [
+                93.0,
+                38.0
+              ],
+              "side": "EAST"
+            }
+          }
+        },
+        "meta": {
+          "kind": "cell",
+          "lib": "mux2"
+        }
       },
       {
         "id": "top.reg",
@@ -106,10 +454,30 @@
         "shape": "reg",
         "note": "RST active high",
         "ports": [
-          {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
-          {"name": "d", "side": "west", "dir": "in", "swatch": "port:scan"},
-          {"name": "rst", "side": "west", "dir": "in", "swatch": "reset:rst"},
-          {"name": "q", "side": "east", "dir": "out", "swatch": "port:scan"}
+          {
+            "name": "clk",
+            "side": "west",
+            "dir": "in",
+            "swatch": "clock:clk"
+          },
+          {
+            "name": "d",
+            "side": "west",
+            "dir": "in",
+            "swatch": "port:scan"
+          },
+          {
+            "name": "rst",
+            "side": "west",
+            "dir": "in",
+            "swatch": "reset:rst"
+          },
+          {
+            "name": "q",
+            "side": "east",
+            "dir": "out",
+            "swatch": "port:scan"
+          }
         ]
       },
       {
@@ -118,82 +486,357 @@
         "shape": "box",
         "swatch": "family:mac",
         "ports": [
-          {"name": "a", "side": "west", "dir": "in"},
-          {"name": "b", "side": "west", "dir": "in"},
-          {"name": "c", "side": "west", "dir": "in"},
-          {"name": "q", "side": "west", "dir": "in", "swatch": "port:scan"},
-          {"name": "y", "side": "east", "dir": "out"}
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "c",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "q",
+            "side": "west",
+            "dir": "in",
+            "swatch": "port:scan"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out"
+          }
         ],
         "edges": [
-          {"from": "top.mac.a", "to": "top.mac.nand.a"},
-          {"from": "top.mac.b", "to": "top.mac.nand.b"},
-          {"from": "top.mac.c", "to": "top.mac.buf.a"},
-          {"from": "top.mac.buf.y", "to": "top.mac.nand.c"},
-          {"from": "top.mac.buf.y", "to": "top.mac.xor2.b"},
-          {"from": "top.mac.nand.y", "to": "top.mac.or2.a"},
-          {"from": "top.mac.q", "to": "top.mac.or2.b", "swatch": "port:scan"},
-          {"from": "top.mac.or2.y", "to": "top.mac.xor2.a"},
-          {"from": "top.mac.xor2.y", "to": "top.mac.inv.a"},
-          {"from": "top.mac.inv.y", "to": "top.mac.y"},
-          {"from": "top.mac.a", "to": "top.mac.fn.a"},
-          {"from": "top.mac.b", "to": "top.mac.fn.b"},
-          {"from": "top.mac.c", "to": "top.mac.fn.c"},
-          {"from": "top.mac.q", "to": "top.mac.fn.q", "swatch": "port:scan"}
+          {
+            "from": "top.mac.a",
+            "to": "top.mac.nand.a"
+          },
+          {
+            "from": "top.mac.b",
+            "to": "top.mac.nand.b"
+          },
+          {
+            "from": "top.mac.c",
+            "to": "top.mac.buf.a"
+          },
+          {
+            "from": "top.mac.buf.y",
+            "to": "top.mac.nand.c"
+          },
+          {
+            "from": "top.mac.buf.y",
+            "to": "top.mac.xor2.b"
+          },
+          {
+            "from": "top.mac.nand.y",
+            "to": "top.mac.or2.a"
+          },
+          {
+            "from": "top.mac.q",
+            "to": "top.mac.or2.b",
+            "swatch": "port:scan"
+          },
+          {
+            "from": "top.mac.or2.y",
+            "to": "top.mac.xor2.a"
+          },
+          {
+            "from": "top.mac.xor2.y",
+            "to": "top.mac.inv.a"
+          },
+          {
+            "from": "top.mac.inv.y",
+            "to": "top.mac.y"
+          },
+          {
+            "from": "top.mac.a",
+            "to": "top.mac.fn.a"
+          },
+          {
+            "from": "top.mac.b",
+            "to": "top.mac.fn.b"
+          },
+          {
+            "from": "top.mac.c",
+            "to": "top.mac.fn.c"
+          },
+          {
+            "from": "top.mac.q",
+            "to": "top.mac.fn.q",
+            "swatch": "port:scan"
+          }
         ],
         "children": [
           {
             "id": "top.mac.buf",
             "title": "buf",
-            "shape": "buf",
+            "shape": "cell",
             "swatch": "gate",
             "ports": [
-              {"name": "a", "side": "west", "dir": "in", "label": "c"},
-              {"name": "y", "side": "east", "dir": "out"}
-            ]
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "c"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "symbol": {
+              "viewBox": "0 0 44.0000 40.0000",
+              "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,6.00 L36.00,20.00 L8.00,34.00 Z\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    8.0,
+                    20.0
+                  ],
+                  "side": "WEST"
+                },
+                "y": {
+                  "tip": [
+                    36.0,
+                    20.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "buf"
+            }
           },
           {
             "id": "top.mac.nand",
             "title": "nand3",
-            "shape": "and",
+            "shape": "cell",
             "swatch": "gate",
             "ports": [
-              {"name": "a", "side": "west", "dir": "in"},
-              {"name": "b", "side": "west", "dir": "in", "bubble": true},
-              {"name": "c", "side": "west", "dir": "in"},
-              {"name": "y", "side": "east", "dir": "out", "bubble": true}
-            ]
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "bubble": true
+              },
+              {
+                "name": "c",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out",
+                "bubble": true
+              }
+            ],
+            "symbol": {
+              "viewBox": "0 0 69.0000 74.0000",
+              "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,4.00 L8.00,70.00 L28.00,70.00 A33.00,33.00 0 0 0 28.00,4.00 Z\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    8.0,
+                    14.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    8.0,
+                    37.0
+                  ],
+                  "side": "WEST"
+                },
+                "c": {
+                  "tip": [
+                    8.0,
+                    60.0
+                  ],
+                  "side": "WEST"
+                },
+                "y": {
+                  "tip": [
+                    61.0,
+                    37.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "and3"
+            }
           },
           {
             "id": "top.mac.or2",
             "title": "or2",
-            "shape": "or",
+            "shape": "cell",
             "swatch": "gate",
             "ports": [
-              {"name": "a", "side": "west", "dir": "in"},
-              {"name": "b", "side": "west", "dir": "in", "label": "q", "swatch": "port:scan"},
-              {"name": "y", "side": "east", "dir": "out"}
-            ]
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "q",
+                "swatch": "port:scan"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "symbol": {
+              "viewBox": "0 0 62.0000 56.0000",
+              "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M10.30,4.00 C31.00,6.40 48.48,9.76 54.00,28.00 C48.48,46.24 31.00,49.60 10.30,52.00 Q23.74,28.00 10.30,4.00 Z\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    14.733333333333334,
+                    14.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    14.733333333333334,
+                    41.99999999999999
+                  ],
+                  "side": "WEST"
+                },
+                "y": {
+                  "tip": [
+                    54.0,
+                    28.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "or2"
+            }
           },
           {
             "id": "top.mac.xor2",
             "title": "xor2",
-            "shape": "xor",
+            "shape": "cell",
             "swatch": "gate",
             "ports": [
-              {"name": "a", "side": "west", "dir": "in"},
-              {"name": "b", "side": "west", "dir": "in"},
-              {"name": "y", "side": "east", "dir": "out"}
-            ]
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "symbol": {
+              "viewBox": "0 0 72.0000 56.0000",
+              "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M20.30,4.00 C41.00,6.40 58.48,9.76 64.00,28.00 C58.48,46.24 41.00,49.60 20.30,52.00 Q33.74,28.00 20.30,4.00 Z\"/><path class=\"gate-stroke\" fill=\"none\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M10.30,4.00 Q23.74,28.00 10.30,52.00\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    14.73333333333333,
+                    14.0
+                  ],
+                  "side": "WEST"
+                },
+                "b": {
+                  "tip": [
+                    14.733333333333334,
+                    41.99999999999999
+                  ],
+                  "side": "WEST"
+                },
+                "y": {
+                  "tip": [
+                    64.0,
+                    28.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "xor2"
+            }
           },
           {
             "id": "top.mac.inv",
             "title": "inv",
-            "shape": "buf",
+            "shape": "cell",
             "swatch": "gate",
             "ports": [
-              {"name": "a", "side": "west", "dir": "in"},
-              {"name": "y", "side": "east", "dir": "out", "bubble": true}
-            ]
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out",
+                "bubble": true
+              }
+            ],
+            "symbol": {
+              "viewBox": "0 0 44.0000 40.0000",
+              "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,6.00 L36.00,20.00 L8.00,34.00 Z\"/><circle fill=\"#ffffff\" stroke=\"__STROKE__\" stroke-width=\"1.2\" cx=\"39.50\" cy=\"20.00\" r=\"3.50\"/>",
+              "anchors": {
+                "a": {
+                  "tip": [
+                    8.0,
+                    20.0
+                  ],
+                  "side": "WEST"
+                },
+                "y": {
+                  "tip": [
+                    43.0,
+                    20.0
+                  ],
+                  "side": "EAST"
+                }
+              }
+            },
+            "meta": {
+              "kind": "cell",
+              "lib": "inv"
+            }
           },
           {
             "id": "top.mac.fn",
@@ -201,15 +844,469 @@
             "shape": "logic",
             "expr": "(a & ~b & c) | q ^ c",
             "ports": [
-              {"name": "a", "side": "west", "dir": "in"},
-              {"name": "b", "side": "west", "dir": "in"},
-              {"name": "c", "side": "west", "dir": "in"},
-              {"name": "q", "side": "west", "dir": "in", "swatch": "port:scan"},
-              {"name": "y", "side": "east", "dir": "out"}
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "c",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "q",
+                "side": "west",
+                "dir": "in",
+                "swatch": "port:scan"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
             ]
           }
         ]
       }
     ]
+  },
+  "libs": {
+    "and2": {
+      "title": "and2",
+      "desc": "两输入与门",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 A"
+        },
+        {
+          "name": "b",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 B"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "与输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 60.0000 56.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,4.00 L8.00,52.00 L28.00,52.00 A24.00,24.00 0 0 0 28.00,4.00 Z\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              8.0,
+              14.0
+            ],
+            "side": "WEST"
+          },
+          "b": {
+            "tip": [
+              8.0,
+              42.0
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              52.0,
+              28.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "and3": {
+      "title": "and3",
+      "desc": "三输入与门",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 A"
+        },
+        {
+          "name": "b",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 B"
+        },
+        {
+          "name": "c",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 C"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "与输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 69.0000 74.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,4.00 L8.00,70.00 L28.00,70.00 A33.00,33.00 0 0 0 28.00,4.00 Z\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              8.0,
+              14.0
+            ],
+            "side": "WEST"
+          },
+          "b": {
+            "tip": [
+              8.0,
+              37.0
+            ],
+            "side": "WEST"
+          },
+          "c": {
+            "tip": [
+              8.0,
+              60.0
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              61.0,
+              37.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "or2": {
+      "title": "or2",
+      "desc": "两输入或门",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 A"
+        },
+        {
+          "name": "b",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 B"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "或输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 62.0000 56.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M10.30,4.00 C31.00,6.40 48.48,9.76 54.00,28.00 C48.48,46.24 31.00,49.60 10.30,52.00 Q23.74,28.00 10.30,4.00 Z\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              14.733333333333334,
+              14.0
+            ],
+            "side": "WEST"
+          },
+          "b": {
+            "tip": [
+              14.733333333333334,
+              41.99999999999999
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              54.0,
+              28.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "xor2": {
+      "title": "xor2",
+      "desc": "两输入异或门",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 A"
+        },
+        {
+          "name": "b",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 B"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "异或输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 72.0000 56.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M20.30,4.00 C41.00,6.40 58.48,9.76 64.00,28.00 C58.48,46.24 41.00,49.60 20.30,52.00 Q33.74,28.00 20.30,4.00 Z\"/><path class=\"gate-stroke\" fill=\"none\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M10.30,4.00 Q23.74,28.00 10.30,52.00\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              14.73333333333333,
+              14.0
+            ],
+            "side": "WEST"
+          },
+          "b": {
+            "tip": [
+              14.733333333333334,
+              41.99999999999999
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              64.0,
+              28.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "buf": {
+      "title": "buf",
+      "desc": "缓冲器（同相驱动）",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "同相输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 44.0000 40.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,6.00 L36.00,20.00 L8.00,34.00 Z\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              8.0,
+              20.0
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              36.0,
+              20.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "inv": {
+      "title": "inv",
+      "desc": "反相器",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "bubble": true,
+          "desc": "反相输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 44.0000 40.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,6.00 L36.00,20.00 L8.00,34.00 Z\"/><circle fill=\"#ffffff\" stroke=\"__STROKE__\" stroke-width=\"1.2\" cx=\"39.50\" cy=\"20.00\" r=\"3.50\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              8.0,
+              20.0
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              43.0,
+              20.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "icg": {
+      "title": "icg",
+      "desc": "集成时钟门控",
+      "ports": [
+        {
+          "name": "en",
+          "side": "west",
+          "dir": "in",
+          "desc": "功能使能"
+        },
+        {
+          "name": "te",
+          "side": "west",
+          "dir": "in",
+          "desc": "测试使能 TE"
+        },
+        {
+          "name": "clk",
+          "side": "south",
+          "dir": "in",
+          "desc": "时钟输入"
+        },
+        {
+          "name": "gclk",
+          "side": "east",
+          "dir": "out",
+          "desc": "门控时钟输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 76.0000 88.0000",
+        "svg": "<rect class=\"swatch-fill\" x=\"8.00\" y=\"4.00\" width=\"60.00\" height=\"76.00\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\"/>",
+        "anchors": {
+          "en": {
+            "tip": [
+              8.0,
+              12.0
+            ],
+            "side": "WEST"
+          },
+          "te": {
+            "tip": [
+              8.0,
+              60.0
+            ],
+            "side": "WEST"
+          },
+          "clk": {
+            "tip": [
+              38.0,
+              80.0
+            ],
+            "side": "SOUTH"
+          },
+          "gclk": {
+            "tip": [
+              68.0,
+              44.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    },
+    "mux2": {
+      "title": "mux2",
+      "desc": "二选一数据多路器",
+      "swatch": "gate",
+      "ports": [
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "label": "0",
+          "desc": "数据输入 0"
+        },
+        {
+          "name": "b",
+          "side": "west",
+          "dir": "in",
+          "label": "1",
+          "desc": "数据输入 1"
+        },
+        {
+          "name": "sel",
+          "side": "south",
+          "dir": "in",
+          "desc": "选择：0 选 a，1 选 b"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "选中数据输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 96.0000 76.0000",
+        "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              3.0,
+              18.0
+            ],
+            "side": "WEST"
+          },
+          "b": {
+            "tip": [
+              3.0,
+              54.0
+            ],
+            "side": "WEST"
+          },
+          "sel": {
+            "tip": [
+              48.0,
+              64.52
+            ],
+            "side": "SOUTH"
+          },
+          "y": {
+            "tip": [
+              93.0,
+              38.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
+    }
   }
 }

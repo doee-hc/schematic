@@ -86,16 +86,10 @@
         },
         {
           "id": "shift_mux",
+          "use_lib": "mux2",
           "title": "shift_in",
-          "shape": "mux",
           "badge": "SI",
-          "swatch": "port:ijtag",
-          "ports": [
-            {"name": "a", "side": "west", "dir": "in", "label": "si", "swatch": "port:ijtag"},
-            {"name": "b", "side": "west", "dir": "in", "label": "chain"},
-            {"name": "sel", "side": "south", "dir": "in"},
-            {"name": "y", "side": "east", "dir": "out", "swatch": "port:ijtag"}
-          ]
+          "swatch": "port:ijtag"
         },
         {"id": "tdr_en_and", "use_lib": "and2", "title": "en", "swatch": "gate"}
       ]

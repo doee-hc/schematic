@@ -3,14 +3,68 @@
     "and3_custom": {
       "title": "and3",
       "desc": "自定义三输入与门（含气泡引脚）",
-      "shape": "and",
       "swatch": "gate",
       "ports": [
-        {"name": "a", "side": "west", "dir": "in", "desc": "输入 A"},
-        {"name": "b", "side": "west", "dir": "in", "bubble": true, "desc": "输入 B（反相）"},
-        {"name": "c", "side": "west", "dir": "in", "desc": "输入 C"},
-        {"name": "y", "side": "east", "dir": "out", "desc": "与输出"}
-      ]
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 A"
+        },
+        {
+          "name": "b",
+          "side": "west",
+          "dir": "in",
+          "bubble": true,
+          "desc": "输入 B（反相）"
+        },
+        {
+          "name": "c",
+          "side": "west",
+          "dir": "in",
+          "desc": "输入 C"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "desc": "与输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 69.0000 74.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,4.00 L8.00,70.00 L28.00,70.00 A33.00,33.00 0 0 0 28.00,4.00 Z\"/><circle fill=\"#ffffff\" stroke=\"__STROKE__\" stroke-width=\"1.2\" cx=\"4.50\" cy=\"37.00\" r=\"3.50\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              8.0,
+              14.0
+            ],
+            "side": "WEST"
+          },
+          "b": {
+            "tip": [
+              1.0,
+              37.0
+            ],
+            "side": "WEST"
+          },
+          "c": {
+            "tip": [
+              8.0,
+              60.0
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              61.0,
+              37.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
     }
   }
 }

@@ -11,74 +11,352 @@
     "gate": "#E7F0FB"
   },
   "swatches": [
-    {"key": "family:occ", "label": "OCC top", "group": "Modules"},
-    {"key": "family:ctrl", "label": "Control", "group": "Modules"},
-    {"key": "family:tdr", "label": "IJTAG/TDR", "group": "Modules"},
-    {"key": "family:sync", "label": "Sync", "group": "Cells"},
-    {"key": "family:cgc", "label": "CGC", "group": "Cells"},
-    {"key": "clock:clk", "label": "Clock", "group": "Nets"},
-    {"key": "port:scan", "label": "Scan", "group": "Nets"},
-    {"key": "port:ijtag", "label": "IJTAG", "group": "Nets"},
-    {"key": "gate", "label": "Gate", "group": "Gates"}
+    {
+      "key": "family:occ",
+      "label": "OCC top",
+      "group": "Modules"
+    },
+    {
+      "key": "family:ctrl",
+      "label": "Control",
+      "group": "Modules"
+    },
+    {
+      "key": "family:tdr",
+      "label": "IJTAG/TDR",
+      "group": "Modules"
+    },
+    {
+      "key": "family:sync",
+      "label": "Sync",
+      "group": "Cells"
+    },
+    {
+      "key": "family:cgc",
+      "label": "CGC",
+      "group": "Cells"
+    },
+    {
+      "key": "clock:clk",
+      "label": "Clock",
+      "group": "Nets"
+    },
+    {
+      "key": "port:scan",
+      "label": "Scan",
+      "group": "Nets"
+    },
+    {
+      "key": "port:ijtag",
+      "label": "IJTAG",
+      "group": "Nets"
+    },
+    {
+      "key": "gate",
+      "label": "Gate",
+      "group": "Gates"
+    }
   ],
   "libs": {
     "clk_buf": {
       "title": "clock_buf02",
       "desc": "时钟缓冲单元",
-      "shape": "buf",
       "swatch": "clock:clk",
       "ports": [
-        {"name": "a", "side": "west", "dir": "in", "label": "A", "swatch": "clock:clk", "desc": "时钟输入"},
-        {"name": "y", "side": "east", "dir": "out", "label": "Y", "swatch": "clock:clk", "desc": "缓冲后时钟"}
-      ]
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "label": "A",
+          "swatch": "clock:clk",
+          "desc": "时钟输入"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "label": "Y",
+          "swatch": "clock:clk",
+          "desc": "缓冲后时钟"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 44.0000 40.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,6.00 L36.00,20.00 L8.00,34.00 Z\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              8.0,
+              20.0
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              36.0,
+              20.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
     },
     "scan_buf": {
       "title": "buf02",
       "desc": "扫描/控制信号缓冲",
-      "shape": "buf",
       "swatch": "port:scan",
       "ports": [
-        {"name": "a", "side": "west", "dir": "in", "label": "A", "swatch": "port:scan", "desc": "逻辑输入"},
-        {"name": "y", "side": "east", "dir": "out", "label": "Y", "swatch": "port:scan", "desc": "缓冲输出"}
-      ]
+        {
+          "name": "a",
+          "side": "west",
+          "dir": "in",
+          "label": "A",
+          "swatch": "port:scan",
+          "desc": "逻辑输入"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "label": "Y",
+          "swatch": "port:scan",
+          "desc": "缓冲输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 44.0000 40.0000",
+        "svg": "<path class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" d=\"M8.00,6.00 L36.00,20.00 L8.00,34.00 Z\"/>",
+        "anchors": {
+          "a": {
+            "tip": [
+              8.0,
+              20.0
+            ],
+            "side": "WEST"
+          },
+          "y": {
+            "tip": [
+              36.0,
+              20.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
     },
     "clk_mux2": {
       "title": "clock_mux21",
       "desc": "二选一时钟多路器",
-      "shape": "mux",
       "badge": "CLK",
       "swatch": "clock:clk",
       "ports": [
-        {"name": "a0", "side": "west", "dir": "in", "label": "0", "swatch": "clock:clk", "desc": "时钟源 0"},
-        {"name": "a1", "side": "west", "dir": "in", "label": "1", "swatch": "clock:clk", "desc": "时钟源 1"},
-        {"name": "s0", "side": "south", "dir": "in", "desc": "选择 0/1"},
-        {"name": "y", "side": "east", "dir": "out", "swatch": "clock:clk", "desc": "选中时钟输出"}
-      ]
+        {
+          "name": "a0",
+          "side": "west",
+          "dir": "in",
+          "label": "0",
+          "swatch": "clock:clk",
+          "desc": "时钟源 0"
+        },
+        {
+          "name": "a1",
+          "side": "west",
+          "dir": "in",
+          "label": "1",
+          "swatch": "clock:clk",
+          "desc": "时钟源 1"
+        },
+        {
+          "name": "s0",
+          "side": "south",
+          "dir": "in",
+          "desc": "选择 0/1"
+        },
+        {
+          "name": "y",
+          "side": "east",
+          "dir": "out",
+          "swatch": "clock:clk",
+          "desc": "选中时钟输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 96.0000 76.0000",
+        "svg": "<polygon class=\"swatch-fill\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\" points=\"3.00,4.00 93.00,18.96 93.00,57.04 3.00,72.00\"/>",
+        "anchors": {
+          "a0": {
+            "tip": [
+              3.0,
+              18.0
+            ],
+            "side": "WEST"
+          },
+          "a1": {
+            "tip": [
+              3.0,
+              54.0
+            ],
+            "side": "WEST"
+          },
+          "s0": {
+            "tip": [
+              48.0,
+              64.52
+            ],
+            "side": "SOUTH"
+          },
+          "y": {
+            "tip": [
+              93.0,
+              38.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
     },
     "cgand": {
       "title": "cgand",
       "desc": "时钟门控与单元（CGC）",
-      "shape": "icg",
       "swatch": "family:cgc",
       "ports": [
-        {"name": "en", "side": "west", "dir": "in", "label": "FE", "desc": "功能使能 FE"},
-        {"name": "te", "side": "west", "dir": "in", "label": "TE", "desc": "测试使能 TE"},
-        {"name": "clk", "side": "south", "dir": "in", "swatch": "clock:clk", "label": "CK", "desc": "待门控时钟"},
-        {"name": "gck", "side": "east", "dir": "out", "swatch": "clock:clk", "label": "GCK", "desc": "门控后时钟 GCK"}
-      ]
+        {
+          "name": "en",
+          "side": "west",
+          "dir": "in",
+          "label": "FE",
+          "desc": "功能使能 FE"
+        },
+        {
+          "name": "te",
+          "side": "west",
+          "dir": "in",
+          "label": "TE",
+          "desc": "测试使能 TE"
+        },
+        {
+          "name": "clk",
+          "side": "south",
+          "dir": "in",
+          "swatch": "clock:clk",
+          "label": "CK",
+          "desc": "待门控时钟"
+        },
+        {
+          "name": "gck",
+          "side": "east",
+          "dir": "out",
+          "swatch": "clock:clk",
+          "label": "GCK",
+          "desc": "门控后时钟 GCK"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 76.0000 88.0000",
+        "svg": "<rect class=\"swatch-fill\" x=\"8.00\" y=\"4.00\" width=\"60.00\" height=\"76.00\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\"/>",
+        "anchors": {
+          "en": {
+            "tip": [
+              8.0,
+              12.0
+            ],
+            "side": "WEST"
+          },
+          "te": {
+            "tip": [
+              8.0,
+              60.0
+            ],
+            "side": "WEST"
+          },
+          "clk": {
+            "tip": [
+              38.0,
+              80.0
+            ],
+            "side": "SOUTH"
+          },
+          "gck": {
+            "tip": [
+              68.0,
+              44.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
     },
     "sync_rst": {
       "title": "sync_cell_rst",
       "desc": "带复位同步单元",
-      "shape": "reg",
       "swatch": "family:sync",
       "note": "ltest_ntc_sync_cell",
       "ports": [
-        {"name": "d", "side": "west", "dir": "in", "label": "D", "desc": "数据输入"},
-        {"name": "clk", "side": "west", "dir": "in", "label": "CK", "swatch": "clock:clk", "desc": "时钟"},
-        {"name": "r", "side": "west", "dir": "in", "label": "R", "swatch": "port:scan", "desc": "同步复位"},
-        {"name": "q", "side": "east", "dir": "out", "label": "O", "desc": "同步输出"}
-      ]
+        {
+          "name": "d",
+          "side": "west",
+          "dir": "in",
+          "label": "D",
+          "desc": "数据输入"
+        },
+        {
+          "name": "clk",
+          "side": "west",
+          "dir": "in",
+          "label": "CK",
+          "swatch": "clock:clk",
+          "desc": "时钟"
+        },
+        {
+          "name": "r",
+          "side": "west",
+          "dir": "in",
+          "label": "R",
+          "swatch": "port:scan",
+          "desc": "同步复位"
+        },
+        {
+          "name": "q",
+          "side": "east",
+          "dir": "out",
+          "label": "O",
+          "desc": "同步输出"
+        }
+      ],
+      "symbol": {
+        "viewBox": "0 0 96.0000 104.0000",
+        "svg": "<rect class=\"swatch-fill\" x=\"0.00\" y=\"0.00\" width=\"96.00\" height=\"104.00\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\"/><polygon fill=\"__STROKE__\" stroke=\"__STROKE__\" stroke-width=\"1\" points=\"42.00,104.00 48.00,95.00 54.00,104.00\"/>",
+        "anchors": {
+          "d": {
+            "tip": [
+              0.0,
+              28.0
+            ],
+            "side": "WEST"
+          },
+          "clk": {
+            "tip": [
+              0.0,
+              52.0
+            ],
+            "side": "WEST"
+          },
+          "r": {
+            "tip": [
+              0.0,
+              76.0
+            ],
+            "side": "WEST"
+          },
+          "q": {
+            "tip": [
+              96.0,
+              52.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
     }
   }
 }

@@ -23,21 +23,8 @@ LOGIC_PORT_PITCH = 22.0
 LOGIC_PORT_INSET = 18.0
 LOGIC_KINDS = frozenset(("comb", "seq"))
 
-SHAPES = ("box", "mux", "reg", "logic", "and", "or", "xor", "buf", "icg")
-DETAIL_SHAPES = frozenset(("mux", "reg", "logic", "and", "or", "xor", "buf", "icg"))
-GATE_SHAPES = frozenset(("and", "or", "xor", "buf", "icg"))
-AND_W = 54.0
-OR_W = 66.0
-XOR_W = 76.0
-BUF_W = 44.0
-BUF_H = 40.0
-ICG_W = 76.0
-ICG_H = 64.0
-ICG_H_TE = 88.0
-GATE_MARGIN = 8.0
-GATE_PAD_Y = 4.0
-GATE_PIN_INSET = 14.0
-XOR_GAP = 10.0
+SHAPES = ("box", "reg", "logic", "cell")
+DETAIL_SHAPES = frozenset(("reg", "logic", "cell"))
 SIDES = {
     "west": "WEST",
     "east": "EAST",
@@ -207,40 +194,11 @@ def _leaf_size(title, inputs, outputs):
     return width, height
 
 
-def _gate_size(shape, inputs):
-    if shape == "buf":
-        return BUF_W, BUF_H
-    if shape == "icg":
-        has_te = any(port.get("name") == "te" for port in inputs)
-        return ICG_W, ICG_H_TE if has_te else ICG_H
-    rows = max(len(inputs), 2)
-    height = max(56.0, 20.0 + rows * 18.0)
-    inner_h = height - 2.0 * GATE_PAD_Y
-    label_w = _max_label(inputs)
-    radius = inner_h / 2.0
-    straight = max(16.0, label_w + 12.0)
-    if shape == "and":
-        body = max(straight + radius, label_w + 34.0)
-        return GATE_MARGIN + body + GATE_MARGIN, height
-    body = max(straight + radius, label_w + 38.0)
-    extra = XOR_GAP if shape == "xor" else 0.0
-    return GATE_MARGIN + extra + body + GATE_MARGIN, height
-
-
 def _shape_size(shape, title, inputs, outputs, south, expr, kind="comb"):
-    if shape in GATE_SHAPES:
-        return _gate_size(shape, inputs)
     if shape == "reg":
         rows = max(len(inputs), len(outputs), 1)
         width = max(96.0, _text_width(title) + 24.0, _max_label(inputs) + 40.0)
         height = max(80.0, 28.0 + rows * 20.0 + 16.0)
-        return width, height
-    if shape == "mux":
-        rows = max(len(inputs), len(outputs), 1)
-        width = max(96.0, _max_label(inputs) + 40.0)
-        height = max(68.0, 20.0 + rows * ROW_H + 24.0)
-        if south:
-            height = max(height, 72.0)
         return width, height
     if shape == "logic":
         lines = wrap_expr(expr)
@@ -282,80 +240,6 @@ def _place_logic_ports(elk_ports, kept, width, height):
         positions[port.get("name")] = (x, height)
     for port, x in zip(kept["NORTH"], north):
         positions[port.get("name")] = (x, 0.0)
-    for port in elk_ports:
-        name = (port.get("properties") or {}).get("name")
-        if name not in positions:
-            continue
-        port["x"], port["y"] = positions[name]
-
-
-def _spread_ys(count, height, inset=GATE_PIN_INSET):
-    if count <= 1:
-        return [height / 2.0]
-    start = inset
-    end = height - inset
-    step = (end - start) / (count - 1)
-    return [start + step * index for index in range(count)]
-
-
-def _icg_pin_positions(west, east, width, height):
-    """West pins stay above the bottom caption. clk sits on the south edge."""
-    top = GATE_PAD_Y + 8.0
-    bot = height - GATE_MARGIN - 20.0
-    if bot < top:
-        top = height * 0.28
-        bot = height * 0.62
-    count = len(west)
-    if count <= 1:
-        ys = [(top + bot) / 2.0]
-    else:
-        step = (bot - top) / (count - 1)
-        ys = [top + step * index for index in range(count)]
-    positions = {port.get("name"): (0.0, y) for port, y in zip(west, ys)}
-    positions["clk"] = (width / 2.0, height)
-    if east:
-        positions[east[0].get("name")] = (width, height / 2.0)
-    return positions
-
-
-def _place_spread(count, start, end):
-    if count <= 1:
-        return [(start + end) / 2.0]
-    step = (end - start) / (count - 1)
-    return [start + step * index for index in range(count)]
-
-
-def _place_mux_ports(elk_ports, kept, width, height):
-    """Keep west pins in document order. ELK's FREE/FIXED_SIDE placement swaps them."""
-    positions = {}
-    top = 18.0
-    bot = max(top + 8.0, height - 22.0)
-    for port, y in zip(kept["WEST"], _place_spread(len(kept["WEST"]), top, bot)):
-        positions[port.get("name")] = (0.0, y)
-    east = kept["EAST"]
-    for port, y in zip(east, _place_spread(len(east), top, bot)):
-        positions[port.get("name")] = (width, y if len(east) > 1 else height / 2.0)
-    inset = 28.0
-    for port, x in zip(kept["SOUTH"], _place_spread(len(kept["SOUTH"]), inset, max(inset, width - inset))):
-        positions[port.get("name")] = (x, height)
-    for port, x in zip(kept["NORTH"], _place_spread(len(kept["NORTH"]), inset, max(inset, width - inset))):
-        positions[port.get("name")] = (x, 0.0)
-    for port in elk_ports:
-        name = (port.get("properties") or {}).get("name")
-        if name not in positions:
-            continue
-        port["x"], port["y"] = positions[name]
-
-
-def _place_gate_ports(elk_ports, shape, kept, width, height):
-    if shape == "icg":
-        positions = _icg_pin_positions(kept["WEST"], kept["EAST"], width, height)
-    else:
-        positions = {}
-        for port, y in zip(kept["WEST"], _spread_ys(len(kept["WEST"]), height)):
-            positions[port.get("name")] = (0.0, y)
-        if kept["EAST"]:
-            positions[kept["EAST"][0].get("name")] = (width, height / 2.0)
     for port in elk_ports:
         name = (port.get("properties") or {}).get("name")
         if name not in positions:
@@ -442,8 +326,8 @@ def index_nodes(root):
         shape = node.get("shape") or "box"
         if shape not in SHAPES:
             raise ValueError("未知外形 %s: %s" % (shape, node_id))
-        if shape in GATE_SHAPES:
-            _check_gate(node)
+        if shape == "cell" and not node.get("symbol"):
+            raise ValueError("cell 缺少 symbol: %s" % node_id)
         nodes[node_id] = node
         if parent_id:
             parent_of[node_id] = parent_id
@@ -505,58 +389,6 @@ def visible_ids(nodes, parent_of, options):
     return final
 
 
-def _check_gate(node):
-    """Gates are leaves. Pin counts and ICG roles are fixed."""
-    node_id = node.get("id")
-    shape = node.get("shape") or "box"
-    if node.get("children"):
-        raise ValueError("门电路不能有子节点: %s" % node_id)
-    groups = _ports_by_side(node)
-    if shape == "icg":
-        _check_icg(node_id, groups)
-        return
-    if groups["NORTH"] or groups["SOUTH"]:
-        raise ValueError("门电路只允许西侧输入和东侧输出: %s" % node_id)
-    if len(groups["EAST"]) != 1:
-        raise ValueError("门电路必须有恰好一个东侧输出: %s" % node_id)
-    west = len(groups["WEST"])
-    if shape == "buf":
-        if west != 1:
-            raise ValueError("buf 必须有恰好一个西侧输入: %s" % node_id)
-        return
-    if west < 2:
-        raise ValueError("%s 至少需要两个西侧输入: %s" % (shape, node_id))
-
-
-def _check_icg(node_id, groups):
-    if groups["NORTH"]:
-        raise ValueError("icg 不允许北侧端口: %s" % node_id)
-    by_name = {}
-    for side, ports in groups.items():
-        for port in ports:
-            name = port.get("name")
-            if name in by_name:
-                raise ValueError("icg 含有未约定的端口 %s: %s" % (name, node_id))
-            by_name[name] = side
-    if by_name.get("en") != "WEST":
-        raise ValueError("icg 的 en 必须在西侧: %s" % node_id)
-    if by_name.get("clk") != "SOUTH":
-        raise ValueError("icg 的 clk 必须在南侧: %s" % node_id)
-    if "te" in by_name and by_name["te"] != "WEST":
-        raise ValueError("icg 的 te 必须在西侧: %s" % node_id)
-    if len(groups["EAST"]) != 1:
-        raise ValueError("icg 必须有恰好一个东侧输出: %s" % node_id)
-    out_name = groups["EAST"][0].get("name")
-    if out_name in ("en", "clk", "te"):
-        raise ValueError("icg 的输出端口不能使用 en、clk 或 te: %s" % node_id)
-    allowed = {"en", "clk", out_name}
-    if "te" in by_name:
-        allowed.add("te")
-    extra = sorted(set(by_name) - allowed)
-    if extra:
-        raise ValueError("icg 含有未约定的端口 %s: %s" % (", ".join(extra), node_id))
-
-
 def _ports_by_side(node):
     groups = {"WEST": [], "EAST": [], "SOUTH": [], "NORTH": []}
     for port in node.get("ports") or []:
@@ -608,11 +440,25 @@ def _visible_port_map(node, pattern):
     return found
 
 
+def _document_libs(document):
+    import copy
+
+    from schematic.elaborate import load_builtin_libs
+
+    libs = document.get("libs") if isinstance(document, dict) else None
+    if not isinstance(libs, dict) or not libs:
+        libs = load_builtin_libs()
+    else:
+        libs = copy.deepcopy(libs)
+    return libs
+
+
 def document_to_elk(document, options=None):
     options = options or {}
     root = document.get("root") if isinstance(document, dict) else None
     if not isinstance(root, dict):
         raise ValueError("文档缺少 root")
+    libs = _document_libs(document)
     nodes, parent_of = index_nodes(root)
     shown = visible_ids(nodes, parent_of, options)
     if root.get("id") not in shown:
@@ -678,7 +524,6 @@ def document_to_elk(document, options=None):
                 props["module_lib"] = meta["lib"]
             if meta.get("stub"):
                 props["module_stub"] = True
-        elk_node["properties"] = props
         if compound:
             left = max(
                 COMPOUND_PAD_MIN_X,
@@ -704,16 +549,24 @@ def document_to_elk(document, options=None):
             elk_node["children"] = [emit(child) for child in children]
         else:
             lk = logic_kind(node) if shape == "logic" else "comb"
-            width, height = _shape_size(
-                shape, title, kept["WEST"], kept["EAST"], kept["SOUTH"], node.get("expr") or "", lk,
-            )
+            sym = node.get("symbol") if shape == "cell" else None
+            if shape == "cell":
+                from schematic.symbol import place_elk_ports_from_symbol, symbol_size
+
+                if not sym:
+                    raise ValueError("cell 缺少 symbol: %s" % node_id)
+                width, height = symbol_size(sym)
+            else:
+                width, height = _shape_size(
+                    shape, title, kept["WEST"], kept["EAST"], kept["SOUTH"],
+                    node.get("expr") or "", lk,
+                )
             elk_node["width"] = width
             elk_node["height"] = height
             opts = dict(NODE_OPTIONS)
-            if shape == "mux":
-                _place_mux_ports(elk_node["ports"], kept, width, height)
+            if shape == "cell":
+                place_elk_ports_from_symbol(elk_node["ports"], sym, kept)
                 opts["elk.portConstraints"] = "FIXED_POS"
-                opts["elk.spacing.portsSurrounding"] = "[top=18, left=0, bottom=20, right=0]"
                 opts["elk.nodeLabels.placement"] = "[H_CENTER, V_TOP, OUTSIDE]"
                 opts["elk.nodeSize.constraints"] = "[]"
             if shape == "reg":
@@ -721,16 +574,12 @@ def document_to_elk(document, options=None):
                 opts["elk.portAlignment.west"] = "JUSTIFIED"
                 opts["elk.spacing.portPort"] = "18"
                 opts["elk.spacing.portsSurrounding"] = "[top=28, left=0, bottom=16, right=0]"
-            if shape in GATE_SHAPES:
-                _place_gate_ports(elk_node["ports"], shape, kept, width, height)
-                opts["elk.portConstraints"] = "FIXED_POS"
-                opts["elk.nodeLabels.placement"] = "[H_CENTER, V_TOP, OUTSIDE]"
-                opts["elk.nodeSize.constraints"] = "[]"
             if shape == "logic":
                 _place_logic_ports(elk_node["ports"], kept, width, height)
                 opts["elk.portConstraints"] = "FIXED_POS"
                 opts["elk.nodeSize.constraints"] = "[]"
             elk_node["layoutOptions"] = opts
+        elk_node["properties"] = props
         return elk_node
 
     edges = []

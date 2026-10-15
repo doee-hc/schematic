@@ -10,7 +10,7 @@
 
 | 术语 | 含义 | JSON 中的位置 |
 |------|------|----------------|
-| **lib** | 可例化的**符号单元**定义：固定 `shape`、引脚布局规则、可选默认 `ports` 模板 | 内置 lib 文件 + 可选用户 `libs` |
+| **lib** | 可例化的**符号单元**定义：`symbol`（SVG + anchors）、`ports`、说明字段 | 内置 lib 文件 + 可选用户 `libs` |
 | **cell** | 对某个 lib 的一次**例化**，图上不可再展开成「用户 module 内部网表」 | 父节点 `children` 里 `use_lib`；展开后 `meta.kind = "cell"` |
 | **module** | 用户/设计侧的**层次块**定义：边界端口 + 可选内部 `children` / `edges`；可为 **black box**（仅端口） | `modules` 的键与定义体 |
 | **instance** | 对某个 module 的一次**例化** | 父节点 `children` 里 `use`；展开后 `meta.kind = "instance"` |
@@ -18,7 +18,7 @@
 
 **原则**
 
-- **cell** 是绘图最小组件（AND、OR、mux、ICG 等）；符号几何与连线吸附由 lib 名 + `shape` 决定，不应通过复制 module 来「画一个门」。
+- **cell** 是绘图最小组件（AND、OR、mux、ICG 等）；展开后 `shape: cell`，几何与连线吸附来自 lib 的 **`symbol.anchors`**，不应通过复制 module 来「画一个门」。
 - **module** 表达结构复用（adder、寄存器堆、datapath）；例化后是 **instance**，可在 viewer 中按路径 **展开一层 / Go in**。
 - **lib 与 module 是两种命名空间**：`use_lib` 查 `libs`（及内置 lib），`use` 查 `modules`；**同一节点二者互斥**。
 
@@ -58,11 +58,12 @@
 | 字段 | 必填 | 说明 |
 |------|------|------|
 | （键名） | 是 | lib 名，如 `and`、`or2`、`mux2`、`icg` |
-| `shape` | 是 | 与 [schema.md](schema.md) 一致：`and` / `or` / `xor` / `buf` / `icg` / `mux` / `box` / … |
+| `symbol` | **是** | 矢量符号：`viewBox`、`svg`（可用 `__FILL__` / `__STROKE__` 占位符）、`anchors`（端口名 → `tip` + `side`） |
 | `desc` | **是** | 一句话说明该 cell 的功能；展开后在 viewer/SVG 悬停时显示 |
 | `title` | 否 | 默认显示名；省略时用 lib 名 |
 | `swatch` | 否 | 默认配色 |
-| `ports` | 视 shape | 引脚列表；内置 lib 由工具提供默认模板，用户 lib 必须写全；**每个端口必填 `desc`**（一句话引脚功能，悬停显示） |
+| `ports` | **是** | 引脚列表，名称须与 `symbol.anchors` 一致；**每个端口必填 `desc`**（悬停显示） |
+| `badge` | 否 | 例化时可继承的短标签（如 mux 上的 `CLK`） |
 
 **Lib 内规则**
 

@@ -11,7 +11,6 @@
   },
   "libs": {
     "bus_master": {
-      "shape": "box",
       "title": "Master",
       "desc": "AMBA AXI 主端口抽象（系统框图用，非逐信号展开）",
       "swatch": "family:compute",
@@ -31,10 +30,29 @@
           "swatch": "clock:clk",
           "desc": "功能时钟"
         }
-      ]
+      ],
+      "symbol": {
+        "viewBox": "0 0 96.0000 48.0000",
+        "svg": "<rect class=\"swatch-fill\" x=\"0.00\" y=\"0.00\" width=\"96.00\" height=\"48.00\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\"/>",
+        "anchors": {
+          "axi_m": {
+            "tip": [
+              96.0,
+              24.0
+            ],
+            "side": "EAST"
+          },
+          "clk": {
+            "tip": [
+              0.0,
+              24.0
+            ],
+            "side": "WEST"
+          }
+        }
+      }
     },
     "bus_slave": {
-      "shape": "box",
       "title": "Slave",
       "desc": "AMBA AXI 从端口抽象",
       "swatch": "family:io",
@@ -54,10 +72,29 @@
           "swatch": "clock:clk",
           "desc": "功能时钟"
         }
-      ]
+      ],
+      "symbol": {
+        "viewBox": "0 0 96.0000 64.0000",
+        "svg": "<rect class=\"swatch-fill\" x=\"0.00\" y=\"0.00\" width=\"96.00\" height=\"64.00\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\"/>",
+        "anchors": {
+          "axi_s": {
+            "tip": [
+              0.0,
+              28.0
+            ],
+            "side": "WEST"
+          },
+          "clk": {
+            "tip": [
+              0.0,
+              36.0
+            ],
+            "side": "WEST"
+          }
+        }
+      }
     },
     "pad_if": {
-      "shape": "box",
       "title": "Pad",
       "desc": "芯片焊盘 / 封装引脚侧抽象接口块",
       "swatch": "family:io",
@@ -75,7 +112,27 @@
           "label": "PAD",
           "desc": "到封装引脚或 bump 的边界"
         }
-      ]
+      ],
+      "symbol": {
+        "viewBox": "0 0 96.0000 48.0000",
+        "svg": "<rect class=\"swatch-fill\" x=\"0.00\" y=\"0.00\" width=\"96.00\" height=\"48.00\" fill=\"__FILL__\" stroke=\"__STROKE__\" stroke-width=\"1.2\"/>",
+        "anchors": {
+          "core": {
+            "tip": [
+              0.0,
+              24.0
+            ],
+            "side": "WEST"
+          },
+          "pad": {
+            "tip": [
+              96.0,
+              24.0
+            ],
+            "side": "EAST"
+          }
+        }
+      }
     }
   }
 }
