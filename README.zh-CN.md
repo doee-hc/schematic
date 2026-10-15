@@ -2,23 +2,19 @@
 
 [English](README.md)
 
-中立电路图 JSON 的正交布线渲染器。模块、端口与连线组成层次网表，经 [ELK](https://www.eclipse.org/elk/) 布局后绘制为 SVG，并提供可缩放、可高亮通路的本地 Web 查看器。
+用与具体 HDL 无关的 JSON 描述层次网表，输出正交布线的电路原理图。布局由 [ELK](https://www.eclipse.org/elk/) 完成，默认可导出 SVG；同一套数据也可导出原生 [draw.io](https://www.drawio.com/)（`.drawio`），符号几何内嵌在图元中。本地 Web 查看器支持缩放平移、层次过滤与交互式通路追踪。
 
-文档格式不绑定具体硬件语言。[ICL Visual](https://github.com/doee-hc/icl_visual) 是其中一个导出端：把 IEEE 1687 ICL 转成这份 JSON。
+## 快速开始
 
-## 目录
-
-- [效果预览](#效果预览)
-- [Web 界面](#web-界面)
-- [命令行工具](#命令行工具)
-- [文档格式](#文档格式)
-- [环境与启动](#环境与启动)
-- [项目结构](#项目结构)
-- [说明](#说明)
+```bash
+pip install -e .
+schematic draw examples/top.json -o top.svg
+schematic view examples/top.json
+```
 
 ## 效果预览
 
-下图来自 `examples/top.json`：复合 `box`、一个 `mux` 和一个 `reg`，并标了时钟与 scan 配色。
+`examples/top.json`：复合模块、一个 mux 单元和寄存器，并标注时钟与 scan 配色。
 
 <p align="center">
   <img src="docs/images/top.svg" alt="top 电路图" width="480" />
@@ -30,69 +26,40 @@
 schematic draw examples/top.json -o docs/images/top.svg
 ```
 
-## Web 界面
+## Web 查看器
 
 ```bash
 schematic view examples/top.json
 ```
 
-浏览器打开 `http://127.0.0.1:8765`（默认监听地址与端口）。可选 `--host`、`--port`、`--verbose`。
+浏览器打开 `http://127.0.0.1:8765`（默认地址与端口）。可选 `--host`、`--port`、`--verbose`。
 
-启动时可传入 JSON（`schematic view design.json`），也可省略路径后用顶栏 **打开文件** 从本机选择。文件内容会 POST 到本地服务并在内存中替换当前电路图；不解析某种网表语言，也不做磁盘上的会话缓存。
-
-### 功能
+启动时可传入 JSON，或用顶栏 **打开文件** 从本机加载。内容 POST 到本地服务，不会在磁盘上保留会话缓存。
 
 | 功能 | 说明 |
 |------|------|
-| **层次选择** | 勾选要出现在图中的节点。已勾选节点的祖先会保留，以保证路径仍在布局中。 |
-| **只留方框** | 隐藏 `mux`、`reg`、`logic`、`and`、`or`、`xor`、`buf`、`icg`，保留 `box`。 |
-| **Port filter** | Include / Exclude 通配（`*`）。Include 优先于 Exclude。未命中规则的端口保留。`"keep": true` 的端口保留。`mux`、`reg`、`logic` 和门电路上的端口不参与过滤。 |
-| **配色** | 颜色来自文档 `palette`。查看器中的改色会同步到树和 SVG，并写入浏览器 `localStorage`。 |
-| **导出 SVG** | 「Download SVG」下载当前预览，包含查看器里改过的配色。 |
+| **层次选择** | 勾选要出现的节点；祖先保留以保证通路仍在布局中。 |
+| **只留方框** | 隐藏 `cell`、`reg`、`logic`，保留 `box` 外框。 |
+| **端口过滤** | Include / Exclude 通配（`*`），Include 优先；`"keep": true` 的端口始终显示。`cell`、`reg`、`logic` 上的端口不参与过滤。 |
+| **配色** | 文档 `palette` 与查看器覆盖（写入 `localStorage`）。 |
+| **导出** | **Download SVG** 下载当前预览（含查看器改色）。 |
 
-### 页面布局
-
-- **顶栏：** 「打开文件」、 「只留方框」、当前文件名。
-- **工具条（可收起）：** 配色编辑器；Port filter（Include / Exclude 列表与 Add）。
-- **左侧：** 「Draw」、状态提示、层次树。
-- **右侧预览：** 缩放、适应、1:1、全屏、下载、画布。
-
-### 交互
-
-| 操作 | 行为 |
-|------|------|
-| **勾选节点** | 勾选父节点会选中整棵子树；勾选子节点会勾选其祖先。 |
-| **Draw** | 至少勾选一个节点；提交过滤、只留方框、配色与勾选列表。 |
-| **滚轮** | 以光标为中心缩放。 |
-| **拖动** | 平移画布。移动距离很小时视为点击。 |
-| **双指 pinch** | 双指缩放。 |
-| **单击端口** | 高亮该端口所在连通分量，并压暗其余图元。该端口成为跳转起点。状态栏显示边数。 |
-| **单击连线** | 高亮与该边相关的通路闭包，并压暗其余图元。 |
-| **双击端口** / **`[`** | 居中到下一个上游驱动。多个驱动时循环 `(1/N)`。`[` 从当前跳转起点出发。 |
-| **`]`** | 居中到下一个下游负载，同样循环。输出脚的下一级就是负载；输入脚则取这条网的其他扇出。 |
-| **右键端口** | 菜单：上游驱动 (N)、下游负载 (N)。 |
-| **Backspace** | 回到跳转前的端口。 |
-| **Shift+0** | 把当前高亮通路缩放到视口。 |
-| **Esc** | 先关菜单；菜单已关时清除高亮。 |
-| **+ / − / 0** | 放大、缩小、适应窗口（焦点不在输入框时）。 |
-| **F** | 预览区全屏 / 退出。 |
-| **适应 / 1:1** | 适应窗口，或把比例恢复为 100%。 |
-
-重复按 `[` 或 `]` 在同一条网的驱动或扇出之间循环。要点进下一级，先单击刚跳到的端口。
+通路追踪：单击端口或连线高亮连通区域；`[` / `]` 在上游驱动与下游负载间步进；双击端口或右键菜单可跳转。缩放、适应、全屏与 Esc 清除等见状态栏与界面提示。
 
 ### HTTP API
 
 | 方法 | 路径 | 用途 |
 |------|------|------|
 | GET | `/api/document` | 文件名、palette、swatches、层次树 |
-| POST | `/api/draw` | JSON：`include`、`port_include`、`port_exclude`、`boxes_only`、`palette` |
+| POST | `/api/draw` | 请求体：`include`、`port_include`、`port_exclude`、`boxes_only`、`palette` |
 
-## 命令行工具
+## 命令行
 
-**draw** — 写出 SVG。出图选项不改文档本身。
+**draw** — 输出 SVG 或 draw.io（由 `-o` 后缀决定）。出图选项不修改源 JSON。
 
 ```bash
 schematic draw examples/top.json -o top.svg
+schematic draw examples/top.json -o top.drawio
 schematic draw examples/top.json -o top.svg \
   --include top --include top.reg \
   --port-include 'si' --port-exclude 'sel' \
@@ -102,47 +69,42 @@ schematic draw examples/top.json -o top.svg \
 
 | 选项 | 说明 |
 |------|------|
-| `-o`, `--output` | 输出 SVG 路径（必填）。 |
-| `--include` | 要绘制的节点 id，可重复。会补上祖先。省略则绘制全部节点。 |
-| `--port-include` | Include 通配，可重复。 |
-| `--port-exclude` | Exclude 通配，可重复。 |
-| `--boxes-only` | 不画 `mux`、`reg`、`logic`、`and`、`or`、`xor`、`buf`、`icg`。 |
-| `--palette` | 覆盖配色，形式为 `key=#hex`，可重复。 |
+| `-o`, `--output` | 输出路径（`.svg` 或 `.drawio`）。 |
+| `--include` | 要绘制的节点 id，可重复；会补上祖先。 |
+| `--port-include` / `--port-exclude` | 端口通配，可重复。 |
+| `--boxes-only` | 不画 `cell`、`reg`、`logic`。 |
+| `--palette` | 覆盖配色 `key=#hex`，可重复。 |
+| `--drawio-via-svg` | draw.io 经 SVG 转换；默认为原生 mxGraph 导出。 |
 
-**view** — 为一份 JSON 启动查看器。见 [Web 界面](#web-界面)。
+**view** — 启动 Web 查看器（JSON 路径可选）。
 
-**模块库** — 用 `modules` 定义单元、`use` 例化，多 JSON 或 `-f` filelist 合并读入，`-top` 指定顶层（与 VCS 一致）。仅展开：
+**elaborate** — 合并库并将 `use` / `use_lib` 展开为扁平 `root` 树（不做布局）：
 
 ```bash
 schematic elaborate -f examples/adder.f -o build/adder-flat.json
 schematic draw -f examples/adder.f -o adder.svg
 ```
 
-见 [docs/modules.md](docs/modules.md)。
+模块库与 filelist：[docs/modules.md](docs/modules.md)。
 
 ## 文档格式
 
-文件是一个对象：可选的 `palette`、可选的 `swatches`，以及必填的 `root`。字段说明见 [docs/schema.md](docs/schema.md)。
+单个 JSON 对象：可选 `palette`、可选 `swatches`、必填 `root`。完整说明见 [docs/schema.md](docs/schema.md)。
 
-| `shape` | 图面 |
+| `shape` | 含义 |
 |---------|------|
-| `box` | 矩形。有子节点时为复合框，端口画在边框上的五边形里。 |
-| `mux` | 梯形。`badge` 为可选短标签（`CLK`、`DATA`、`1H`）。标题在图形外侧。 |
-| `reg` | 带时钟缺口的矩形。左侧端口按固定顺序排列。 |
-| `logic` | 圆角矩形。`expr` 在框内折行显示。 |
-| `and` | D 形。至少两个西侧输入、一个东侧输出。西侧书写顺序即从上到下。 |
-| `or` | 盾形。引脚规则与 `and` 相同。 |
-| `xor` | 盾形，输入侧再加一条弧。引脚规则与 `and` 相同。 |
-| `buf` | 朝右的三角。一个西侧输入、一个东侧输出。输出 `bubble` 即反相器。 |
-| `icg` | 方块。`en` 在西侧，`clk` 在南侧，可选 `te` 在西侧，一个东侧输出。 |
+| `box` | 矩形模块；有 `children` 时为复合框，边框端口为五边形。 |
+| `reg` | 带时钟缺口的寄存器。 |
+| `logic` | 圆角组合或时序块（`kind`：`comb` 或 `seq`）；`expr` 在框内折行。 |
+| `cell` | 库符号：矢量 `symbol`（`viewBox`、`svg`、`anchors`）与端口。门、mux、ICG 等在源 JSON 里用 **`use_lib`** 例化，不要 inline 写门形。 |
 
-连线写在两端的公共父节点上。`from` 与 `to` 为 `节点id.端口名`。`invert` 为真时，箭头前画反相圆。端口上的 `bubble` 则把气泡画在该引脚上。示例见 [examples/gates.json](examples/gates.json)。
+内置单元见 [schematic/lib/gates.json](schematic/lib/gates.json)。可在文档 `libs` 中自定义（示例 [examples/lib/acme_cells.json](examples/lib/acme_cells.json)）。
 
-## 环境与启动
+连线写在公共父节点：`from` / `to` 为 `节点id.端口名`。连线 `invert` 在箭头前画反相圆；端口 `bubble` 在引脚处反相。
 
-**依赖**
+## 环境
 
-- Python 3.7+（3.9+ 推荐）
+- Python 3.7+（推荐 3.9+）
 - [Node.js](https://nodejs.org/)（随包提供的 ELK 布局）
 
 ```bash
@@ -150,28 +112,20 @@ pip install -e .
 python -m pytest tests/ -q
 ```
 
-`icl_visual` 以子模块形式引用本仓库。完整克隆该项目后，`pip install -r requirements.txt` 会以可编辑方式安装本包。
+可选 draw.io 转换依赖（Python 3.11+）：`pip install -e ".[drawio]"`。
 
-## 项目结构
+## 仓库结构
 
 | 路径 | 说明 |
 |------|------|
-| `schematic/graph.py` | 文档与出图选项 → ELK 图 |
-| `schematic/svg.py` | 布局结果 → SVG |
-| `schematic/engine.py` 与 `schematic/vendor/elkjs/` | 经 Node.js 调用 ELK |
-| `schematic/server.py` 与 `schematic/static/` | 查看器 |
-| `schematic/cli.py` | `schematic draw` 与 `schematic view` |
-| `docs/schema.md` | 文档字段说明 |
-| `examples/top.json` | 预览用网表 |
-| `examples/adder.json` | 4 位行波进位加法器 |
-| `examples/multiplier.json` | 无符号 4×4 阵列乘法器 |
-| `examples/shifter.json` | 4 位逻辑桶形移位器 |
-| `examples/comparator.json` | 无符号 4 位比较器 |
-| `examples/accumulator.json` | 带门控时钟的 4 位累加器 |
-| `docs/images/` | README 配图 |
+| `schematic/` | 布局、SVG / draw.io 渲染、CLI、查看器 |
+| `schematic/lib/gates.json` | 默认符号库 |
+| `docs/schema.md` | JSON 字段说明 |
+| `docs/modules.md` | 层次模块与 filelist |
+| `examples/` | 示例设计（datapath、加法器、Tessent OCC 等） |
 
 ## 说明
 
-配色键是任意字符串。`palette` 把键映射到 `#hex`。键不在表中时，渲染器使用该 `shape` 的默认填充色。
+`palette` 将任意字符串键映射为 `#hex`；缺省键使用该 `shape` 的默认色。
 
-连线未写 `swatch` 时，若两端端口的键以 `clock:`、`reset:` 或 `port:` 开头，则按此顺序取其中一个作为连线颜色。
+连线未写 `swatch` 时，若端口的键以 `clock:`、`reset:` 或 `port:` 开头，则按此顺序取其中一个作为连线颜色。
