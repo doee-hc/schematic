@@ -14,16 +14,18 @@ schematic view examples/top.json
 
 ## Preview
 
-`examples/top.json`: a compound module, a mux cell, and a register, with clock and scan styling.
+From [examples/tessent_occ/](examples/tessent_occ/): a Tessent on-chip clock controller — nested modules, lib `cell` symbols (gates, mux, clock gating), registers, and clock / scan / IJTAG net styling after ELK layout.
 
 <p align="center">
-  <img src="docs/images/top.svg" alt="top schematic" width="480" />
+  <img src="docs/images/tessent_occ.svg" alt="Tessent OCC schematic" width="720" />
 </p>
 
 Regenerate:
 
 ```bash
-schematic draw examples/top.json -o docs/images/top.svg
+schematic draw -f examples/tessent_occ/occ.f \
+  -top processor_core_rtl2_tessent_occ \
+  -o docs/images/tessent_occ.svg
 ```
 
 ## Web viewer

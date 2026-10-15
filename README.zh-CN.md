@@ -14,16 +14,18 @@ schematic view examples/top.json
 
 ## 效果预览
 
-`examples/top.json`：复合模块、一个 mux 单元和寄存器，并标注时钟与 scan 配色。
+来自 [examples/tessent_occ/](examples/tessent_occ/)：Tessent 片上时钟控制器（OCC）——层次子模块、库 `cell` 符号（门、mux、时钟门控）、寄存器，以及经 ELK 布局后的 clock / scan / IJTAG 连线配色。
 
 <p align="center">
-  <img src="docs/images/top.svg" alt="top 电路图" width="480" />
+  <img src="docs/images/tessent_occ.svg" alt="Tessent OCC 电路图" width="720" />
 </p>
 
 重新生成配图：
 
 ```bash
-schematic draw examples/top.json -o docs/images/top.svg
+schematic draw -f examples/tessent_occ/occ.f \
+  -top processor_core_rtl2_tessent_occ \
+  -o docs/images/tessent_occ.svg
 ```
 
 ## Web 查看器
