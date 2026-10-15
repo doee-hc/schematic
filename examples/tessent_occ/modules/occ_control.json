@@ -1,0 +1,232 @@
+{
+  "modules": {
+    "processor_core_rtl2_tessent_occ_control": {
+      "title": "occ_control",
+      "shape": "box",
+      "swatch": "family:ctrl",
+      "note": "TDR + shift/capture FSM, clock enables, scan bypass",
+      "ports": [
+        {"name": "fast_clock", "side": "west", "dir": "in", "swatch": "clock:clk"},
+        {"name": "slow_clock", "side": "west", "dir": "in", "swatch": "clock:clk"},
+        {"name": "bypass_clock", "side": "west", "dir": "in", "swatch": "clock:clk", "label": "clock_out"},
+        {"name": "scan_en", "side": "west", "dir": "in", "swatch": "port:scan"},
+        {"name": "shift_only_mode", "side": "west", "dir": "in", "swatch": "port:scan"},
+        {"name": "ijtag_tck", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_reset", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_sel", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_ce", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_se", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_ue", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_si", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_so", "side": "east", "dir": "out", "swatch": "port:ijtag"},
+        {"name": "inject_tck", "side": "east", "dir": "out", "swatch": "port:ijtag"},
+        {"name": "slow_clock_en", "side": "east", "dir": "out", "swatch": "clock:clk"},
+        {"name": "clock_mux_select", "side": "east", "dir": "out"},
+        {"name": "fast_clock_en", "side": "east", "dir": "out", "swatch": "clock:clk"},
+        {"name": "scan_in", "side": "west", "dir": "in", "swatch": "port:scan"},
+        {"name": "scan_out", "side": "east", "dir": "out", "swatch": "port:scan"}
+      ],
+      "edges": [
+        {"from": "slow_clock", "to": "se_slow.clk", "swatch": "clock:clk"},
+        {"from": "scan_en", "to": "se_slow.se", "swatch": "port:scan"},
+        {"from": "tdr.test_mode", "to": "se_slow.tm"},
+        {"from": "se_slow.q", "to": "sync.d"},
+        {"from": "fast_clock", "to": "sync.clk", "swatch": "clock:clk"},
+        {"from": "scan_en", "to": "sync_r.scan_en", "swatch": "port:scan"},
+        {"from": "tdr.test_mode", "to": "sync_r.test_mode"},
+        {"from": "sync_r.y", "to": "sync.r", "swatch": "port:scan"},
+        {"from": "sync.q", "to": "sr_clk_en.sync"},
+        {"from": "tdr.test_mode", "to": "sr_clk_en.test_mode"},
+        {"from": "shift_reg.some_ones_left", "to": "sr_clk_en.sr_en"},
+        {"from": "tdr.active_upstream_parent_occ", "to": "sr_clk_en.parent"},
+        {"from": "sr_clk_en.y", "to": "cgc_sr.en"},
+        {"from": "sr_clk_en.y", "to": "cgc_sr.te"},
+        {"from": "fast_clock", "to": "cgc_sr.clk", "swatch": "clock:clk"},
+        {"from": "cgc_sr.gck", "to": "sr_mux.a0", "swatch": "clock:clk"},
+        {"from": "slow_clock", "to": "sr_mux.a1", "swatch": "clock:clk"},
+        {"from": "scan_en", "to": "sr_mux_sel.scan_en", "swatch": "port:scan"},
+        {"from": "tdr.fast_capture_mode", "to": "sr_mux_sel.fast_cap"},
+        {"from": "sr_mux_sel.y", "to": "sr_mux.s0"},
+        {"from": "sr_mux.y", "to": "shift_reg.clk", "swatch": "clock:clk"},
+        {"from": "scan_en", "to": "shift_reg.scan_en", "swatch": "port:scan"},
+        {"from": "tdr.capture_cycle_width", "to": "shift_reg.capture_cycle_width"},
+        {"from": "scan_in", "to": "shift_reg.scan_in", "swatch": "port:scan"},
+        {"from": "bypass_clock", "to": "bypass_ff.clk", "swatch": "clock:clk"},
+        {"from": "scan_in", "to": "bypass_d.a", "swatch": "port:scan"},
+        {"from": "scan_en", "to": "bypass_d.b", "swatch": "port:scan"},
+        {"from": "bypass_d.y", "to": "bypass_ff.d", "swatch": "port:scan"},
+        {"from": "tdr.test_mode", "to": "so_d_mux.sel"},
+        {"from": "bypass_ff.q", "to": "so_d_mux.a", "swatch": "port:scan"},
+        {"from": "shift_reg.scan_out", "to": "so_d_mux.b", "swatch": "port:scan"},
+        {"from": "so_d_mux.y", "to": "so_gate.a", "swatch": "port:scan"},
+        {"from": "scan_en", "to": "so_gate.b", "swatch": "port:scan"},
+        {"from": "bypass_clock", "to": "so_out.clk", "swatch": "clock:clk"},
+        {"from": "so_gate.y", "to": "so_out.d", "swatch": "port:scan"},
+        {"from": "so_out.q", "to": "scan_out", "swatch": "port:scan"},
+        {"from": "ijtag_tck", "to": "tdr.ijtag_tck", "swatch": "port:ijtag"},
+        {"from": "ijtag_reset", "to": "tdr.ijtag_reset", "swatch": "port:ijtag"},
+        {"from": "ijtag_sel", "to": "tdr.ijtag_sel", "swatch": "port:ijtag"},
+        {"from": "ijtag_ce", "to": "tdr.ijtag_ce", "swatch": "port:ijtag"},
+        {"from": "ijtag_se", "to": "tdr.ijtag_se", "swatch": "port:ijtag"},
+        {"from": "ijtag_ue", "to": "tdr.ijtag_ue", "swatch": "port:ijtag"},
+        {"from": "ijtag_si", "to": "tdr.ijtag_si", "swatch": "port:ijtag"},
+        {"from": "tdr.ijtag_so", "to": "ijtag_so", "swatch": "port:ijtag"},
+        {"from": "tdr.inject_tck", "to": "inject_tck", "swatch": "port:ijtag"},
+        {"from": "shift_reg.scan_out", "to": "fast_en.sr_out", "swatch": "port:scan"},
+        {"from": "tdr.fast_capture_mode", "to": "fast_en.fast_cap"},
+        {"from": "sync.q", "to": "fast_en.sync"},
+        {"from": "tdr.active_upstream_parent_occ", "to": "fast_en.parent"},
+        {"from": "tdr.test_mode", "to": "fast_en.test_mode"},
+        {"from": "fast_en.y", "to": "fast_clock_en", "swatch": "clock:clk"},
+        {"from": "shift_reg.scan_out", "to": "slow_en.sr_out", "swatch": "port:scan"},
+        {"from": "tdr.fast_capture_mode", "to": "slow_en.fast_cap"},
+        {"from": "scan_en", "to": "slow_en.scan_en", "swatch": "port:scan"},
+        {"from": "tdr.test_mode", "to": "slow_en.test_mode"},
+        {"from": "tdr.inject_tck", "to": "slow_en.inject", "swatch": "port:ijtag"},
+        {"from": "shift_only_mode", "to": "slow_en.shift_only", "swatch": "port:scan"},
+        {"from": "slow_en.y", "to": "slow_clock_en", "swatch": "clock:clk"},
+        {"from": "scan_en", "to": "mux_sel.scan_en", "swatch": "port:scan"},
+        {"from": "tdr.fast_capture_mode", "to": "mux_sel.fast_cap"},
+        {"from": "tdr.test_mode", "to": "mux_sel.test_mode"},
+        {"from": "tdr.inject_tck", "to": "mux_sel.inject", "swatch": "port:ijtag"},
+        {"from": "shift_only_mode", "to": "mux_sel.shift_only", "swatch": "port:scan"},
+        {"from": "mux_sel.y", "to": "clock_mux_select"}
+      ],
+      "children": [
+        {
+          "id": "se_slow",
+          "title": "SE_SLOW_inv",
+          "shape": "reg",
+          "note": "negedge slow_clock; ~scan_en in test_mode",
+          "ports": [
+            {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+            {"name": "se", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "tm", "side": "west", "dir": "in"},
+            {"name": "q", "side": "east", "dir": "out"}
+          ]
+        },
+        {
+          "id": "sync_r",
+          "title": "sync_R",
+          "shape": "logic",
+          "expr": "scan_en | ~test_mode",
+          "ports": [
+            {"name": "scan_en", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "test_mode", "side": "west", "dir": "in"},
+            {"name": "y", "side": "east", "dir": "out", "swatch": "port:scan"}
+          ]
+        },
+        {"id": "sync", "use_lib": "sync_rst", "title": "ltest_sync"},
+        {
+          "id": "sr_clk_en",
+          "title": "SHIFT_REG_CLK_en",
+          "shape": "logic",
+          "expr": "test_mode & ShiftReg_EN & (sync|parent)",
+          "ports": [
+            {"name": "test_mode", "side": "west", "dir": "in"},
+            {"name": "sr_en", "side": "west", "dir": "in"},
+            {"name": "sync", "side": "west", "dir": "in"},
+            {"name": "parent", "side": "west", "dir": "in"},
+            {"name": "y", "side": "east", "dir": "out"}
+          ]
+        },
+        {"id": "cgc_sr", "use_lib": "cgand", "title": "cgc_SHIFT_REG_CLK"},
+        {"id": "sr_mux", "use_lib": "clk_mux2", "title": "SHIFT_REG_CLK_mux"},
+        {
+          "id": "sr_mux_sel",
+          "title": "sr_mux_S0",
+          "shape": "logic",
+          "expr": "scan_en | ~fast_capture_mode",
+          "ports": [
+            {"name": "scan_en", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "fast_cap", "side": "west", "dir": "in"},
+            {"name": "y", "side": "east", "dir": "out"}
+          ]
+        },
+        {"id": "shift_reg", "use": "processor_core_rtl2_tessent_occ_shift_reg", "title": "ShiftReg"},
+        {
+          "id": "bypass_ff",
+          "title": "BYPASS_SHIFT_FF",
+          "shape": "reg",
+          "ports": [
+            {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+            {"name": "d", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "q", "side": "east", "dir": "out", "swatch": "port:scan"}
+          ]
+        },
+        {"id": "bypass_d", "use_lib": "and2", "title": "scan_in&en", "swatch": "gate"},
+        {
+          "id": "so_d_mux",
+          "title": "SCAN_OUT_d",
+          "desc": "扫描链输出数据 mux：bypass 与 shift 两路择一",
+          "shape": "mux",
+          "badge": "SO",
+          "swatch": "port:scan",
+          "note": "sel=test_mode 时选 bypass，否则选 shift",
+          "ports": [
+            {"name": "a", "side": "west", "dir": "in", "label": "bypass", "swatch": "port:scan", "desc": "旁路移位寄存器输出"},
+            {"name": "b", "side": "west", "dir": "in", "label": "shift", "swatch": "port:scan", "desc": "capture shift 寄存器 scan_out"},
+            {"name": "sel", "side": "south", "dir": "in", "desc": "选择 0=bypass / 1=shift"},
+            {"name": "y", "side": "east", "dir": "out", "swatch": "port:scan", "desc": "mux 后的 SCAN_OUT_d"}
+          ]
+        },
+        {"id": "so_gate", "use_lib": "and2", "title": "so&en", "swatch": "gate"},
+        {
+          "id": "so_out",
+          "title": "scan_out",
+          "shape": "reg",
+          "note": "negedge bypass_clock",
+          "ports": [
+            {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+            {"name": "d", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "q", "side": "east", "dir": "out", "swatch": "port:scan"}
+          ]
+        },
+        {"id": "tdr", "use": "processor_core_rtl2_tessent_occ_tdr", "title": "occ_tdr"},
+        {
+          "id": "fast_en",
+          "title": "fast_clock_en",
+          "shape": "logic",
+          "expr": "(sr_out&fast_cap&(sync|parent))|~test_mode",
+          "ports": [
+            {"name": "sr_out", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "fast_cap", "side": "west", "dir": "in"},
+            {"name": "sync", "side": "west", "dir": "in"},
+            {"name": "parent", "side": "west", "dir": "in"},
+            {"name": "test_mode", "side": "west", "dir": "in"},
+            {"name": "y", "side": "east", "dir": "out", "swatch": "clock:clk"}
+          ]
+        },
+        {
+          "id": "slow_en",
+          "title": "slow_clock_en",
+          "shape": "logic",
+          "expr": "(((sr&~fast_cap)|scan_en)&test_mode)|inject|(shift_only&scan_en)",
+          "ports": [
+            {"name": "sr_out", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "fast_cap", "side": "west", "dir": "in"},
+            {"name": "scan_en", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "test_mode", "side": "west", "dir": "in"},
+            {"name": "inject", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "shift_only", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "y", "side": "east", "dir": "out", "swatch": "clock:clk"}
+          ]
+        },
+        {
+          "id": "mux_sel",
+          "title": "clock_mux_select",
+          "shape": "logic",
+          "expr": "((scan_en|~fast_cap)&test_mode)|inject|(shift_only&scan_en)",
+          "ports": [
+            {"name": "scan_en", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "fast_cap", "side": "west", "dir": "in"},
+            {"name": "test_mode", "side": "west", "dir": "in"},
+            {"name": "inject", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "shift_only", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "y", "side": "east", "dir": "out"}
+          ]
+        }
+      ]
+    }
+  }
+}

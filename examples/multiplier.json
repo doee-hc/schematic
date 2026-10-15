@@ -1,0 +1,2196 @@
+{
+  "palette": {
+    "family:top": "#F4F6F8",
+    "family:cell": "#EEF2F6",
+    "gate": "#E7F0FB"
+  },
+  "swatches": [
+    {
+      "key": "family:top",
+      "label": "Top",
+      "group": "Modules"
+    },
+    {
+      "key": "family:cell",
+      "label": "Cell",
+      "group": "Modules"
+    },
+    {
+      "key": "gate",
+      "label": "Gate",
+      "group": "Gates"
+    }
+  ],
+  "root": {
+    "id": "top",
+    "title": "mul4",
+    "shape": "box",
+    "swatch": "family:top",
+    "ports": [
+      {
+        "name": "a0",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "a1",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "a2",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "a3",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b0",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b1",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b2",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b3",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "p0",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "p1",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "p2",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "p3",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "p4",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "p5",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "p6",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "p7",
+        "side": "east",
+        "dir": "out"
+      }
+    ],
+    "edges": [
+      {
+        "from": "top.a0",
+        "to": "top.pp.a0"
+      },
+      {
+        "from": "top.b0",
+        "to": "top.pp.b0"
+      },
+      {
+        "from": "top.a1",
+        "to": "top.pp.a1"
+      },
+      {
+        "from": "top.b1",
+        "to": "top.pp.b1"
+      },
+      {
+        "from": "top.a2",
+        "to": "top.pp.a2"
+      },
+      {
+        "from": "top.b2",
+        "to": "top.pp.b2"
+      },
+      {
+        "from": "top.a3",
+        "to": "top.pp.a3"
+      },
+      {
+        "from": "top.b3",
+        "to": "top.pp.b3"
+      },
+      {
+        "from": "top.pp.y00",
+        "to": "top.p0"
+      },
+      {
+        "from": "top.pp.y01",
+        "to": "top.add1.x1"
+      },
+      {
+        "from": "top.pp.y02",
+        "to": "top.add1.x2"
+      },
+      {
+        "from": "top.pp.y03",
+        "to": "top.add1.x3"
+      },
+      {
+        "from": "top.pp.y10",
+        "to": "top.add1.y0"
+      },
+      {
+        "from": "top.pp.y11",
+        "to": "top.add1.y1"
+      },
+      {
+        "from": "top.pp.y12",
+        "to": "top.add1.y2"
+      },
+      {
+        "from": "top.pp.y13",
+        "to": "top.add1.y3"
+      },
+      {
+        "from": "top.add1.p1",
+        "to": "top.p1"
+      },
+      {
+        "from": "top.add1.s2",
+        "to": "top.add2.u2"
+      },
+      {
+        "from": "top.add1.s3",
+        "to": "top.add2.u3"
+      },
+      {
+        "from": "top.add1.s4",
+        "to": "top.add2.u4"
+      },
+      {
+        "from": "top.add1.c4",
+        "to": "top.add2.c4"
+      },
+      {
+        "from": "top.pp.y20",
+        "to": "top.add2.z0"
+      },
+      {
+        "from": "top.pp.y21",
+        "to": "top.add2.z1"
+      },
+      {
+        "from": "top.pp.y22",
+        "to": "top.add2.z2"
+      },
+      {
+        "from": "top.pp.y23",
+        "to": "top.add2.z3"
+      },
+      {
+        "from": "top.add2.p2",
+        "to": "top.p2"
+      },
+      {
+        "from": "top.add2.s6",
+        "to": "top.add3.v6"
+      },
+      {
+        "from": "top.add2.s7",
+        "to": "top.add3.v7"
+      },
+      {
+        "from": "top.add2.s8",
+        "to": "top.add3.v8"
+      },
+      {
+        "from": "top.add2.c8",
+        "to": "top.add3.c8"
+      },
+      {
+        "from": "top.pp.y30",
+        "to": "top.add3.w0"
+      },
+      {
+        "from": "top.pp.y31",
+        "to": "top.add3.w1"
+      },
+      {
+        "from": "top.pp.y32",
+        "to": "top.add3.w2"
+      },
+      {
+        "from": "top.pp.y33",
+        "to": "top.add3.w3"
+      },
+      {
+        "from": "top.add3.p3",
+        "to": "top.p3"
+      },
+      {
+        "from": "top.add3.p4",
+        "to": "top.p4"
+      },
+      {
+        "from": "top.add3.p5",
+        "to": "top.p5"
+      },
+      {
+        "from": "top.add3.p6",
+        "to": "top.p6"
+      },
+      {
+        "from": "top.add3.p7",
+        "to": "top.p7"
+      }
+    ],
+    "children": [
+      {
+        "id": "top.pp",
+        "title": "pp",
+        "shape": "box",
+        "swatch": "family:cell",
+        "note": "partial products a[x] & b[y]",
+        "ports": [
+          {
+            "name": "a0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "a1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "a2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "a3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "y00",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y01",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y02",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y03",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y10",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y11",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y12",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y13",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y20",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y21",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y22",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y23",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y30",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y31",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y32",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y33",
+            "side": "east",
+            "dir": "out"
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.pp.a0",
+            "to": "top.pp.r0.a0"
+          },
+          {
+            "from": "top.pp.r0.y0",
+            "to": "top.pp.y00"
+          },
+          {
+            "from": "top.pp.a1",
+            "to": "top.pp.r0.a1"
+          },
+          {
+            "from": "top.pp.r0.y1",
+            "to": "top.pp.y01"
+          },
+          {
+            "from": "top.pp.a2",
+            "to": "top.pp.r0.a2"
+          },
+          {
+            "from": "top.pp.r0.y2",
+            "to": "top.pp.y02"
+          },
+          {
+            "from": "top.pp.a3",
+            "to": "top.pp.r0.a3"
+          },
+          {
+            "from": "top.pp.r0.y3",
+            "to": "top.pp.y03"
+          },
+          {
+            "from": "top.pp.b0",
+            "to": "top.pp.r0.b"
+          },
+          {
+            "from": "top.pp.a0",
+            "to": "top.pp.r1.a0"
+          },
+          {
+            "from": "top.pp.r1.y0",
+            "to": "top.pp.y10"
+          },
+          {
+            "from": "top.pp.a1",
+            "to": "top.pp.r1.a1"
+          },
+          {
+            "from": "top.pp.r1.y1",
+            "to": "top.pp.y11"
+          },
+          {
+            "from": "top.pp.a2",
+            "to": "top.pp.r1.a2"
+          },
+          {
+            "from": "top.pp.r1.y2",
+            "to": "top.pp.y12"
+          },
+          {
+            "from": "top.pp.a3",
+            "to": "top.pp.r1.a3"
+          },
+          {
+            "from": "top.pp.r1.y3",
+            "to": "top.pp.y13"
+          },
+          {
+            "from": "top.pp.b1",
+            "to": "top.pp.r1.b"
+          },
+          {
+            "from": "top.pp.a0",
+            "to": "top.pp.r2.a0"
+          },
+          {
+            "from": "top.pp.r2.y0",
+            "to": "top.pp.y20"
+          },
+          {
+            "from": "top.pp.a1",
+            "to": "top.pp.r2.a1"
+          },
+          {
+            "from": "top.pp.r2.y1",
+            "to": "top.pp.y21"
+          },
+          {
+            "from": "top.pp.a2",
+            "to": "top.pp.r2.a2"
+          },
+          {
+            "from": "top.pp.r2.y2",
+            "to": "top.pp.y22"
+          },
+          {
+            "from": "top.pp.a3",
+            "to": "top.pp.r2.a3"
+          },
+          {
+            "from": "top.pp.r2.y3",
+            "to": "top.pp.y23"
+          },
+          {
+            "from": "top.pp.b2",
+            "to": "top.pp.r2.b"
+          },
+          {
+            "from": "top.pp.a0",
+            "to": "top.pp.r3.a0"
+          },
+          {
+            "from": "top.pp.r3.y0",
+            "to": "top.pp.y30"
+          },
+          {
+            "from": "top.pp.a1",
+            "to": "top.pp.r3.a1"
+          },
+          {
+            "from": "top.pp.r3.y1",
+            "to": "top.pp.y31"
+          },
+          {
+            "from": "top.pp.a2",
+            "to": "top.pp.r3.a2"
+          },
+          {
+            "from": "top.pp.r3.y2",
+            "to": "top.pp.y32"
+          },
+          {
+            "from": "top.pp.a3",
+            "to": "top.pp.r3.a3"
+          },
+          {
+            "from": "top.pp.r3.y3",
+            "to": "top.pp.y33"
+          },
+          {
+            "from": "top.pp.b3",
+            "to": "top.pp.r3.b"
+          }
+        ],
+        "children": [
+          {
+            "id": "top.pp.r0",
+            "title": "b0",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "partial products a[3:0] & b",
+            "ports": [
+              {
+                "name": "a0",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a1",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a2",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a3",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y0",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y1",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y2",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y3",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "edges": [
+              {
+                "from": "top.pp.r0.a0",
+                "to": "top.pp.r0.g0.a"
+              },
+              {
+                "from": "top.pp.r0.b",
+                "to": "top.pp.r0.g0.b"
+              },
+              {
+                "from": "top.pp.r0.g0.y",
+                "to": "top.pp.r0.y0"
+              },
+              {
+                "from": "top.pp.r0.a1",
+                "to": "top.pp.r0.g1.a"
+              },
+              {
+                "from": "top.pp.r0.b",
+                "to": "top.pp.r0.g1.b"
+              },
+              {
+                "from": "top.pp.r0.g1.y",
+                "to": "top.pp.r0.y1"
+              },
+              {
+                "from": "top.pp.r0.a2",
+                "to": "top.pp.r0.g2.a"
+              },
+              {
+                "from": "top.pp.r0.b",
+                "to": "top.pp.r0.g2.b"
+              },
+              {
+                "from": "top.pp.r0.g2.y",
+                "to": "top.pp.r0.y2"
+              },
+              {
+                "from": "top.pp.r0.a3",
+                "to": "top.pp.r0.g3.a"
+              },
+              {
+                "from": "top.pp.r0.b",
+                "to": "top.pp.r0.g3.b"
+              },
+              {
+                "from": "top.pp.r0.g3.y",
+                "to": "top.pp.r0.y3"
+              }
+            ],
+            "children": [
+              {
+                "id": "top.pp.r0.g0",
+                "title": "a0",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r0.g1",
+                "title": "a1",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r0.g2",
+                "title": "a2",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r0.g3",
+                "title": "a3",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "top.pp.r1",
+            "title": "b1",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "partial products a[3:0] & b",
+            "ports": [
+              {
+                "name": "a0",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a1",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a2",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a3",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y0",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y1",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y2",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y3",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "edges": [
+              {
+                "from": "top.pp.r1.a0",
+                "to": "top.pp.r1.g0.a"
+              },
+              {
+                "from": "top.pp.r1.b",
+                "to": "top.pp.r1.g0.b"
+              },
+              {
+                "from": "top.pp.r1.g0.y",
+                "to": "top.pp.r1.y0"
+              },
+              {
+                "from": "top.pp.r1.a1",
+                "to": "top.pp.r1.g1.a"
+              },
+              {
+                "from": "top.pp.r1.b",
+                "to": "top.pp.r1.g1.b"
+              },
+              {
+                "from": "top.pp.r1.g1.y",
+                "to": "top.pp.r1.y1"
+              },
+              {
+                "from": "top.pp.r1.a2",
+                "to": "top.pp.r1.g2.a"
+              },
+              {
+                "from": "top.pp.r1.b",
+                "to": "top.pp.r1.g2.b"
+              },
+              {
+                "from": "top.pp.r1.g2.y",
+                "to": "top.pp.r1.y2"
+              },
+              {
+                "from": "top.pp.r1.a3",
+                "to": "top.pp.r1.g3.a"
+              },
+              {
+                "from": "top.pp.r1.b",
+                "to": "top.pp.r1.g3.b"
+              },
+              {
+                "from": "top.pp.r1.g3.y",
+                "to": "top.pp.r1.y3"
+              }
+            ],
+            "children": [
+              {
+                "id": "top.pp.r1.g0",
+                "title": "a0",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r1.g1",
+                "title": "a1",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r1.g2",
+                "title": "a2",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r1.g3",
+                "title": "a3",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "top.pp.r2",
+            "title": "b2",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "partial products a[3:0] & b",
+            "ports": [
+              {
+                "name": "a0",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a1",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a2",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a3",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y0",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y1",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y2",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y3",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "edges": [
+              {
+                "from": "top.pp.r2.a0",
+                "to": "top.pp.r2.g0.a"
+              },
+              {
+                "from": "top.pp.r2.b",
+                "to": "top.pp.r2.g0.b"
+              },
+              {
+                "from": "top.pp.r2.g0.y",
+                "to": "top.pp.r2.y0"
+              },
+              {
+                "from": "top.pp.r2.a1",
+                "to": "top.pp.r2.g1.a"
+              },
+              {
+                "from": "top.pp.r2.b",
+                "to": "top.pp.r2.g1.b"
+              },
+              {
+                "from": "top.pp.r2.g1.y",
+                "to": "top.pp.r2.y1"
+              },
+              {
+                "from": "top.pp.r2.a2",
+                "to": "top.pp.r2.g2.a"
+              },
+              {
+                "from": "top.pp.r2.b",
+                "to": "top.pp.r2.g2.b"
+              },
+              {
+                "from": "top.pp.r2.g2.y",
+                "to": "top.pp.r2.y2"
+              },
+              {
+                "from": "top.pp.r2.a3",
+                "to": "top.pp.r2.g3.a"
+              },
+              {
+                "from": "top.pp.r2.b",
+                "to": "top.pp.r2.g3.b"
+              },
+              {
+                "from": "top.pp.r2.g3.y",
+                "to": "top.pp.r2.y3"
+              }
+            ],
+            "children": [
+              {
+                "id": "top.pp.r2.g0",
+                "title": "a0",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r2.g1",
+                "title": "a1",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r2.g2",
+                "title": "a2",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r2.g3",
+                "title": "a3",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "top.pp.r3",
+            "title": "b3",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "partial products a[3:0] & b",
+            "ports": [
+              {
+                "name": "a0",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a1",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a2",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "a3",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y0",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y1",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y2",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "y3",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "edges": [
+              {
+                "from": "top.pp.r3.a0",
+                "to": "top.pp.r3.g0.a"
+              },
+              {
+                "from": "top.pp.r3.b",
+                "to": "top.pp.r3.g0.b"
+              },
+              {
+                "from": "top.pp.r3.g0.y",
+                "to": "top.pp.r3.y0"
+              },
+              {
+                "from": "top.pp.r3.a1",
+                "to": "top.pp.r3.g1.a"
+              },
+              {
+                "from": "top.pp.r3.b",
+                "to": "top.pp.r3.g1.b"
+              },
+              {
+                "from": "top.pp.r3.g1.y",
+                "to": "top.pp.r3.y1"
+              },
+              {
+                "from": "top.pp.r3.a2",
+                "to": "top.pp.r3.g2.a"
+              },
+              {
+                "from": "top.pp.r3.b",
+                "to": "top.pp.r3.g2.b"
+              },
+              {
+                "from": "top.pp.r3.g2.y",
+                "to": "top.pp.r3.y2"
+              },
+              {
+                "from": "top.pp.r3.a3",
+                "to": "top.pp.r3.g3.a"
+              },
+              {
+                "from": "top.pp.r3.b",
+                "to": "top.pp.r3.g3.b"
+              },
+              {
+                "from": "top.pp.r3.g3.y",
+                "to": "top.pp.r3.y3"
+              }
+            ],
+            "children": [
+              {
+                "id": "top.pp.r3.g0",
+                "title": "a0",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r3.g1",
+                "title": "a1",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r3.g2",
+                "title": "a2",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.pp.r3.g3",
+                "title": "a3",
+                "shape": "and",
+                "swatch": "gate",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "bubble": false
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "top.add1",
+        "title": "add1",
+        "shape": "box",
+        "swatch": "family:cell",
+        "ports": [
+          {
+            "name": "x1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "x2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "x3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "y0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "y1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "y2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "y3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "p1",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "s2",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "s3",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "s4",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "c4",
+            "side": "east",
+            "dir": "out"
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.add1.x1",
+            "to": "top.add1.h0.a"
+          },
+          {
+            "from": "top.add1.y0",
+            "to": "top.add1.h0.b"
+          },
+          {
+            "from": "top.add1.h0.s",
+            "to": "top.add1.p1"
+          },
+          {
+            "from": "top.add1.x2",
+            "to": "top.add1.f1.a"
+          },
+          {
+            "from": "top.add1.y1",
+            "to": "top.add1.f1.b"
+          },
+          {
+            "from": "top.add1.h0.co",
+            "to": "top.add1.f1.ci"
+          },
+          {
+            "from": "top.add1.f1.s",
+            "to": "top.add1.s2"
+          },
+          {
+            "from": "top.add1.x3",
+            "to": "top.add1.f2.a"
+          },
+          {
+            "from": "top.add1.y2",
+            "to": "top.add1.f2.b"
+          },
+          {
+            "from": "top.add1.f1.co",
+            "to": "top.add1.f2.ci"
+          },
+          {
+            "from": "top.add1.f2.s",
+            "to": "top.add1.s3"
+          },
+          {
+            "from": "top.add1.y3",
+            "to": "top.add1.h3.a"
+          },
+          {
+            "from": "top.add1.f2.co",
+            "to": "top.add1.h3.b"
+          },
+          {
+            "from": "top.add1.h3.s",
+            "to": "top.add1.s4"
+          },
+          {
+            "from": "top.add1.h3.co",
+            "to": "top.add1.c4"
+          }
+        ],
+        "children": [
+          {
+            "id": "top.add1.h0",
+            "title": "ha",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b; co = a & b",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add1.f1",
+            "title": "fa",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add1.f2",
+            "title": "fa",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add1.h3",
+            "title": "ha",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b; co = a & b",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "top.add2",
+        "title": "add2",
+        "shape": "box",
+        "swatch": "family:cell",
+        "ports": [
+          {
+            "name": "u2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "u3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "u4",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "c4",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "z0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "z1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "z2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "z3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "p2",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "s6",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "s7",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "s8",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "c8",
+            "side": "east",
+            "dir": "out"
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.add2.u2",
+            "to": "top.add2.h0.a"
+          },
+          {
+            "from": "top.add2.z0",
+            "to": "top.add2.h0.b"
+          },
+          {
+            "from": "top.add2.h0.s",
+            "to": "top.add2.p2"
+          },
+          {
+            "from": "top.add2.u3",
+            "to": "top.add2.f1.a"
+          },
+          {
+            "from": "top.add2.z1",
+            "to": "top.add2.f1.b"
+          },
+          {
+            "from": "top.add2.h0.co",
+            "to": "top.add2.f1.ci"
+          },
+          {
+            "from": "top.add2.f1.s",
+            "to": "top.add2.s6"
+          },
+          {
+            "from": "top.add2.u4",
+            "to": "top.add2.f2.a"
+          },
+          {
+            "from": "top.add2.z2",
+            "to": "top.add2.f2.b"
+          },
+          {
+            "from": "top.add2.f1.co",
+            "to": "top.add2.f2.ci"
+          },
+          {
+            "from": "top.add2.f2.s",
+            "to": "top.add2.s7"
+          },
+          {
+            "from": "top.add2.c4",
+            "to": "top.add2.f3.a"
+          },
+          {
+            "from": "top.add2.z3",
+            "to": "top.add2.f3.b"
+          },
+          {
+            "from": "top.add2.f2.co",
+            "to": "top.add2.f3.ci"
+          },
+          {
+            "from": "top.add2.f3.s",
+            "to": "top.add2.s8"
+          },
+          {
+            "from": "top.add2.f3.co",
+            "to": "top.add2.c8"
+          }
+        ],
+        "children": [
+          {
+            "id": "top.add2.h0",
+            "title": "ha",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b; co = a & b",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add2.f1",
+            "title": "fa",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add2.f2",
+            "title": "fa",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add2.f3",
+            "title": "fa",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "top.add3",
+        "title": "add3",
+        "shape": "box",
+        "swatch": "family:cell",
+        "ports": [
+          {
+            "name": "v6",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "v7",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "v8",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "c8",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "w0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "w1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "w2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "w3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "p3",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "p4",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "p5",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "p6",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "p7",
+            "side": "east",
+            "dir": "out"
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.add3.v6",
+            "to": "top.add3.h0.a"
+          },
+          {
+            "from": "top.add3.w0",
+            "to": "top.add3.h0.b"
+          },
+          {
+            "from": "top.add3.h0.s",
+            "to": "top.add3.p3"
+          },
+          {
+            "from": "top.add3.v7",
+            "to": "top.add3.f1.a"
+          },
+          {
+            "from": "top.add3.w1",
+            "to": "top.add3.f1.b"
+          },
+          {
+            "from": "top.add3.h0.co",
+            "to": "top.add3.f1.ci"
+          },
+          {
+            "from": "top.add3.f1.s",
+            "to": "top.add3.p4"
+          },
+          {
+            "from": "top.add3.v8",
+            "to": "top.add3.f2.a"
+          },
+          {
+            "from": "top.add3.w2",
+            "to": "top.add3.f2.b"
+          },
+          {
+            "from": "top.add3.f1.co",
+            "to": "top.add3.f2.ci"
+          },
+          {
+            "from": "top.add3.f2.s",
+            "to": "top.add3.p5"
+          },
+          {
+            "from": "top.add3.c8",
+            "to": "top.add3.f3.a"
+          },
+          {
+            "from": "top.add3.w3",
+            "to": "top.add3.f3.b"
+          },
+          {
+            "from": "top.add3.f2.co",
+            "to": "top.add3.f3.ci"
+          },
+          {
+            "from": "top.add3.f3.s",
+            "to": "top.add3.p6"
+          },
+          {
+            "from": "top.add3.f3.co",
+            "to": "top.add3.p7"
+          }
+        ],
+        "children": [
+          {
+            "id": "top.add3.h0",
+            "title": "ha",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b; co = a & b",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add3.f1",
+            "title": "fa",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add3.f2",
+            "title": "fa",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add3.f3",
+            "title": "fa",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "note": "Unsigned 4x4 array multiplier. p = a * b."
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "palette": {},
+  "swatches": [],
+  "libs": {
+    "and2": {
+      "title": "and2",
+      "desc": "两输入与门",
+      "shape": "and",
+      "swatch": "gate",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in", "desc": "输入 A"},
+        {"name": "b", "side": "west", "dir": "in", "desc": "输入 B"},
+        {"name": "y", "side": "east", "dir": "out", "desc": "与输出"}
+      ]
+    },
+    "and3": {
+      "title": "and3",
+      "desc": "三输入与门",
+      "shape": "and",
+      "swatch": "gate",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in", "desc": "输入 A"},
+        {"name": "b", "side": "west", "dir": "in", "desc": "输入 B"},
+        {"name": "c", "side": "west", "dir": "in", "desc": "输入 C"},
+        {"name": "y", "side": "east", "dir": "out", "desc": "与输出"}
+      ]
+    },
+    "or2": {
+      "title": "or2",
+      "desc": "两输入或门",
+      "shape": "or",
+      "swatch": "gate",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in", "desc": "输入 A"},
+        {"name": "b", "side": "west", "dir": "in", "desc": "输入 B"},
+        {"name": "y", "side": "east", "dir": "out", "desc": "或输出"}
+      ]
+    },
+    "xor2": {
+      "title": "xor2",
+      "desc": "两输入异或门",
+      "shape": "xor",
+      "swatch": "gate",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in", "desc": "输入 A"},
+        {"name": "b", "side": "west", "dir": "in", "desc": "输入 B"},
+        {"name": "y", "side": "east", "dir": "out", "desc": "异或输出"}
+      ]
+    },
+    "buf": {
+      "title": "buf",
+      "desc": "缓冲器（同相驱动）",
+      "shape": "buf",
+      "swatch": "gate",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in", "desc": "输入"},
+        {"name": "y", "side": "east", "dir": "out", "desc": "同相输出"}
+      ]
+    },
+    "inv": {
+      "title": "inv",
+      "desc": "反相器",
+      "shape": "buf",
+      "swatch": "gate",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in", "desc": "输入"},
+        {"name": "y", "side": "east", "dir": "out", "bubble": true, "desc": "反相输出"}
+      ]
+    },
+    "icg": {
+      "title": "icg",
+      "desc": "集成时钟门控",
+      "shape": "icg",
+      "ports": [
+        {"name": "en", "side": "west", "dir": "in", "desc": "功能使能"},
+        {"name": "te", "side": "west", "dir": "in", "desc": "测试使能 TE"},
+        {"name": "clk", "side": "south", "dir": "in", "desc": "时钟输入"},
+        {"name": "gclk", "side": "east", "dir": "out", "desc": "门控时钟输出"}
+      ]
+    },
+    "mux2": {
+      "title": "mux2",
+      "desc": "二选一数据多路器",
+      "shape": "mux",
+      "swatch": "gate",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in", "label": "0", "desc": "数据输入 0"},
+        {"name": "b", "side": "west", "dir": "in", "label": "1", "desc": "数据输入 1"},
+        {"name": "sel", "side": "south", "dir": "in", "desc": "选择：0 选 a，1 选 b"},
+        {"name": "y", "side": "east", "dir": "out", "desc": "选中数据输出"}
+      ]
+    }
+  }
+}

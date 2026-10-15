@@ -1,0 +1,259 @@
+{
+  "modules": {
+    "cpu_cluster": {
+      "black_box": true,
+      "title": "CPU Cluster",
+      "desc": "四核应用处理器簇（乱序 OoO + L1I/L1D），运行 Rich OS 与裸机固件",
+      "shape": "box",
+      "swatch": "family:compute",
+      "ports": [
+        {"name": "axi_m", "side": "east", "dir": "out", "label": "M_AXI", "swatch": "bus:axi"},
+        {"name": "ace_snoop", "side": "north", "dir": "out", "label": "ACE", "swatch": "bus:axi"},
+        {"name": "gic", "side": "south", "dir": "in", "label": "IRQ/GIC"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+        {"name": "rst_n", "side": "west", "dir": "in", "swatch": "reset:rst"}
+      ]
+    },
+    "l2_cache": {
+      "black_box": true,
+      "title": "L2/LLC",
+      "desc": "共享末级缓存与一致性目录，连接 CPU 与系统 NoC",
+      "shape": "box",
+      "swatch": "family:compute",
+      "ports": [
+        {"name": "cpu", "side": "west", "dir": "in", "label": "CPU", "swatch": "bus:axi"},
+        {"name": "noc", "side": "east", "dir": "out", "label": "NoC", "swatch": "bus:axi"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "gic": {
+      "black_box": true,
+      "title": "GIC-600",
+      "desc": "通用中断控制器，分发 PPI/SPI 到各核",
+      "shape": "box",
+      "swatch": "family:sys",
+      "ports": [
+        {"name": "axi_s", "side": "west", "dir": "in", "swatch": "bus:axi"},
+        {"name": "irq_out", "side": "east", "dir": "out", "label": "IRQ"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "gpu": {
+      "black_box": true,
+      "title": "Mali-G78",
+      "desc": "可编程图形与通用计算 GPU，支持 Vulkan/OpenCL",
+      "shape": "box",
+      "swatch": "family:compute",
+      "ports": [
+        {"name": "axi_m", "side": "east", "dir": "out", "label": "M_AXI", "swatch": "bus:axi"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+        {"name": "rst_n", "side": "west", "dir": "in", "swatch": "reset:rst"}
+      ]
+    },
+    "npu": {
+      "black_box": true,
+      "title": "Ethos-N78",
+      "desc": "神经网络加速器，执行 INT8/FP16 推理 workload",
+      "shape": "box",
+      "swatch": "family:compute",
+      "ports": [
+        {"name": "axi_m", "side": "east", "dir": "out", "label": "M_AXI", "swatch": "bus:axi"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "system_noc": {
+      "black_box": true,
+      "title": "CMN-700 NoC",
+      "desc": "一致性 mesh / crossbar，汇聚 CPU/GPU/NPU 主端口并路由到存储与外设从端口",
+      "shape": "box",
+      "swatch": "family:noc",
+      "ports": [
+        {"name": "s_apss", "side": "west", "dir": "in", "label": "S_APSS", "swatch": "bus:axi"},
+        {"name": "s_gpu", "side": "west", "dir": "in", "label": "S_GPU", "swatch": "bus:axi"},
+        {"name": "s_npu", "side": "west", "dir": "in", "label": "S_NPU", "swatch": "bus:axi"},
+        {"name": "s_dma", "side": "west", "dir": "in", "label": "S_DMA", "swatch": "bus:axi"},
+        {"name": "s_mm", "side": "west", "dir": "in", "label": "S_MM", "swatch": "bus:axi"},
+        {"name": "s_dbg", "side": "west", "dir": "in", "label": "S_DBG", "swatch": "bus:axi"},
+        {"name": "m_mem", "side": "east", "dir": "out", "label": "M_MEM", "swatch": "bus:axi"},
+        {"name": "m_io", "side": "east", "dir": "out", "label": "M_IO", "swatch": "bus:axi"},
+        {"name": "m_mm", "side": "east", "dir": "out", "label": "M_MM", "swatch": "bus:axi"},
+        {"name": "m_sec", "side": "east", "dir": "out", "label": "M_SEC", "swatch": "bus:axi"},
+        {"name": "m_dbg", "side": "south", "dir": "out", "label": "M_DBG", "swatch": "bus:axi"},
+        {"name": "clk", "side": "north", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "ddr_controller": {
+      "black_box": true,
+      "title": "DDRC",
+      "desc": "LPDDR5 内存控制器，调度读写与低功耗自刷新",
+      "shape": "box",
+      "swatch": "family:memory",
+      "ports": [
+        {"name": "axi_s", "side": "west", "dir": "in", "swatch": "bus:axi"},
+        {"name": "phy", "side": "east", "dir": "out", "label": "DFI"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "ddr_phy": {
+      "black_box": true,
+      "title": "LPDDR5 PHY",
+      "desc": "DDR IO 与训练，对接 bump 到 DRAM 颗粒",
+      "shape": "box",
+      "swatch": "family:memory",
+      "ports": [
+        {"name": "dfi", "side": "west", "dir": "in", "label": "DFI"},
+        {"name": "dq", "side": "east", "dir": "out", "label": "LPDDR5", "keep": true}
+      ]
+    },
+    "ocm_sram": {
+      "black_box": true,
+      "title": "OCM SRAM",
+      "desc": "片上 SRAM（启动 ROM 旁路、安全世界与 DMA 缓冲）",
+      "shape": "box",
+      "swatch": "family:memory",
+      "ports": [
+        {"name": "axi_s", "side": "west", "dir": "in", "swatch": "bus:axi"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "pcie_ctrl": {
+      "black_box": true,
+      "title": "PCIe Gen4",
+      "desc": "PCI Express 根复合体，连接 SSD 或外扩 GPU",
+      "shape": "box",
+      "swatch": "family:io",
+      "ports": [
+        {"name": "axi_s", "side": "west", "dir": "in", "swatch": "bus:axi"},
+        {"name": "pipe", "side": "east", "dir": "out", "label": "PIPE"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "usb3_ctrl": {
+      "black_box": true,
+      "title": "USB3 DRD",
+      "desc": "USB 3.2 双角色设备/主机控制器",
+      "shape": "box",
+      "swatch": "family:io",
+      "ports": [
+        {"name": "axi_s", "side": "west", "dir": "in", "swatch": "bus:axi"},
+        {"name": "utmi", "side": "east", "dir": "out", "label": "UTMI+"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "ufs_ctrl": {
+      "black_box": true,
+      "title": "UFS 3.1",
+      "desc": "通用闪存存储控制器，对接 eUFS 颗粒",
+      "shape": "box",
+      "swatch": "family:io",
+      "ports": [
+        {"name": "axi_s", "side": "west", "dir": "in", "swatch": "bus:axi"},
+        {"name": "mphy", "side": "east", "dir": "out", "label": "M-PHY"}
+      ]
+    },
+    "mipi_dsi": {
+      "black_box": true,
+      "title": "MIPI DSI",
+      "desc": "显示串行接口，驱动面板 timing 与像素流",
+      "shape": "box",
+      "swatch": "family:mm",
+      "ports": [
+        {"name": "axi_s", "side": "west", "dir": "in", "swatch": "bus:axi"},
+        {"name": "dsi", "side": "east", "dir": "out", "label": "DSI", "keep": true}
+      ]
+    },
+    "isp": {
+      "black_box": true,
+      "title": "ISP",
+      "desc": "图像信号处理器，接收 CSI-2 并完成 demosaic/3A",
+      "shape": "box",
+      "swatch": "family:mm",
+      "ports": [
+        {"name": "axi_m", "side": "east", "dir": "out", "swatch": "bus:axi"},
+        {"name": "csi", "side": "west", "dir": "in", "label": "CSI-2", "keep": true},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "video_codec": {
+      "black_box": true,
+      "title": "VPU",
+      "desc": "硬件视频编解码（H.264/H.265/AV1）",
+      "shape": "box",
+      "swatch": "family:mm",
+      "ports": [
+        {"name": "axi_m", "side": "east", "dir": "out", "swatch": "bus:axi"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "crypto_accel": {
+      "black_box": true,
+      "title": "CryptoCell",
+      "desc": "AES/SHA/RSA 与 TRNG，服务 TrustZone 与安全启动",
+      "shape": "box",
+      "swatch": "family:sec",
+      "ports": [
+        {"name": "axi_s", "side": "west", "dir": "in", "swatch": "bus:axi"},
+        {"name": "otp", "side": "north", "dir": "in", "label": "OTP"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "rom_secure": {
+      "black_box": true,
+      "title": "Secure ROM",
+      "desc": "掩膜 ROM，存放 BL1 与公钥哈希",
+      "shape": "box",
+      "swatch": "family:sec",
+      "ports": [
+        {"name": "boot", "side": "east", "dir": "out", "label": "BOOT"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "crg": {
+      "black_box": true,
+      "title": "CRG",
+      "desc": "时钟复位发生器：PLL、分频、复位同步与 clock gating 控制",
+      "shape": "box",
+      "swatch": "family:sys",
+      "ports": [
+        {"name": "xtal", "side": "west", "dir": "in", "label": "XTAL", "keep": true},
+        {"name": "clk_tree", "side": "east", "dir": "out", "label": "CLK", "swatch": "clock:clk"},
+        {"name": "rst_n", "side": "east", "dir": "out", "label": "RST_N", "swatch": "reset:rst"}
+      ]
+    },
+    "pmu": {
+      "black_box": true,
+      "title": "PMU",
+      "desc": "电源管理：DVFS、电源域开关与唤醒逻辑",
+      "shape": "box",
+      "swatch": "family:sys",
+      "ports": [
+        {"name": "axi_s", "side": "west", "dir": "in", "swatch": "bus:axi"},
+        {"name": "pwr_req", "side": "east", "dir": "out", "label": "PWR"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "dap_debug": {
+      "black_box": true,
+      "title": "CoreSight DAP",
+      "desc": "JTAG/SWD 调试访问端口与 trace funnel",
+      "shape": "box",
+      "swatch": "family:sys",
+      "ports": [
+        {"name": "axi_m", "side": "east", "dir": "out", "swatch": "bus:axi"},
+        {"name": "jtag", "side": "west", "dir": "in", "label": "JTAG", "keep": true, "swatch": "port:debug"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    },
+    "system_dma": {
+      "black_box": true,
+      "title": "System DMA",
+      "desc": "中央 DMA 引擎，在存储与外设间搬移数据",
+      "shape": "box",
+      "swatch": "family:io",
+      "ports": [
+        {"name": "axi_m", "side": "east", "dir": "out", "swatch": "bus:axi"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "modules": {
+    "ioss": {
+      "title": "IO SS",
+      "desc": "高速与存储类 IO：PCIe、USB、UFS",
+      "shape": "box",
+      "swatch": "family:io",
+      "ports": [
+        {"name": "noc_s", "side": "west", "dir": "in", "swatch": "bus:axi", "keep": true},
+        {"name": "pcie", "side": "east", "dir": "out", "label": "PCIe", "keep": true},
+        {"name": "usb", "side": "east", "dir": "out", "label": "USB", "keep": true},
+        {"name": "ufs", "side": "east", "dir": "out", "label": "UFS", "keep": true},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ],
+      "edges": [
+        {"from": "noc_s", "to": "pcie.axi_s", "swatch": "bus:axi"},
+        {"from": "noc_s", "to": "usb.axi_s", "swatch": "bus:axi"},
+        {"from": "noc_s", "to": "ufs.axi_s", "swatch": "bus:axi"},
+        {"from": "clk", "to": "pcie.clk", "swatch": "clock:clk"},
+        {"from": "clk", "to": "usb.clk", "swatch": "clock:clk"},
+        {"from": "pcie.pipe", "to": "pcie"},
+        {"from": "usb.utmi", "to": "usb"},
+        {"from": "ufs.mphy", "to": "ufs"}
+      ],
+      "children": [
+        {"id": "pcie", "use": "pcie_ctrl"},
+        {"id": "usb", "use": "usb3_ctrl"},
+        {"id": "ufs", "use": "ufs_ctrl"}
+      ]
+    }
+  }
+}

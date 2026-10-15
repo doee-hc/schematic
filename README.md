@@ -38,21 +38,21 @@ schematic view examples/top.json
 
 Open `http://127.0.0.1:8765` (default bind address and port). Options: `--host`, `--port`, `--verbose`.
 
-The server loads one JSON file. It does not parse a netlist language and it does not keep a session cache.
+Pass a JSON path at startup (`schematic view design.json`), or omit it and use **Open file** in the top bar to pick a local file. The browser POSTs the JSON to the local server, which replaces the in-memory document. It does not parse a netlist language and it does not persist an on-disk session cache.
 
 ### Features
 
 | Feature | Description |
 |---------|-------------|
 | **Hierarchy** | Check nodes to include. Ancestors of a checked node stay visible so the path remains in the layout. |
-| **Boxes only** | Hide `mux`, `reg`, and `logic`. `box` nodes remain. |
-| **Port filter** | Include / exclude globs (`*`). Include wins over exclude. Ports that match neither rule stay visible. Ports with `"keep": true` stay visible. Ports on `mux`, `reg`, and `logic` are not filtered. |
+| **Boxes only** | Hide `mux`, `reg`, `logic`, `and`, `or`, `xor`, `buf`, and `icg`. `box` nodes remain. |
+| **Port filter** | Include / exclude globs (`*`). Include wins over exclude. Ports that match neither rule stay visible. Ports with `"keep": true` stay visible. Ports on `mux`, `reg`, `logic`, and gate shapes are not filtered. |
 | **Palette** | Colors come from the document `palette`. Overrides apply to the tree and the SVG and are stored in `localStorage`. |
 | **Export** | **Download SVG** saves the current preview, including palette overrides. |
 
 ### Page layout
 
-- **Top bar:** boxes-only toggle and the open file name.
+- **Top bar:** **Open file**, boxes-only toggle, and the current file name.
 - **Toolbar (collapsible):** palette editor; port filter (Include / Exclude lists and Add).
 - **Left panel:** **Draw**, status line, hierarchy tree.
 - **Right panel:** zoom, fit, 1:1, fullscreen, download, and the canvas.
@@ -66,13 +66,19 @@ The server loads one JSON file. It does not parse a netlist language and it does
 | **Wheel** | Zoom toward the cursor. |
 | **Drag** | Pan the canvas. A small movement counts as a click. |
 | **Pinch** | Two-finger zoom. |
-| **Click a port** | Highlight the connected component. The status line shows the edge count. |
-| **Click an edge** | Highlight the related path closure. |
-| **Double-click a port** | Center an upstream driver. Multiple drivers cycle `(1/N)`. |
-| **Esc** | Clear the highlight. |
+| **Click a port** | Highlight its connected component and dim everything else. That port becomes the hop anchor. The status line shows the edge count. |
+| **Click an edge** | Highlight the related path closure and dim everything else. |
+| **Double-click a port** / **`[`** | Center the next upstream driver. Multiple drivers cycle `(1/N)`. `[` starts from the hop anchor. |
+| **`]`** | Center the next downstream load, cycling the same way. On an output, the next pins are the loads. On an input, the loads are the other sinks of that net. |
+| **Right-click a port** | Menu: upstream drivers (N), downstream loads (N). |
+| **Backspace** | Return to the port you hopped from. |
+| **Shift+0** | Fit the highlighted path in the view. |
+| **Esc** | Close the menu, or clear the highlight if the menu is already closed. |
 | **+ / − / 0** | Zoom in, zoom out, or fit (when focus is not in an input). |
 | **F** | Toggle preview fullscreen. |
 | **Fit / 1:1** | Fit the window, or reset the scale to 100%. |
+
+Press `[` or `]` again to cycle drivers or loads of the same net. Click the port you landed on before hopping further along the path.
 
 ### HTTP API
 
@@ -100,10 +106,19 @@ schematic draw examples/top.json -o top.svg \
 | `--include` | Node id to draw. Repeatable. Ancestors are added. Omit to draw every node. |
 | `--port-include` | Include glob. Repeatable. |
 | `--port-exclude` | Exclude glob. Repeatable. |
-| `--boxes-only` | Omit `mux`, `reg`, and `logic`. |
+| `--boxes-only` | Omit `mux`, `reg`, `logic`, `and`, `or`, `xor`, `buf`, and `icg`. |
 | `--palette` | Override `key=#hex`. Repeatable. |
 
-**view** — serve the viewer for one JSON file. See [Web UI](#web-ui).
+**view** — serve the viewer (optional JSON path; open another file in the UI). See [Web UI](#web-ui).
+
+**Module libraries** — define reusable `modules`, instantiate with `use`, merge sources with multiple JSON paths or `-f filelist`, and pick the top with `-top` (VCS-style). Expand only:
+
+```bash
+schematic elaborate -f examples/adder.f -o build/adder-flat.json
+schematic draw -f examples/adder.f -o adder.svg
+```
+
+See [docs/modules.en.md](docs/modules.en.md).
 
 ## Document
 
@@ -115,8 +130,13 @@ The file is one object: optional `palette`, optional `swatches`, and required `r
 | `mux` | Trapezoid. `badge` is an optional short label (`CLK`, `DATA`, `1H`). The title sits outside the shape. |
 | `reg` | Rectangle with a clock notch. West ports use a fixed order. |
 | `logic` | Rounded rectangle. `expr` is wrapped inside the shape. |
+| `and` | D shape. At least two west inputs and one east output. West ports are top to bottom as written. |
+| `or` | Shield. Same pin rule as `and`. |
+| `xor` | Shield plus a second input arc. Same pin rule as `and`. |
+| `buf` | Triangle pointing right. One west input and one east output. An output `bubble` draws an inverter. |
+| `icg` | Rectangle. `en` is west, `clk` is south, optional `te` is west, and there is one east output. |
 
-An edge is stored on the common parent. `from` and `to` are `nodeId.portName`. `invert` draws a bubble before the arrow.
+An edge is stored on the common parent. `from` and `to` are `nodeId.portName`. `invert` draws a bubble before the arrow. A port `bubble` draws a bubble on that pin instead. See [examples/gates.json](examples/gates.json).
 
 ## Setup & run
 
@@ -143,6 +163,11 @@ python -m pytest tests/ -q
 | `schematic/cli.py` | `schematic draw` and `schematic view` |
 | `docs/schema.en.md` | Document reference |
 | `examples/top.json` | Preview netlist |
+| `examples/adder.json` | 4-bit ripple-carry adder |
+| `examples/multiplier.json` | Unsigned 4×4 array multiplier |
+| `examples/shifter.json` | 4-bit logical barrel shifter |
+| `examples/comparator.json` | Unsigned 4-bit comparator |
+| `examples/accumulator.json` | Clock-gated 4-bit accumulator |
 | `docs/images/` | README figure |
 
 ## Notes

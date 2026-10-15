@@ -1,0 +1,77 @@
+{
+  "palette": {
+    "family:top": "#F4F6F8",
+    "gate": "#E7F0FB",
+    "clock:clk": "#E6A23C"
+  },
+  "swatches": [
+    {"key": "family:top", "label": "Top", "group": "Modules"},
+    {"key": "gate", "label": "Gate", "group": "Gates"},
+    {"key": "clock:clk", "label": "clk", "group": "Clocks"}
+  ],
+  "libs": {
+    "and3_b_bub_y_bub": {
+      "title": "and3",
+      "desc": "三输入与门（B/Y 带反相气泡）",
+      "shape": "and",
+      "swatch": "gate",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in", "desc": "输入 A"},
+        {"name": "b", "side": "west", "dir": "in", "bubble": true, "desc": "输入 B（反相）"},
+        {"name": "c", "side": "west", "dir": "in", "desc": "输入 C"},
+        {"name": "y", "side": "east", "dir": "out", "bubble": true, "desc": "与输出（反相）"}
+      ]
+    },
+    "icg_clk": {
+      "title": "icg",
+      "desc": "带时钟配色的 ICG",
+      "shape": "icg",
+      "ports": [
+        {"name": "en", "side": "west", "dir": "in", "desc": "功能使能"},
+        {"name": "te", "side": "west", "dir": "in", "desc": "测试使能 TE"},
+        {"name": "clk", "side": "south", "dir": "in", "swatch": "clock:clk", "desc": "时钟输入"},
+        {"name": "gclk", "side": "east", "dir": "out", "swatch": "clock:clk", "desc": "门控时钟输出"}
+      ]
+    }
+  },
+  "root": {
+    "id": "top",
+    "title": "gates",
+    "shape": "box",
+    "swatch": "family:top",
+    "ports": [
+      {"name": "a", "side": "west", "dir": "in"},
+      {"name": "b", "side": "west", "dir": "in"},
+      {"name": "c", "side": "west", "dir": "in"},
+      {"name": "d", "side": "west", "dir": "in"},
+      {"name": "e", "side": "west", "dir": "in"},
+      {"name": "en", "side": "west", "dir": "in"},
+      {"name": "te", "side": "west", "dir": "in"},
+      {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+      {"name": "y", "side": "east", "dir": "out"},
+      {"name": "gclk", "side": "east", "dir": "out", "swatch": "clock:clk"}
+    ],
+    "edges": [
+      {"from": "top.a", "to": "top.and3.a"},
+      {"from": "top.b", "to": "top.and3.b"},
+      {"from": "top.c", "to": "top.and3.c"},
+      {"from": "top.and3.y", "to": "top.or2.a"},
+      {"from": "top.d", "to": "top.or2.b"},
+      {"from": "top.or2.y", "to": "top.xor2.a"},
+      {"from": "top.e", "to": "top.xor2.b"},
+      {"from": "top.xor2.y", "to": "top.inv.a"},
+      {"from": "top.inv.y", "to": "top.y"},
+      {"from": "top.en", "to": "top.icg.en"},
+      {"from": "top.te", "to": "top.icg.te"},
+      {"from": "top.clk", "to": "top.icg.clk", "swatch": "clock:clk"},
+      {"from": "top.icg.gclk", "to": "top.gclk", "swatch": "clock:clk"}
+    ],
+    "children": [
+      {"id": "and3", "use_lib": "and3_b_bub_y_bub"},
+      {"id": "or2", "use_lib": "or2"},
+      {"id": "xor2", "use_lib": "xor2"},
+      {"id": "inv", "use_lib": "inv"},
+      {"id": "icg", "use_lib": "icg_clk"}
+    ]
+  }
+}

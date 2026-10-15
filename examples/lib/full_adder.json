@@ -1,0 +1,38 @@
+{
+  "modules": {
+    "full_adder": {
+      "title": "fa0",
+      "shape": "box",
+      "swatch": "family:cell",
+      "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in"},
+        {"name": "b", "side": "west", "dir": "in"},
+        {"name": "ci", "side": "west", "dir": "in", "label": "ci"},
+        {"name": "s", "side": "east", "dir": "out"},
+        {"name": "co", "side": "east", "dir": "out", "label": "co"}
+      ],
+      "edges": [
+        {"from": "a", "to": "xp.a"},
+        {"from": "b", "to": "xp.b"},
+        {"from": "a", "to": "ab.a"},
+        {"from": "b", "to": "ab.b"},
+        {"from": "xp.y", "to": "xs.a"},
+        {"from": "ci", "to": "xs.b"},
+        {"from": "xp.y", "to": "pc.a"},
+        {"from": "ci", "to": "pc.b"},
+        {"from": "xs.y", "to": "s"},
+        {"from": "ab.y", "to": "oc.a"},
+        {"from": "pc.y", "to": "oc.b"},
+        {"from": "oc.y", "to": "co"}
+      ],
+      "children": [
+        {"id": "xp", "use_lib": "xor2", "title": "p", "swatch": "gate"},
+        {"id": "xs", "use_lib": "xor2", "title": "s", "swatch": "gate"},
+        {"id": "ab", "use_lib": "and2", "title": "g", "swatch": "gate"},
+        {"id": "pc", "use_lib": "and2", "title": "t", "swatch": "gate"},
+        {"id": "oc", "use_lib": "or2", "title": "co", "swatch": "gate"}
+      ]
+    }
+  }
+}

@@ -2,21 +2,48 @@
 
 import math
 
-from schematic.graph import LOGIC_LINE_H, PORT_H, PORT_TIP, wrap_expr
+from schematic.graph import (
+    GATE_MARGIN,
+    GATE_PAD_Y,
+    GATE_SHAPES,
+    LOGIC_LINE_H,
+    PORT_H,
+    PORT_TIP,
+    XOR_GAP,
+    wrap_expr,
+)
 from schematic.style import SHAPE_FILL, SHAPE_STROKE, color_for, darken, pick_swatch
 
 JUMP_R = 2.0
 EPS = 0.6
 ARROW_LEN = 8.0
 ARROW_HALF = 3.0
+LOGIC_TITLE_Y = 16.0
+LOGIC_BODY_TOP = 20.0
+LOGIC_SEQ_NOTCH = 9.0
+
+
+def _logic_text_baselines(y, h, expr_line_count, seq=False):
+    """标题固定在框顶；expr 在标题下方剩余区域内垂直居中。"""
+    title_y = y + LOGIC_TITLE_Y
+    if not expr_line_count:
+        return title_y, None
+    body_bottom = y + h - (LOGIC_SEQ_NOTCH if seq else 2.0)
+    body_h = max(0.0, body_bottom - (y + LOGIC_BODY_TOP))
+    expr_block_h = expr_line_count * LOGIC_LINE_H
+    expr_block_top = y + LOGIC_BODY_TOP + max(0.0, (body_h - expr_block_h) / 2.0)
+    expr_start = expr_block_top + 9.0
+    return title_y, expr_start
 PAD = 16.0
 PORT_FILL = "#fffef6"
 PORT_STROKE = "#333"
-EDGE_HIT_WIDTH = 24.0
+EDGE_HIT_WIDTH = 12.0
 INVERT_R = 3.5
 MUX_INSET_X = 3.0
 MUX_END_PAD = 4.0
 MUX_SLANT_FRAC = 0.22
+BUBBLE_R = 3.5
+LABEL_DY = 3.6
 
 
 def _esc(text):
@@ -27,6 +54,59 @@ def _esc(text):
         .replace(">", "&gt;")
         .replace('"', "&quot;")
     )
+
+
+def _svg_title(text):
+    if not text or not str(text).strip():
+        return ""
+    return "<title>%s</title>" % _esc(str(text))
+
+
+def _port_desc(port):
+    return (port.get("properties") or {}).get("desc") or ""
+
+
+def _port_label(port):
+    labels = port.get("labels") or []
+    if labels and labels[0].get("text"):
+        return labels[0].get("text") or ""
+    props = port.get("properties") or {}
+    return props.get("label") or props.get("name") or _port_name(port)
+
+
+def _node_tooltip_text(node):
+    parts = []
+    title = _node_title(node)
+    if title:
+        parts.append(title)
+    lib = _prop(node, "module_lib")
+    if lib:
+        parts.append("lib: %s" % lib)
+    desc = _prop(node, "desc")
+    if desc and desc != title:
+        parts.append(desc)
+    note = _prop(node, "note")
+    if note and note not in (desc, title):
+        parts.append(note)
+    port_lines = []
+    for port in node.get("ports") or []:
+        name = (port.get("properties") or {}).get("name") or _port_name(port)
+        pd = _port_desc(port)
+        label = _port_label(port)
+        if pd:
+            tag = label if label else name
+            port_lines.append("%s — %s" % (tag, pd) if tag else pd)
+        elif label or name:
+            line = label or name
+            if label and name and label != name:
+                line = "%s (%s)" % (label, name)
+            port_lines.append(line)
+    if port_lines:
+        if parts:
+            parts.append("")
+        parts.append("引脚:")
+        parts.extend(port_lines)
+    return "\n".join(parts)
 
 
 def _abs_origins(node, ox=0.0, oy=0.0, acc=None):
@@ -325,21 +405,37 @@ def _collect_ports(graph, origins):
             if shape == "mux":
                 along = geom["tip"][1] if side in ("WEST", "EAST") else geom["tip"][0]
                 geom["tip"] = _mux_border_point(x, y, w, h, side, along)
+            gate_name = ""
+            if shape in GATE_SHAPES:
+                gate_name = (port.get("properties") or {}).get("name") or _port_name(port)
+                bubble = str((port.get("properties") or {}).get("bubble") or "") == "true"
+                along = geom["tip"][1] if side in ("WEST", "EAST") else geom["tip"][0]
+                border = _gate_border_point(
+                    x, y, w, h, shape, side, along, gate_name, _node_has_te(node),
+                )
+                geom["border"] = border
+                geom["tip"] = _bubble_tip(border, side, bubble)
             geom["shape"] = "snap"
             pins[port["id"]] = geom
             if shape == "logic":
                 continue
             if shape == "mux" and side == "EAST":
                 continue
+            if shape in GATE_SHAPES:
+                if shape == "icg" and side == "WEST" and gate_name not in ("en", "te", "clk"):
+                    continue
+                tx, ty, anchor = _gate_label_pos(
+                    x, y, w, h, shape, gate_name, geom.get("border") or geom["tip"],
+                    _node_has_te(node), side,
+                )
+                labels.append((tx, ty, anchor, name, _port_swatch(port), port["id"]))
+                continue
             metrics = _mux_metrics(x, y, w, h) if shape == "mux" else None
             if side == "EAST":
                 tx, ty, anchor = x + w - 5, max(y + 18.0, min(y + h - 6.0, py + 3.0)), "end"
             elif side == "SOUTH" and metrics:
-                tx, ty, anchor = (
-                    x + w / 2.0,
-                    metrics["left_bot"] + 12.0,
-                    "middle",
-                )
+                bottom = (metrics["left_bot"] + metrics["right_bot"]) / 2.0
+                tx, ty, anchor = (x + w / 2.0, bottom - 8.0, "middle")
             elif side == "SOUTH":
                 tx, ty, anchor = x + w / 2.0, y + h - 3.0, "middle"
             elif metrics:
@@ -464,6 +560,314 @@ def _mux_title_pos(node, x, y, w):
     return x + w / 2.0, y - 4.0
 
 
+def _bubble_tip(border, side, bubble):
+    if not bubble:
+        return border
+    shift = 2.0 * BUBBLE_R
+    x, y = border
+    if side == "WEST":
+        return (x - shift, y)
+    if side == "EAST":
+        return (x + shift, y)
+    if side == "SOUTH":
+        return (x, y + shift)
+    if side == "NORTH":
+        return (x, y - shift)
+    return border
+
+
+def _node_has_te(node):
+    for port in node.get("ports") or []:
+        name = (port.get("properties") or {}).get("name") or ""
+        if name == "te" or str(port.get("id") or "").endswith("__te"):
+            return True
+    return False
+
+
+def _and_metrics(x, y, w, h):
+    top = y + GATE_PAD_Y
+    bot = y + h - GATE_PAD_Y
+    left = x + GATE_MARGIN
+    right = x + w - GATE_MARGIN
+    mid = (top + bot) / 2.0
+    radius = max(8.0, (bot - top) / 2.0)
+    if right - left - radius < 10.0:
+        radius = max(8.0, (right - left) * 0.62)
+    arc_x = right - radius
+    if arc_x < left:
+        arc_x = left
+    return {
+        "left": left,
+        "right": right,
+        "top": top,
+        "bot": bot,
+        "mid": mid,
+        "radius": radius,
+        "arc_x": arc_x,
+    }
+
+
+def _and_path(metrics):
+    left, top, bot = metrics["left"], metrics["top"], metrics["bot"]
+    arc_x, radius = metrics["arc_x"], metrics["radius"]
+    if arc_x <= left + 0.5:
+        return "M%.2f,%.2f L%.2f,%.2f A%.2f,%.2f 0 0 0 %.2f,%.2f Z" % (
+            left, top, left, bot, radius, radius, left, top,
+        )
+    return "M%.2f,%.2f L%.2f,%.2f L%.2f,%.2f A%.2f,%.2f 0 0 0 %.2f,%.2f Z" % (
+        left, top, left, bot, arc_x, bot, radius, radius, arc_x, top,
+    )
+
+
+def _or_metrics(x, y, w, h, xor):
+    gap = XOR_GAP if xor else 0.0
+    right = x + w - GATE_MARGIN
+    top = y + GATE_PAD_Y
+    bot = y + h - GATE_PAD_Y
+    mid = (top + bot) / 2.0
+    left = x + GATE_MARGIN + gap
+    span_x = max(8.0, right - left)
+    span_y = max(8.0, bot - top)
+    # 比 and 更内凹的输入背弧；宽度仍与 and 同级，靠较浅的 end_x 留出门腹。
+    end_x = left + span_x * 0.05
+    indent = max(6.0, min(span_y * 0.14, span_x * 0.17))
+    return {
+        "left": left,
+        "right": right,
+        "top": top,
+        "bot": bot,
+        "mid": mid,
+        "end_x": end_x,
+        "span_x": span_x,
+        "span_y": span_y,
+        "back0": (end_x, top),
+        "back1": (end_x, bot),
+        "back_c": (end_x + 2.0 * indent, mid),
+        "xor_gap": gap,
+    }
+
+
+def _quad_at(p0, p1, p2, t):
+    omt = 1.0 - t
+    return (
+        omt * omt * p0[0] + 2.0 * omt * t * p1[0] + t * t * p2[0],
+        omt * omt * p0[1] + 2.0 * omt * t * p1[1] + t * t * p2[1],
+    )
+
+
+def _or_back_point(metrics, along):
+    span = metrics["bot"] - metrics["top"]
+    t = 0.5 if span < 1e-6 else (along - metrics["top"]) / span
+    t = max(0.0, min(1.0, t))
+    return _quad_at(metrics["back0"], metrics["back_c"], metrics["back1"], t)
+
+
+def _or_path(metrics):
+    left = metrics["left"]
+    span_x = metrics["span_x"]
+    span_y = metrics["span_y"]
+    end_x = metrics["end_x"]
+    right, top, bot, mid = metrics["right"], metrics["top"], metrics["bot"], metrics["mid"]
+    back_c = metrics["back_c"]
+    return (
+        "M%.2f,%.2f C%.2f,%.2f %.2f,%.2f %.2f,%.2f C%.2f,%.2f %.2f,%.2f %.2f,%.2f Q%.2f,%.2f %.2f,%.2f Z"
+        % (
+            end_x, top,
+            left + span_x * 0.50, top + span_y * 0.05,
+            left + span_x * 0.88, mid - span_y * 0.38,
+            right, mid,
+            left + span_x * 0.88, mid + span_y * 0.38,
+            left + span_x * 0.50, bot - span_y * 0.05,
+            end_x, bot,
+            back_c[0], mid,
+            end_x, top,
+        )
+    )
+
+
+def _xor_arc_path(metrics):
+    off = metrics["xor_gap"]
+    return "M%.2f,%.2f Q%.2f,%.2f %.2f,%.2f" % (
+        metrics["back0"][0] - off, metrics["back0"][1],
+        metrics["back_c"][0] - off, metrics["back_c"][1],
+        metrics["back1"][0] - off, metrics["back1"][1],
+    )
+
+
+def _buf_metrics(x, y, w, h):
+    top = y + 6.0
+    bot = y + h - 6.0
+    return {
+        "left": x + GATE_MARGIN,
+        "right": x + w - GATE_MARGIN,
+        "top": top,
+        "bot": bot,
+        "mid": (top + bot) / 2.0,
+    }
+
+
+def _buf_path(metrics):
+    return "M%.2f,%.2f L%.2f,%.2f L%.2f,%.2f Z" % (
+        metrics["left"], metrics["top"],
+        metrics["right"], metrics["mid"],
+        metrics["left"], metrics["bot"],
+    )
+
+
+def _label_y(pin_y, top, bot):
+    baseline = pin_y + LABEL_DY
+    low = top + 11.0
+    high = bot - 3.0
+    if low > high:
+        return (top + bot) / 2.0 + LABEL_DY
+    return min(max(baseline, low), high)
+
+
+def _icg_metrics(x, y, w, h, has_te=False):
+    return {
+        "left": x + GATE_MARGIN,
+        "right": x + w - GATE_MARGIN,
+        "top": y + GATE_PAD_Y,
+        "bot": y + h - GATE_MARGIN,
+        "mid": y + h / 2.0,
+    }
+
+
+def _gate_border_point(x, y, w, h, shape, side, along, name="", has_te=False):
+    if shape == "and":
+        metrics = _and_metrics(x, y, w, h)
+        if side == "EAST":
+            return (metrics["right"], metrics["mid"])
+        yy = min(max(along, metrics["top"] + 2.0), metrics["bot"] - 2.0)
+        return (metrics["left"], yy)
+    if shape in ("or", "xor"):
+        metrics = _or_metrics(x, y, w, h, shape == "xor")
+        if side == "EAST":
+            return (metrics["right"], metrics["mid"])
+        yy = min(max(along, metrics["top"] + 1.0), metrics["bot"] - 1.0)
+        point = _or_back_point(metrics, yy)
+        if shape == "xor":
+            # 连线停在外侧那条弧上，不穿进门腹。
+            return (point[0] - metrics["xor_gap"], point[1])
+        return point
+    if shape == "buf":
+        metrics = _buf_metrics(x, y, w, h)
+        if side == "EAST":
+            return (metrics["right"], metrics["mid"])
+        yy = min(max(along, metrics["top"] + 1.0), metrics["bot"] - 1.0)
+        return (metrics["left"], yy)
+    metrics = _icg_metrics(x, y, w, h)
+    if side == "EAST":
+        return (metrics["right"], metrics["mid"])
+    if name == "clk" or side == "SOUTH":
+        return ((metrics["left"] + metrics["right"]) / 2.0, metrics["bot"])
+    yy = min(max(along, metrics["top"] + 2.0), metrics["bot"] - 2.0)
+    return (metrics["left"], yy)
+
+
+def _gate_label_pos(x, y, w, h, shape, name, border, has_te, side="WEST"):
+    if side == "EAST":
+        if shape == "and":
+            metrics = _and_metrics(x, y, w, h)
+            return metrics["right"] - 6.0, _label_y(border[1], metrics["top"], metrics["bot"]), "end"
+        if shape == "buf":
+            metrics = _buf_metrics(x, y, w, h)
+            return metrics["right"] - 4.0, _label_y(border[1], metrics["top"], metrics["bot"]), "end"
+        if shape in ("or", "xor"):
+            metrics = _or_metrics(x, y, w, h, shape == "xor")
+            return metrics["right"] - 6.0, _label_y(border[1], metrics["top"], metrics["bot"]), "end"
+        metrics = _icg_metrics(x, y, w, h)
+        return metrics["right"] - 6.0, _label_y(border[1], metrics["top"], metrics["bot"]), "end"
+    if shape == "and":
+        metrics = _and_metrics(x, y, w, h)
+        return metrics["left"] + 6.0, _label_y(border[1], metrics["top"], metrics["bot"]), "start"
+    if shape == "buf":
+        metrics = _buf_metrics(x, y, w, h)
+        return metrics["left"] + 4.0, _label_y(border[1], metrics["top"], metrics["bot"]), "start"
+    if shape in ("or", "xor"):
+        metrics = _or_metrics(x, y, w, h, shape == "xor")
+        yy = min(max(border[1], metrics["top"] + 1.0), metrics["bot"] - 1.0)
+        back = _or_back_point(metrics, yy)
+        return back[0] + 10.0, _label_y(border[1], metrics["top"], metrics["bot"]), "start"
+    metrics = _icg_metrics(x, y, w, h)
+    if name == "clk":
+        return (metrics["left"] + metrics["right"]) / 2.0 + 6.0, metrics["bot"] - 8.0, "start"
+    return metrics["left"] + 8.0, _label_y(border[1], metrics["top"], metrics["bot"] - 16.0), "start"
+
+
+def _gate_bubbles(node, x, y, w, h, stroke):
+    shape = _shape(node)
+    has_te = _node_has_te(node)
+    parts = []
+    for port in node.get("ports") or []:
+        if str((port.get("properties") or {}).get("bubble") or "") != "true":
+            continue
+        side = _port_side(port, w)
+        name = (port.get("properties") or {}).get("name") or _port_name(port)
+        py_mid = y + float(port.get("y") or 0) + float(port.get("height") or 0) / 2.0
+        if side == "SOUTH":
+            along = x + float(port.get("x") or 0) + float(port.get("width") or 0) / 2.0
+        else:
+            along = py_mid
+        border = _gate_border_point(x, y, w, h, shape, side, along, name, has_te)
+        tip = _bubble_tip(border, side, True)
+        parts.append(
+            '<circle class="gate-bubble" cx="%.2f" cy="%.2f" r="%.2f" fill="#fff" stroke="%s" stroke-width="1.2"/>'
+            % ((border[0] + tip[0]) / 2.0, (border[1] + tip[1]) / 2.0, BUBBLE_R, stroke)
+        )
+    return "".join(parts)
+
+
+def _gate_svg(node, x, y, w, h, fill, stroke, attrs, title, tooltip=""):
+    shape = _shape(node)
+    extra = ""
+    if shape == "and":
+        body = _and_path(_and_metrics(x, y, w, h))
+    elif shape in ("or", "xor"):
+        metrics = _or_metrics(x, y, w, h, shape == "xor")
+        body = _or_path(metrics)
+        if shape == "xor":
+            extra = (
+                '<path class="gate-stroke" fill="none" stroke="%s" stroke-width="1.2" d="%s"/>'
+                % (stroke, _xor_arc_path(metrics))
+            )
+    elif shape == "buf":
+        body = _buf_path(_buf_metrics(x, y, w, h))
+    else:
+        metrics = _icg_metrics(x, y, w, h)
+        return (
+            "<g %s>"
+            "%s"
+            '<rect class="swatch-fill" x="%.2f" y="%.2f" width="%.2f" height="%.2f" fill="%s" stroke="%s" stroke-width="1.2"/>'
+            "%s"
+            '<text class="gate-title" x="%.2f" y="%.2f" text-anchor="middle" '
+            'font-family="DejaVu Sans, sans-serif" font-size="11" font-weight="700" fill="#111">%s</text>'
+            "</g>"
+            % (
+                attrs,
+                tooltip,
+                metrics["left"], metrics["top"],
+                metrics["right"] - metrics["left"], metrics["bot"] - metrics["top"],
+                fill, stroke,
+                _gate_bubbles(node, x, y, w, h, stroke),
+                x + w / 2.0, y - 4.0, title,
+            )
+        )
+    return (
+        "<g %s>"
+        "%s"
+        '<path class="swatch-fill" fill="%s" stroke="%s" stroke-width="1.2" d="%s"/>'
+        "%s%s"
+        '<text class="gate-title" x="%.2f" y="%.2f" text-anchor="middle" '
+        'font-family="DejaVu Sans, sans-serif" font-size="11" font-weight="700" fill="#111">%s</text>'
+        "</g>"
+        % (
+            attrs, tooltip, fill, stroke, body, extra, _gate_bubbles(node, x, y, w, h, stroke),
+            x + w / 2.0, y - 4.0, title,
+        )
+    )
+
+
 def _poly(pts):
     return " ".join("%.2f,%.2f" % pt for pt in pts)
 
@@ -478,16 +882,39 @@ def _node_svg(node, x, y, w, h, palette):
     fill = color_for(palette, swatch, SHAPE_FILL.get(shape, "#fff"))
     stroke = SHAPE_STROKE.get(shape) or darken(fill)
     nid = _esc(node["id"])
+    mod_use = _prop(node, "module_use") or ""
+    mod_lib = _prop(node, "module_lib") or ""
+    mod_stub = "true" if _prop(node, "module_stub") else "false"
     attrs = 'class="node" data-id="%s" data-shape="%s" data-swatch="%s"' % (
         nid, _esc(shape), _esc(swatch),
     )
+    if mod_use:
+        attrs += ' data-module-use="%s" data-module-stub="%s"' % (
+            _esc(mod_use), mod_stub,
+        )
+    if mod_lib:
+        attrs += ' data-module-lib="%s"' % _esc(mod_lib)
+    node_tooltip = _svg_title(_node_tooltip_text(node))
+    if mod_use and mod_stub != "true":
+        title_h = min(22.0, h)
+        node_hit = (
+            '<rect class="node-hit node-hit-chrome" x="%.2f" y="%.2f" width="%.2f" height="%.2f" '
+            'fill="transparent" pointer-events="all"/>'
+            % (x, y, w, title_h)
+        )
+    else:
+        node_hit = (
+            '<rect class="node-hit" x="%.2f" y="%.2f" width="%.2f" height="%.2f" '
+            'fill="transparent" pointer-events="all"/>'
+            % (x, y, w, h)
+        )
     if shape == "reg":
         cx = x + w / 2.0
         clock = "%.2f,%.2f %.2f,%.2f %.2f,%.2f" % (
             cx - 6.0, y + h, cx, y + h - 9.0, cx + 6.0, y + h,
         )
         extra = ""
-        tooltip = "<title>%s</title>" % _esc(note) if note else ""
+        tooltip = node_tooltip or (_svg_title(note) if note else "")
         return (
             "<g %s>"
             "%s"
@@ -509,22 +936,46 @@ def _node_svg(node, x, y, w, h, palette):
                 % (m["right_x"] - 3.0, m["right_top"] + 10.0, stroke, _esc(badge_text))
             )
         tx, ty = _mux_title_pos(node, x, y, w)
+        mux_hit = (
+            '<rect class="node-hit" x="%.2f" y="%.2f" width="%.2f" height="%.2f" '
+            'fill="transparent" pointer-events="all"/>'
+            % (x, ty - 14.0, w, h + (y - ty) + 14.0)
+        )
         return (
             "<g %s>"
+            "%s"
+            "%s"
             '<polygon class="swatch-fill" fill="%s" stroke="%s" stroke-width="1.2" points="%s"/>'
             '<text class="mux-title" x="%.2f" y="%.2f" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" font-weight="700" fill="#111">%s</text>'
             "%s"
             "</g>"
-            % (attrs, fill, stroke, _poly(pts), tx, ty, title, badge)
+            % (attrs, node_tooltip, mux_hit, fill, stroke, _poly(pts), tx, ty, title, badge)
         )
+    if shape in GATE_SHAPES:
+        return _gate_svg(node, x, y, w, h, fill, stroke, attrs, title, node_tooltip)
     if shape == "logic":
         lines = wrap_expr(expr)
-        tooltip = "<title>%s</title>" % _esc(expr) if expr else ""
+        lk = (_prop(node, "kind") or "comb").lower()
+        if lk not in ("comb", "seq"):
+            lk = "comb"
+        if lk == "seq":
+            attrs += ' data-logic-kind="seq"'
+        tooltip_parts = []
+        base = _node_tooltip_text(node)
+        if base:
+            tooltip_parts.append(base)
+        if lk == "seq":
+            tooltip_parts.append("时序 logic (kind=seq)")
+        if expr:
+            tooltip_parts.append(expr)
+        tooltip = _svg_title("\n".join(tooltip_parts)) if tooltip_parts else ""
+        cx = x + w / 2.0
+        title_y, expr_start = _logic_text_baselines(y, h, len(lines), seq=(lk == "seq"))
         extra = ""
-        if lines:
-            cx = x + w / 2.0
+        if lines and expr_start is not None:
             tspans = "".join(
-                '<tspan x="%.2f" y="%.2f">%s</tspan>' % (cx, y + 34.0 + index * LOGIC_LINE_H, _esc(line))
+                '<tspan x="%.2f" y="%.2f">%s</tspan>'
+                % (cx, expr_start + index * LOGIC_LINE_H, _esc(line))
                 for index, line in enumerate(lines)
             )
             extra = (
@@ -532,21 +983,30 @@ def _node_svg(node, x, y, w, h, palette):
                 'font-size="9" fill="#333">%s</text>'
                 % tspans
             )
+        clock = ""
+        if lk == "seq":
+            clock = (
+                '<polygon fill="%s" stroke="%s" stroke-width="1" points="%.2f,%.2f %.2f,%.2f %.2f,%.2f"/>'
+                % (stroke, stroke, cx - 6.0, y + h, cx, y + h - LOGIC_SEQ_NOTCH, cx + 6.0, y + h)
+            )
         return (
             "<g %s>"
             "%s"
             '<rect class="swatch-fill" x="%.2f" y="%.2f" width="%.2f" height="%.2f" rx="14" ry="14" fill="%s" stroke="%s" stroke-width="1.2"/>'
+            "%s"
             '<text x="%.2f" y="%.2f" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" font-weight="700" fill="#111">%s</text>'
             "%s"
             "</g>"
-            % (attrs, tooltip, x, y, w, h, fill, stroke, x + w / 2.0, y + 16, title, extra)
+            % (attrs, tooltip, x, y, w, h, fill, stroke, clock, cx, title_y, title, extra)
         )
     return (
         "<g %s>"
+        "%s"
+        "%s"
         '<rect class="swatch-fill" x="%.2f" y="%.2f" width="%.2f" height="%.2f" fill="%s" stroke="%s" stroke-width="1"/>'
         '<text x="%.2f" y="%.2f" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" font-weight="700" fill="#111">%s</text>'
         "</g>"
-        % (attrs, x, y, w, h, fill, stroke, x + w / 2.0, y + 14, title)
+        % (attrs, node_tooltip, node_hit, x, y, w, h, fill, stroke, x + w / 2.0, y + 14, title)
     )
 
 
@@ -557,11 +1017,22 @@ def _expand_box(box, x, y):
     box[3] = max(box[3], y)
 
 
+def _port_desc_by_id(graph):
+    acc = {}
+    for node in _iter_nodes(graph):
+        for port in node.get("ports") or []:
+            pd = _port_desc(port)
+            if port.get("id") and pd:
+                acc[port["id"]] = pd
+    return acc
+
+
 def render_svg(graph, palette=None):
     palette = palette or {}
     origins = _abs_origins(graph)
     pins, labels = _collect_ports(graph, origins)
     port_swatches = _port_swatch_map(graph)
+    port_desc_by_id = _port_desc_by_id(graph)
     routes = []
     box = [0.0, 0.0, float(graph.get("width") or 0), float(graph.get("height") or 0)]
 
@@ -639,7 +1110,7 @@ def render_svg(graph, palette=None):
             continue
         _expand_box(box, x, y)
         _expand_box(box, x + w, y + h)
-        if _shape(node) == "mux":
+        if _shape(node) == "mux" or _shape(node) in GATE_SHAPES:
             tx, ty = _mux_title_pos(node, x, y, w)
             tw = max(8.0, len(_node_title(node)) * 6.6)
             _expand_box(box, tx - tw / 2.0, ty - 12.0)
@@ -689,14 +1160,26 @@ def render_svg(graph, palette=None):
         swatch = geom.get("swatch") or ""
         fill = color_for(palette, swatch, PORT_FILL) if swatch else PORT_FILL
         stroke = darken(fill, 0.45) if swatch else PORT_STROKE
+        pname = geom.get("name") or ""
+        pdesc = port_desc_by_id.get(geom.get("id") or "", "")
+        if pdesc:
+            port_tip = _svg_title("%s: %s" % (pname, pdesc))
+        elif pname:
+            port_tip = _svg_title(pname)
+        else:
+            port_tip = ""
         parts.append(
             '<g class="port" data-id="%s" data-swatch="%s" pointer-events="all">'
+            "%s"
             '<circle class="port-hit" cx="%.2f" cy="%.2f" r="12" fill="transparent" stroke="none"/>'
             '<polygon class="swatch-fill port-shape" fill="%s" stroke="%s" stroke-width="1" points="%s"/>'
             '<text class="port-label port-label-hit" pointer-events="all" x="%.2f" y="%.2f" '
             'text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="10" fill="#222">%s</text>'
             "</g>"
-            % (_esc(geom["id"]), _esc(swatch), tx, ty, fill, stroke, _poly(poly), tx, ty, _esc(geom["name"]))
+            % (
+                _esc(geom["id"]), _esc(swatch), port_tip, tx, ty,
+                fill, stroke, _poly(poly), tx, ty, _esc(pname),
+            )
         )
 
     for tx, ty, anchor, name, swatch, port_id in labels:
@@ -711,13 +1194,21 @@ def render_svg(graph, palette=None):
         else:
             _expand_box(box, tx, ty - 10.0)
             _expand_box(box, tx + tw, ty + 4.0)
+        pdesc = port_desc_by_id.get(port_id, "")
+        if pdesc:
+            port_tip = _svg_title("%s: %s" % (name, pdesc))
+        elif name:
+            port_tip = _svg_title(name)
+        else:
+            port_tip = ""
         parts.append(
             '<g class="port port-text" data-id="%s" data-swatch="%s" pointer-events="all">'
+            "%s"
             '<text class="port-label port-label-hit" pointer-events="all" data-swatch="%s" '
             'x="%.2f" y="%.2f" text-anchor="%s" font-family="DejaVu Sans, sans-serif" font-size="10" '
             'fill="%s">%s</text>'
             "</g>"
-            % (_esc(port_id), _esc(swatch), _esc(swatch), tx, ty, anchor, fill, _esc(name))
+            % (_esc(port_id), _esc(swatch), port_tip, _esc(swatch), tx, ty, anchor, fill, _esc(name))
         )
 
     minx, miny, maxx, maxy = box

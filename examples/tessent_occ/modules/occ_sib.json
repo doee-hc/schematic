@@ -1,0 +1,104 @@
+{
+  "modules": {
+    "processor_core_rtl2_tessent_occ_sib": {
+      "title": "tdr_sib",
+      "shape": "box",
+      "swatch": "family:tdr",
+      "note": "Segment isolation buffer — shift/capture/update on negedge/posedge ijtag_tck",
+      "ports": [
+        {"name": "clock", "side": "west", "dir": "in", "swatch": "port:ijtag", "label": "tck"},
+        {"name": "reset", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "enable", "side": "west", "dir": "in", "swatch": "port:ijtag", "label": "sel"},
+        {"name": "capture_en", "side": "west", "dir": "in", "swatch": "port:ijtag", "label": "ce"},
+        {"name": "shift_en", "side": "west", "dir": "in", "swatch": "port:ijtag", "label": "se"},
+        {"name": "update_en", "side": "west", "dir": "in", "swatch": "port:ijtag", "label": "ue"},
+        {"name": "scan_in", "side": "west", "dir": "in", "swatch": "port:ijtag", "label": "si"},
+        {"name": "from_scan_out", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "scan_out", "side": "east", "dir": "out", "swatch": "port:ijtag", "label": "so"},
+        {"name": "to_enable", "side": "east", "dir": "out", "swatch": "port:ijtag", "label": "tdr_en"}
+      ],
+      "edges": [
+        {"from": "clock", "to": "sib_ff.clk", "swatch": "port:ijtag"},
+        {"from": "clock", "to": "latch_ff.clk", "swatch": "port:ijtag"},
+        {"from": "clock", "to": "retime_ff.clk", "swatch": "port:ijtag"},
+        {"from": "reset", "to": "latch_ff.rst", "swatch": "port:ijtag"},
+        {"from": "reset", "to": "sib_ff.rst", "swatch": "port:ijtag"},
+        {"from": "sib_ff.q", "to": "latch_ff.d", "swatch": "port:ijtag"},
+        {"from": "sib_ff.q", "to": "retime_ff.d", "swatch": "port:ijtag"},
+        {"from": "retime_ff.q", "to": "scan_out", "swatch": "port:ijtag"},
+        {"from": "shift_en", "to": "shift_mux.sel", "swatch": "port:ijtag"},
+        {"from": "scan_in", "to": "shift_mux.a", "swatch": "port:ijtag"},
+        {"from": "from_scan_out", "to": "shift_mux.b", "swatch": "port:ijtag"},
+        {"from": "latch_ff.q", "to": "shift_mux.sel"},
+        {"from": "shift_mux.y", "to": "sib_ff.d", "swatch": "port:ijtag"},
+        {"from": "latch_ff.q", "to": "ten_int.d"},
+        {"from": "clock", "to": "ten_int.clk", "swatch": "port:ijtag"},
+        {"from": "ten_int.q", "to": "tdr_en_and.a"},
+        {"from": "enable", "to": "tdr_en_and.b", "swatch": "port:ijtag"},
+        {"from": "tdr_en_and.y", "to": "to_enable", "swatch": "port:ijtag"}
+      ],
+      "children": [
+        {
+          "id": "sib_ff",
+          "title": "sib",
+          "shape": "reg",
+          "swatch": "family:tdr",
+          "ports": [
+            {"name": "clk", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "d", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "rst", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "q", "side": "east", "dir": "out", "swatch": "port:ijtag"}
+          ]
+        },
+        {
+          "id": "latch_ff",
+          "title": "sib_latch",
+          "shape": "reg",
+          "swatch": "family:tdr",
+          "ports": [
+            {"name": "clk", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "d", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "rst", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "q", "side": "east", "dir": "out", "swatch": "port:ijtag"}
+          ]
+        },
+        {
+          "id": "retime_ff",
+          "title": "so_retime",
+          "shape": "reg",
+          "swatch": "family:tdr",
+          "ports": [
+            {"name": "clk", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "d", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "q", "side": "east", "dir": "out", "swatch": "port:ijtag"}
+          ]
+        },
+        {
+          "id": "ten_int",
+          "title": "to_en_int",
+          "shape": "reg",
+          "swatch": "family:tdr",
+          "ports": [
+            {"name": "clk", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "d", "side": "west", "dir": "in"},
+            {"name": "q", "side": "east", "dir": "out"}
+          ]
+        },
+        {
+          "id": "shift_mux",
+          "title": "shift_in",
+          "shape": "mux",
+          "badge": "SI",
+          "swatch": "port:ijtag",
+          "ports": [
+            {"name": "a", "side": "west", "dir": "in", "label": "si", "swatch": "port:ijtag"},
+            {"name": "b", "side": "west", "dir": "in", "label": "chain"},
+            {"name": "sel", "side": "south", "dir": "in"},
+            {"name": "y", "side": "east", "dir": "out", "swatch": "port:ijtag"}
+          ]
+        },
+        {"id": "tdr_en_and", "use_lib": "and2", "title": "en", "swatch": "gate"}
+      ]
+    }
+  }
+}

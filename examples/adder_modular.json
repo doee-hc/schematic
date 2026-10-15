@@ -1,0 +1,206 @@
+{
+  "palette": {
+    "family:top": "#F4F6F8",
+    "family:cell": "#EEF2F6",
+    "gate": "#E7F0FB"
+  },
+  "swatches": [
+    {
+      "key": "family:top",
+      "label": "Top",
+      "group": "Modules"
+    },
+    {
+      "key": "family:cell",
+      "label": "Cell",
+      "group": "Modules"
+    },
+    {
+      "key": "gate",
+      "label": "Gate",
+      "group": "Gates"
+    }
+  ],
+  "modules": {
+    "adder4": {
+      "title": "adder4",
+      "shape": "box",
+      "swatch": "family:top",
+      "ports": [
+        {
+          "name": "a0",
+          "side": "west",
+          "dir": "in"
+        },
+        {
+          "name": "a1",
+          "side": "west",
+          "dir": "in"
+        },
+        {
+          "name": "a2",
+          "side": "west",
+          "dir": "in"
+        },
+        {
+          "name": "a3",
+          "side": "west",
+          "dir": "in"
+        },
+        {
+          "name": "b0",
+          "side": "west",
+          "dir": "in"
+        },
+        {
+          "name": "b1",
+          "side": "west",
+          "dir": "in"
+        },
+        {
+          "name": "b2",
+          "side": "west",
+          "dir": "in"
+        },
+        {
+          "name": "b3",
+          "side": "west",
+          "dir": "in"
+        },
+        {
+          "name": "ci",
+          "side": "west",
+          "dir": "in",
+          "label": "ci"
+        },
+        {
+          "name": "s0",
+          "side": "east",
+          "dir": "out"
+        },
+        {
+          "name": "s1",
+          "side": "east",
+          "dir": "out"
+        },
+        {
+          "name": "s2",
+          "side": "east",
+          "dir": "out"
+        },
+        {
+          "name": "s3",
+          "side": "east",
+          "dir": "out"
+        },
+        {
+          "name": "co",
+          "side": "east",
+          "dir": "out",
+          "label": "co"
+        }
+      ],
+      "edges": [
+        {
+          "from": "ci",
+          "to": "fa0.ci"
+        },
+        {
+          "from": "a0",
+          "to": "fa0.a"
+        },
+        {
+          "from": "b0",
+          "to": "fa0.b"
+        },
+        {
+          "from": "fa0.s",
+          "to": "s0"
+        },
+        {
+          "from": "fa0.co",
+          "to": "fa1.ci"
+        },
+        {
+          "from": "a1",
+          "to": "fa1.a"
+        },
+        {
+          "from": "b1",
+          "to": "fa1.b"
+        },
+        {
+          "from": "fa1.s",
+          "to": "s1"
+        },
+        {
+          "from": "fa1.co",
+          "to": "fa2.ci"
+        },
+        {
+          "from": "a2",
+          "to": "fa2.a"
+        },
+        {
+          "from": "b2",
+          "to": "fa2.b"
+        },
+        {
+          "from": "fa2.s",
+          "to": "s2"
+        },
+        {
+          "from": "fa2.co",
+          "to": "fa3.ci"
+        },
+        {
+          "from": "a3",
+          "to": "fa3.a"
+        },
+        {
+          "from": "b3",
+          "to": "fa3.b"
+        },
+        {
+          "from": "fa3.s",
+          "to": "s3"
+        },
+        {
+          "from": "fa3.co",
+          "to": "co"
+        }
+      ],
+      "children": [
+        {
+          "id": "fa0",
+          "use": "full_adder",
+          "title": "fa0",
+          "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+          "swatch": "family:cell"
+        },
+        {
+          "id": "fa1",
+          "use": "full_adder",
+          "title": "fa1",
+          "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+          "swatch": "family:cell"
+        },
+        {
+          "id": "fa2",
+          "use": "full_adder",
+          "title": "fa2",
+          "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+          "swatch": "family:cell"
+        },
+        {
+          "id": "fa3",
+          "use": "full_adder",
+          "title": "fa3",
+          "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+          "swatch": "family:cell"
+        }
+      ]
+    }
+  },
+  "root": "adder4"
+}

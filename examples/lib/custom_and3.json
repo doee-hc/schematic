@@ -1,0 +1,16 @@
+{
+  "libs": {
+    "and3_custom": {
+      "title": "and3",
+      "desc": "自定义三输入与门（含气泡引脚）",
+      "shape": "and",
+      "swatch": "gate",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in", "desc": "输入 A"},
+        {"name": "b", "side": "west", "dir": "in", "bubble": true, "desc": "输入 B（反相）"},
+        {"name": "c", "side": "west", "dir": "in", "desc": "输入 C"},
+        {"name": "y", "side": "east", "dir": "out", "desc": "与输出"}
+      ]
+    }
+  }
+}

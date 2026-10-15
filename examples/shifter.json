@@ -1,0 +1,1330 @@
+{
+  "palette": {
+    "family:top": "#F4F6F8",
+    "family:cell": "#EEF2F6",
+    "gate": "#E7F0FB"
+  },
+  "swatches": [
+    {
+      "key": "family:top",
+      "label": "Top",
+      "group": "Modules"
+    },
+    {
+      "key": "family:cell",
+      "label": "Cell",
+      "group": "Modules"
+    },
+    {
+      "key": "gate",
+      "label": "Gate",
+      "group": "Gates"
+    }
+  ],
+  "root": {
+    "id": "top",
+    "title": "barrel4",
+    "shape": "box",
+    "swatch": "family:top",
+    "ports": [
+      {
+        "name": "d0",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "d1",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "d2",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "d3",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "s0",
+        "side": "south",
+        "dir": "in"
+      },
+      {
+        "name": "s1",
+        "side": "south",
+        "dir": "in"
+      },
+      {
+        "name": "dir",
+        "side": "south",
+        "dir": "in"
+      },
+      {
+        "name": "z",
+        "side": "south",
+        "dir": "in",
+        "label": "0"
+      },
+      {
+        "name": "y0",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "y1",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "y2",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "y3",
+        "side": "east",
+        "dir": "out"
+      }
+    ],
+    "edges": [
+      {
+        "from": "top.d0",
+        "to": "top.shl.d0"
+      },
+      {
+        "from": "top.z",
+        "to": "top.shl.z"
+      },
+      {
+        "from": "top.d0",
+        "to": "top.shr.d0"
+      },
+      {
+        "from": "top.z",
+        "to": "top.shr.z"
+      },
+      {
+        "from": "top.shr.y0",
+        "to": "top.pick.r0"
+      },
+      {
+        "from": "top.shl.y0",
+        "to": "top.pick.l0"
+      },
+      {
+        "from": "top.pick.y0",
+        "to": "top.y0"
+      },
+      {
+        "from": "top.d1",
+        "to": "top.shl.d1"
+      },
+      {
+        "from": "top.d1",
+        "to": "top.shr.d1"
+      },
+      {
+        "from": "top.shr.y1",
+        "to": "top.pick.r1"
+      },
+      {
+        "from": "top.shl.y1",
+        "to": "top.pick.l1"
+      },
+      {
+        "from": "top.pick.y1",
+        "to": "top.y1"
+      },
+      {
+        "from": "top.d2",
+        "to": "top.shl.d2"
+      },
+      {
+        "from": "top.d2",
+        "to": "top.shr.d2"
+      },
+      {
+        "from": "top.shr.y2",
+        "to": "top.pick.r2"
+      },
+      {
+        "from": "top.shl.y2",
+        "to": "top.pick.l2"
+      },
+      {
+        "from": "top.pick.y2",
+        "to": "top.y2"
+      },
+      {
+        "from": "top.d3",
+        "to": "top.shl.d3"
+      },
+      {
+        "from": "top.d3",
+        "to": "top.shr.d3"
+      },
+      {
+        "from": "top.shr.y3",
+        "to": "top.pick.r3"
+      },
+      {
+        "from": "top.shl.y3",
+        "to": "top.pick.l3"
+      },
+      {
+        "from": "top.pick.y3",
+        "to": "top.y3"
+      },
+      {
+        "from": "top.s0",
+        "to": "top.shl.s0"
+      },
+      {
+        "from": "top.s1",
+        "to": "top.shl.s1"
+      },
+      {
+        "from": "top.s0",
+        "to": "top.shr.s0"
+      },
+      {
+        "from": "top.s1",
+        "to": "top.shr.s1"
+      },
+      {
+        "from": "top.dir",
+        "to": "top.pick.dir"
+      }
+    ],
+    "children": [
+      {
+        "id": "top.shl",
+        "title": "shl",
+        "shape": "box",
+        "swatch": "family:cell",
+        "note": "logical left shift by {s1,s0}",
+        "ports": [
+          {
+            "name": "d0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "d1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "d2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "d3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "s0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "s1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "z",
+            "side": "west",
+            "dir": "in",
+            "label": "0"
+          },
+          {
+            "name": "y0",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y1",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y2",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y3",
+            "side": "east",
+            "dir": "out"
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.shl.d0",
+            "to": "top.shl.t0.a"
+          },
+          {
+            "from": "top.shl.z",
+            "to": "top.shl.t0.b"
+          },
+          {
+            "from": "top.shl.s0",
+            "to": "top.shl.t0.sel"
+          },
+          {
+            "from": "top.shl.t0.y",
+            "to": "top.shl.u0.a"
+          },
+          {
+            "from": "top.shl.z",
+            "to": "top.shl.u0.b"
+          },
+          {
+            "from": "top.shl.s1",
+            "to": "top.shl.u0.sel"
+          },
+          {
+            "from": "top.shl.u0.y",
+            "to": "top.shl.y0"
+          },
+          {
+            "from": "top.shl.d1",
+            "to": "top.shl.t1.a"
+          },
+          {
+            "from": "top.shl.d0",
+            "to": "top.shl.t1.b"
+          },
+          {
+            "from": "top.shl.s0",
+            "to": "top.shl.t1.sel"
+          },
+          {
+            "from": "top.shl.t1.y",
+            "to": "top.shl.u1.a"
+          },
+          {
+            "from": "top.shl.z",
+            "to": "top.shl.u1.b"
+          },
+          {
+            "from": "top.shl.s1",
+            "to": "top.shl.u1.sel"
+          },
+          {
+            "from": "top.shl.u1.y",
+            "to": "top.shl.y1"
+          },
+          {
+            "from": "top.shl.d2",
+            "to": "top.shl.t2.a"
+          },
+          {
+            "from": "top.shl.d1",
+            "to": "top.shl.t2.b"
+          },
+          {
+            "from": "top.shl.s0",
+            "to": "top.shl.t2.sel"
+          },
+          {
+            "from": "top.shl.t2.y",
+            "to": "top.shl.u2.a"
+          },
+          {
+            "from": "top.shl.t0.y",
+            "to": "top.shl.u2.b"
+          },
+          {
+            "from": "top.shl.s1",
+            "to": "top.shl.u2.sel"
+          },
+          {
+            "from": "top.shl.u2.y",
+            "to": "top.shl.y2"
+          },
+          {
+            "from": "top.shl.d3",
+            "to": "top.shl.t3.a"
+          },
+          {
+            "from": "top.shl.d2",
+            "to": "top.shl.t3.b"
+          },
+          {
+            "from": "top.shl.s0",
+            "to": "top.shl.t3.sel"
+          },
+          {
+            "from": "top.shl.t3.y",
+            "to": "top.shl.u3.a"
+          },
+          {
+            "from": "top.shl.t1.y",
+            "to": "top.shl.u3.b"
+          },
+          {
+            "from": "top.shl.s1",
+            "to": "top.shl.u3.sel"
+          },
+          {
+            "from": "top.shl.u3.y",
+            "to": "top.shl.y3"
+          }
+        ],
+        "children": [
+          {
+            "id": "top.shl.t0",
+            "title": "t0",
+            "shape": "mux",
+            "badge": "SH1",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shl.t1",
+            "title": "t1",
+            "shape": "mux",
+            "badge": "SH1",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shl.t2",
+            "title": "t2",
+            "shape": "mux",
+            "badge": "SH1",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shl.t3",
+            "title": "t3",
+            "shape": "mux",
+            "badge": "SH1",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shl.u0",
+            "title": "u0",
+            "shape": "mux",
+            "badge": "SH2",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shl.u1",
+            "title": "u1",
+            "shape": "mux",
+            "badge": "SH2",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shl.u2",
+            "title": "u2",
+            "shape": "mux",
+            "badge": "SH2",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shl.u3",
+            "title": "u3",
+            "shape": "mux",
+            "badge": "SH2",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "top.shr",
+        "title": "shr",
+        "shape": "box",
+        "swatch": "family:cell",
+        "note": "logical right shift by {s1,s0}",
+        "ports": [
+          {
+            "name": "d0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "d1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "d2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "d3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "s0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "s1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "z",
+            "side": "west",
+            "dir": "in",
+            "label": "0"
+          },
+          {
+            "name": "y0",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y1",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y2",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y3",
+            "side": "east",
+            "dir": "out"
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.shr.d0",
+            "to": "top.shr.t0.a"
+          },
+          {
+            "from": "top.shr.d1",
+            "to": "top.shr.t0.b"
+          },
+          {
+            "from": "top.shr.s0",
+            "to": "top.shr.t0.sel"
+          },
+          {
+            "from": "top.shr.t0.y",
+            "to": "top.shr.u0.a"
+          },
+          {
+            "from": "top.shr.t2.y",
+            "to": "top.shr.u0.b"
+          },
+          {
+            "from": "top.shr.s1",
+            "to": "top.shr.u0.sel"
+          },
+          {
+            "from": "top.shr.u0.y",
+            "to": "top.shr.y0"
+          },
+          {
+            "from": "top.shr.d1",
+            "to": "top.shr.t1.a"
+          },
+          {
+            "from": "top.shr.d2",
+            "to": "top.shr.t1.b"
+          },
+          {
+            "from": "top.shr.s0",
+            "to": "top.shr.t1.sel"
+          },
+          {
+            "from": "top.shr.t1.y",
+            "to": "top.shr.u1.a"
+          },
+          {
+            "from": "top.shr.t3.y",
+            "to": "top.shr.u1.b"
+          },
+          {
+            "from": "top.shr.s1",
+            "to": "top.shr.u1.sel"
+          },
+          {
+            "from": "top.shr.u1.y",
+            "to": "top.shr.y1"
+          },
+          {
+            "from": "top.shr.d2",
+            "to": "top.shr.t2.a"
+          },
+          {
+            "from": "top.shr.d3",
+            "to": "top.shr.t2.b"
+          },
+          {
+            "from": "top.shr.s0",
+            "to": "top.shr.t2.sel"
+          },
+          {
+            "from": "top.shr.t2.y",
+            "to": "top.shr.u2.a"
+          },
+          {
+            "from": "top.shr.z",
+            "to": "top.shr.u2.b"
+          },
+          {
+            "from": "top.shr.s1",
+            "to": "top.shr.u2.sel"
+          },
+          {
+            "from": "top.shr.u2.y",
+            "to": "top.shr.y2"
+          },
+          {
+            "from": "top.shr.d3",
+            "to": "top.shr.t3.a"
+          },
+          {
+            "from": "top.shr.z",
+            "to": "top.shr.t3.b"
+          },
+          {
+            "from": "top.shr.s0",
+            "to": "top.shr.t3.sel"
+          },
+          {
+            "from": "top.shr.t3.y",
+            "to": "top.shr.u3.a"
+          },
+          {
+            "from": "top.shr.z",
+            "to": "top.shr.u3.b"
+          },
+          {
+            "from": "top.shr.s1",
+            "to": "top.shr.u3.sel"
+          },
+          {
+            "from": "top.shr.u3.y",
+            "to": "top.shr.y3"
+          }
+        ],
+        "children": [
+          {
+            "id": "top.shr.t0",
+            "title": "t0",
+            "shape": "mux",
+            "badge": "SH1",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shr.t1",
+            "title": "t1",
+            "shape": "mux",
+            "badge": "SH1",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shr.t2",
+            "title": "t2",
+            "shape": "mux",
+            "badge": "SH1",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shr.t3",
+            "title": "t3",
+            "shape": "mux",
+            "badge": "SH1",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shr.u0",
+            "title": "u0",
+            "shape": "mux",
+            "badge": "SH2",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shr.u1",
+            "title": "u1",
+            "shape": "mux",
+            "badge": "SH2",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shr.u2",
+            "title": "u2",
+            "shape": "mux",
+            "badge": "SH2",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.shr.u3",
+            "title": "u3",
+            "shape": "mux",
+            "badge": "SH2",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "top.pick",
+        "title": "dir",
+        "shape": "box",
+        "swatch": "family:cell",
+        "note": "dir=0 keeps the right shift, dir=1 keeps the left shift",
+        "ports": [
+          {
+            "name": "r0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "r1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "r2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "r3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "l0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "l1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "l2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "l3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "dir",
+            "side": "south",
+            "dir": "in"
+          },
+          {
+            "name": "y0",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y1",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y2",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "y3",
+            "side": "east",
+            "dir": "out"
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.pick.r0",
+            "to": "top.pick.m0.a"
+          },
+          {
+            "from": "top.pick.l0",
+            "to": "top.pick.m0.b"
+          },
+          {
+            "from": "top.pick.dir",
+            "to": "top.pick.m0.sel"
+          },
+          {
+            "from": "top.pick.m0.y",
+            "to": "top.pick.y0"
+          },
+          {
+            "from": "top.pick.r1",
+            "to": "top.pick.m1.a"
+          },
+          {
+            "from": "top.pick.l1",
+            "to": "top.pick.m1.b"
+          },
+          {
+            "from": "top.pick.dir",
+            "to": "top.pick.m1.sel"
+          },
+          {
+            "from": "top.pick.m1.y",
+            "to": "top.pick.y1"
+          },
+          {
+            "from": "top.pick.r2",
+            "to": "top.pick.m2.a"
+          },
+          {
+            "from": "top.pick.l2",
+            "to": "top.pick.m2.b"
+          },
+          {
+            "from": "top.pick.dir",
+            "to": "top.pick.m2.sel"
+          },
+          {
+            "from": "top.pick.m2.y",
+            "to": "top.pick.y2"
+          },
+          {
+            "from": "top.pick.r3",
+            "to": "top.pick.m3.a"
+          },
+          {
+            "from": "top.pick.l3",
+            "to": "top.pick.m3.b"
+          },
+          {
+            "from": "top.pick.dir",
+            "to": "top.pick.m3.sel"
+          },
+          {
+            "from": "top.pick.m3.y",
+            "to": "top.pick.y3"
+          }
+        ],
+        "children": [
+          {
+            "id": "top.pick.m0",
+            "title": "y0",
+            "shape": "mux",
+            "badge": "DIR",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.pick.m1",
+            "title": "y1",
+            "shape": "mux",
+            "badge": "DIR",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.pick.m2",
+            "title": "y2",
+            "shape": "mux",
+            "badge": "DIR",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          },
+          {
+            "id": "top.pick.m3",
+            "title": "y3",
+            "shape": "mux",
+            "badge": "DIR",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in",
+                "label": "0"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in",
+                "label": "1"
+              },
+              {
+                "name": "sel",
+                "side": "south",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "note": "4-bit logical barrel shifter. dir=1 shifts left, dir=0 shifts right. z is the fill bit."
+  }
+}

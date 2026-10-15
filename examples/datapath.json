@@ -1,0 +1,215 @@
+{
+  "palette": {
+    "family:top": "#F4F6F8",
+    "family:mac": "#EEF2F6",
+    "gate": "#E7F0FB",
+    "clock:clk": "#E6A23C",
+    "reset:rst": "#E35D6A",
+    "port:scan": "#3D7ECC"
+  },
+  "swatches": [
+    {"key": "family:top", "label": "Core", "group": "Modules"},
+    {"key": "family:mac", "label": "MAC", "group": "Modules"},
+    {"key": "gate", "label": "Gate", "group": "Gates"},
+    {"key": "clock:clk", "label": "clk", "group": "Clocks"},
+    {"key": "reset:rst", "label": "rst", "group": "Reset"},
+    {"key": "port:scan", "label": "Scan", "group": "Ports"}
+  ],
+  "root": {
+    "id": "top",
+    "title": "core",
+    "shape": "box",
+    "swatch": "family:top",
+    "ports": [
+      {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+      {"name": "rst_n", "side": "west", "dir": "in", "swatch": "reset:rst"},
+      {"name": "scan_en", "side": "west", "dir": "in", "swatch": "port:scan"},
+      {"name": "si", "side": "west", "dir": "in", "swatch": "port:scan"},
+      {"name": "te", "side": "west", "dir": "in"},
+      {"name": "ce", "side": "west", "dir": "in"},
+      {"name": "a", "side": "west", "dir": "in"},
+      {"name": "b", "side": "west", "dir": "in"},
+      {"name": "c", "side": "west", "dir": "in"},
+      {"name": "gclk", "side": "east", "dir": "out", "swatch": "clock:clk", "keep": true},
+      {"name": "so", "side": "east", "dir": "out", "swatch": "port:scan", "keep": true},
+      {"name": "y", "side": "east", "dir": "out", "keep": true}
+    ],
+    "edges": [
+      {"from": "top.clk", "to": "top.icg.clk", "swatch": "clock:clk"},
+      {"from": "top.te", "to": "top.icg.te"},
+      {"from": "top.ce", "to": "top.ice.a"},
+      {"from": "top.scan_en", "to": "top.ice.b", "swatch": "port:scan"},
+      {"from": "top.ice.y", "to": "top.icg.en"},
+      {"from": "top.icg.gclk", "to": "top.reg.clk", "swatch": "clock:clk"},
+      {"from": "top.icg.gclk", "to": "top.gclk", "swatch": "clock:clk"},
+      {"from": "top.rst_n", "to": "top.rst_inv.a", "swatch": "reset:rst"},
+      {"from": "top.rst_inv.y", "to": "top.reg.rst", "swatch": "reset:rst"},
+      {"from": "top.si", "to": "top.scan_mux.a", "swatch": "port:scan"},
+      {"from": "top.mac.y", "to": "top.scan_mux.b"},
+      {"from": "top.scan_en", "to": "top.scan_mux.sel", "swatch": "port:scan"},
+      {"from": "top.scan_mux.y", "to": "top.reg.d", "swatch": "port:scan"},
+      {"from": "top.reg.q", "to": "top.so", "swatch": "port:scan"},
+      {"from": "top.reg.q", "to": "top.mac.q", "invert": true, "swatch": "port:scan"},
+      {"from": "top.a", "to": "top.mac.a"},
+      {"from": "top.b", "to": "top.mac.b"},
+      {"from": "top.c", "to": "top.mac.c"},
+      {"from": "top.mac.y", "to": "top.y"}
+    ],
+    "children": [
+      {
+        "id": "top.ice",
+        "title": "ice",
+        "shape": "and",
+        "swatch": "gate",
+        "ports": [
+          {"name": "a", "side": "west", "dir": "in", "label": "ce"},
+          {"name": "b", "side": "west", "dir": "in", "label": "scan", "bubble": true, "swatch": "port:scan"},
+          {"name": "y", "side": "east", "dir": "out", "label": "en"}
+        ]
+      },
+      {
+        "id": "top.icg",
+        "title": "icg",
+        "shape": "icg",
+        "ports": [
+          {"name": "en", "side": "west", "dir": "in"},
+          {"name": "te", "side": "west", "dir": "in"},
+          {"name": "clk", "side": "south", "dir": "in", "swatch": "clock:clk"},
+          {"name": "gclk", "side": "east", "dir": "out", "swatch": "clock:clk"}
+        ]
+      },
+      {
+        "id": "top.rst_inv",
+        "title": "rst",
+        "shape": "buf",
+        "swatch": "gate",
+        "ports": [
+          {"name": "a", "side": "west", "dir": "in", "swatch": "reset:rst"},
+          {"name": "y", "side": "east", "dir": "out", "bubble": true, "swatch": "reset:rst"}
+        ]
+      },
+      {
+        "id": "top.scan_mux",
+        "title": "scan_mux",
+        "shape": "mux",
+        "badge": "SCAN",
+        "ports": [
+          {"name": "a", "side": "west", "dir": "in", "label": "0", "swatch": "port:scan"},
+          {"name": "b", "side": "west", "dir": "in", "label": "1"},
+          {"name": "sel", "side": "south", "dir": "in", "swatch": "port:scan"},
+          {"name": "y", "side": "east", "dir": "out", "swatch": "port:scan"}
+        ]
+      },
+      {
+        "id": "top.reg",
+        "title": "q_reg",
+        "shape": "reg",
+        "note": "RST active high",
+        "ports": [
+          {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+          {"name": "d", "side": "west", "dir": "in", "swatch": "port:scan"},
+          {"name": "rst", "side": "west", "dir": "in", "swatch": "reset:rst"},
+          {"name": "q", "side": "east", "dir": "out", "swatch": "port:scan"}
+        ]
+      },
+      {
+        "id": "top.mac",
+        "title": "mac",
+        "shape": "box",
+        "swatch": "family:mac",
+        "ports": [
+          {"name": "a", "side": "west", "dir": "in"},
+          {"name": "b", "side": "west", "dir": "in"},
+          {"name": "c", "side": "west", "dir": "in"},
+          {"name": "q", "side": "west", "dir": "in", "swatch": "port:scan"},
+          {"name": "y", "side": "east", "dir": "out"}
+        ],
+        "edges": [
+          {"from": "top.mac.a", "to": "top.mac.nand.a"},
+          {"from": "top.mac.b", "to": "top.mac.nand.b"},
+          {"from": "top.mac.c", "to": "top.mac.buf.a"},
+          {"from": "top.mac.buf.y", "to": "top.mac.nand.c"},
+          {"from": "top.mac.buf.y", "to": "top.mac.xor2.b"},
+          {"from": "top.mac.nand.y", "to": "top.mac.or2.a"},
+          {"from": "top.mac.q", "to": "top.mac.or2.b", "swatch": "port:scan"},
+          {"from": "top.mac.or2.y", "to": "top.mac.xor2.a"},
+          {"from": "top.mac.xor2.y", "to": "top.mac.inv.a"},
+          {"from": "top.mac.inv.y", "to": "top.mac.y"},
+          {"from": "top.mac.a", "to": "top.mac.fn.a"},
+          {"from": "top.mac.b", "to": "top.mac.fn.b"},
+          {"from": "top.mac.c", "to": "top.mac.fn.c"},
+          {"from": "top.mac.q", "to": "top.mac.fn.q", "swatch": "port:scan"}
+        ],
+        "children": [
+          {
+            "id": "top.mac.buf",
+            "title": "buf",
+            "shape": "buf",
+            "swatch": "gate",
+            "ports": [
+              {"name": "a", "side": "west", "dir": "in", "label": "c"},
+              {"name": "y", "side": "east", "dir": "out"}
+            ]
+          },
+          {
+            "id": "top.mac.nand",
+            "title": "nand3",
+            "shape": "and",
+            "swatch": "gate",
+            "ports": [
+              {"name": "a", "side": "west", "dir": "in"},
+              {"name": "b", "side": "west", "dir": "in", "bubble": true},
+              {"name": "c", "side": "west", "dir": "in"},
+              {"name": "y", "side": "east", "dir": "out", "bubble": true}
+            ]
+          },
+          {
+            "id": "top.mac.or2",
+            "title": "or2",
+            "shape": "or",
+            "swatch": "gate",
+            "ports": [
+              {"name": "a", "side": "west", "dir": "in"},
+              {"name": "b", "side": "west", "dir": "in", "label": "q", "swatch": "port:scan"},
+              {"name": "y", "side": "east", "dir": "out"}
+            ]
+          },
+          {
+            "id": "top.mac.xor2",
+            "title": "xor2",
+            "shape": "xor",
+            "swatch": "gate",
+            "ports": [
+              {"name": "a", "side": "west", "dir": "in"},
+              {"name": "b", "side": "west", "dir": "in"},
+              {"name": "y", "side": "east", "dir": "out"}
+            ]
+          },
+          {
+            "id": "top.mac.inv",
+            "title": "inv",
+            "shape": "buf",
+            "swatch": "gate",
+            "ports": [
+              {"name": "a", "side": "west", "dir": "in"},
+              {"name": "y", "side": "east", "dir": "out", "bubble": true}
+            ]
+          },
+          {
+            "id": "top.mac.fn",
+            "title": "fn",
+            "shape": "logic",
+            "expr": "(a & ~b & c) | q ^ c",
+            "ports": [
+              {"name": "a", "side": "west", "dir": "in"},
+              {"name": "b", "side": "west", "dir": "in"},
+              {"name": "c", "side": "west", "dir": "in"},
+              {"name": "q", "side": "west", "dir": "in", "swatch": "port:scan"},
+              {"name": "y", "side": "east", "dir": "out"}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

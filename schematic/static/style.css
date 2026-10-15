@@ -194,6 +194,30 @@ body {
   overflow: hidden;
 }
 
+.nav-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-actions button {
+  flex: 0 0 auto;
+}
+
+.nav-crumb {
+  flex: 1 1 100%;
+  font-size: 11px;
+  line-height: 1.3;
+  word-break: break-all;
+}
+
+.preview-content svg g.node.node-selected > .swatch-fill,
+.preview-content svg g.node.node-selected > rect.swatch-fill {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
 label {
   display: block;
   font-size: 12px;
@@ -600,7 +624,7 @@ button:disabled {
 
 .preview-hint {
   font-weight: 400;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .preview-actions {
@@ -720,6 +744,43 @@ button:disabled {
 
 .preview svg g.port .port-hit {
   pointer-events: none;
+}
+
+.preview svg.path-dim g.node,
+.preview svg.path-dim g.edge,
+.preview svg.path-dim g.port {
+  opacity: 0.16;
+}
+
+.preview svg.path-dim g.node.node-hl,
+.preview svg.path-dim g.edge.path-hl,
+.preview svg.path-dim g.port.port-hl,
+.preview svg.path-dim g.port.port-onpath {
+  opacity: 1;
+}
+
+.port-menu {
+  position: fixed;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 168px;
+  padding: 4px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(17, 24, 39, 0.14);
+}
+
+.port-menu[hidden] {
+  display: none;
+}
+
+.port-menu button {
+  text-align: left;
+  padding: 7px 10px;
+  font-weight: 600;
 }
 
 .preview-wrap:fullscreen,

@@ -4,21 +4,13 @@ import json
 import os
 import re
 
+from schematic.document import load_document, normalize_document
+from schematic.elaborate import load_schematic
 from schematic.engine import layout
 from schematic.graph import document_to_elk
 from schematic.svg import render_svg
 
 _HEX = re.compile(r"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")
-
-
-def load_document(path):
-    with open(path, "r", encoding="utf-8") as handle:
-        data = json.load(handle)
-    if not isinstance(data, dict) or not isinstance(data.get("root"), dict):
-        raise ValueError("电路图 JSON 需要对象根，且包含 root")
-    data.setdefault("palette", {})
-    data.setdefault("swatches", [])
-    return data
 
 
 def clean_palette(raw):
@@ -53,6 +45,17 @@ def draw(document, options=None):
     graph = document_to_elk(document, options)
     laid = layout(graph)
     return render_svg(laid, palette)
+
+
+def draw_sources(json_paths, out_path, options=None, filelists=None, top=None):
+    document = load_schematic(json_paths, filelists=filelists, top=top)
+    svg = draw(document, options)
+    folder = os.path.dirname(os.path.abspath(out_path))
+    if folder and not os.path.isdir(folder):
+        os.makedirs(folder)
+    with open(out_path, "w", encoding="utf-8") as handle:
+        handle.write(svg)
+    return out_path
 
 
 def draw_file(path, out_path, options=None):

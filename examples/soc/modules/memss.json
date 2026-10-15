@@ -1,0 +1,28 @@
+{
+  "modules": {
+    "memss": {
+      "title": "Memory SS",
+      "desc": "存储子系统：DDR 控制器/PHY 与片上 OCM",
+      "shape": "box",
+      "swatch": "family:memory",
+      "ports": [
+        {"name": "noc_s", "side": "west", "dir": "in", "label": "S_AXI", "swatch": "bus:axi", "keep": true},
+        {"name": "lpddr5", "side": "east", "dir": "out", "label": "LPDDR5", "keep": true},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ],
+      "edges": [
+        {"from": "noc_s", "to": "ddrc.axi_s", "swatch": "bus:axi"},
+        {"from": "noc_s", "to": "sram.axi_s", "swatch": "bus:axi"},
+        {"from": "clk", "to": "ddrc.clk", "swatch": "clock:clk"},
+        {"from": "clk", "to": "sram.clk", "swatch": "clock:clk"},
+        {"from": "ddrc.phy", "to": "phy.dfi"},
+        {"from": "phy.dq", "to": "lpddr5"}
+      ],
+      "children": [
+        {"id": "ddrc", "use": "ddr_controller", "title": "DDRC"},
+        {"id": "phy", "use": "ddr_phy", "title": "PHY"},
+        {"id": "sram", "use": "ocm_sram", "title": "OCM"}
+      ]
+    }
+  }
+}

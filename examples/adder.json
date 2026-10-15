@@ -1,0 +1,1068 @@
+{
+  "palette": {
+    "family:top": "#F4F6F8",
+    "family:cell": "#EEF2F6",
+    "gate": "#E7F0FB"
+  },
+  "swatches": [
+    {
+      "key": "family:top",
+      "label": "Top",
+      "group": "Modules"
+    },
+    {
+      "key": "family:cell",
+      "label": "Cell",
+      "group": "Modules"
+    },
+    {
+      "key": "gate",
+      "label": "Gate",
+      "group": "Gates"
+    }
+  ],
+  "root": {
+    "shape": "box",
+    "id": "top",
+    "title": "adder4",
+    "swatch": "family:top",
+    "ports": [
+      {
+        "name": "a0",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "a1",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "a2",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "a3",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b0",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b1",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b2",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b3",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "ci",
+        "side": "west",
+        "dir": "in",
+        "label": "ci"
+      },
+      {
+        "name": "s0",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "s1",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "s2",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "s3",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "co",
+        "side": "east",
+        "dir": "out",
+        "label": "co"
+      }
+    ],
+    "children": [
+      {
+        "shape": "box",
+        "id": "top.fa0",
+        "title": "fa0",
+        "swatch": "family:cell",
+        "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "ci",
+            "side": "west",
+            "dir": "in",
+            "label": "ci"
+          },
+          {
+            "name": "s",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "co",
+            "side": "east",
+            "dir": "out",
+            "label": "co"
+          }
+        ],
+        "children": [
+          {
+            "shape": "xor",
+            "id": "top.fa0.xp",
+            "title": "p",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "xor2"
+            }
+          },
+          {
+            "shape": "xor",
+            "id": "top.fa0.xs",
+            "title": "s",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "xor2"
+            }
+          },
+          {
+            "shape": "and",
+            "id": "top.fa0.ab",
+            "title": "g",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "and2"
+            }
+          },
+          {
+            "shape": "and",
+            "id": "top.fa0.pc",
+            "title": "t",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "and2"
+            }
+          },
+          {
+            "shape": "or",
+            "id": "top.fa0.oc",
+            "title": "co",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "or2"
+            }
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.fa0.a",
+            "to": "top.fa0.xp.a"
+          },
+          {
+            "from": "top.fa0.b",
+            "to": "top.fa0.xp.b"
+          },
+          {
+            "from": "top.fa0.a",
+            "to": "top.fa0.ab.a"
+          },
+          {
+            "from": "top.fa0.b",
+            "to": "top.fa0.ab.b"
+          },
+          {
+            "from": "top.fa0.xp.y",
+            "to": "top.fa0.xs.a"
+          },
+          {
+            "from": "top.fa0.ci",
+            "to": "top.fa0.xs.b"
+          },
+          {
+            "from": "top.fa0.xp.y",
+            "to": "top.fa0.pc.a"
+          },
+          {
+            "from": "top.fa0.ci",
+            "to": "top.fa0.pc.b"
+          },
+          {
+            "from": "top.fa0.xs.y",
+            "to": "top.fa0.s"
+          },
+          {
+            "from": "top.fa0.ab.y",
+            "to": "top.fa0.oc.a"
+          },
+          {
+            "from": "top.fa0.pc.y",
+            "to": "top.fa0.oc.b"
+          },
+          {
+            "from": "top.fa0.oc.y",
+            "to": "top.fa0.co"
+          }
+        ]
+      },
+      {
+        "shape": "box",
+        "id": "top.fa1",
+        "title": "fa1",
+        "swatch": "family:cell",
+        "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "ci",
+            "side": "west",
+            "dir": "in",
+            "label": "ci"
+          },
+          {
+            "name": "s",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "co",
+            "side": "east",
+            "dir": "out",
+            "label": "co"
+          }
+        ],
+        "children": [
+          {
+            "shape": "xor",
+            "id": "top.fa1.xp",
+            "title": "p",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "xor2"
+            }
+          },
+          {
+            "shape": "xor",
+            "id": "top.fa1.xs",
+            "title": "s",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "xor2"
+            }
+          },
+          {
+            "shape": "and",
+            "id": "top.fa1.ab",
+            "title": "g",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "and2"
+            }
+          },
+          {
+            "shape": "and",
+            "id": "top.fa1.pc",
+            "title": "t",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "and2"
+            }
+          },
+          {
+            "shape": "or",
+            "id": "top.fa1.oc",
+            "title": "co",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "or2"
+            }
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.fa1.a",
+            "to": "top.fa1.xp.a"
+          },
+          {
+            "from": "top.fa1.b",
+            "to": "top.fa1.xp.b"
+          },
+          {
+            "from": "top.fa1.a",
+            "to": "top.fa1.ab.a"
+          },
+          {
+            "from": "top.fa1.b",
+            "to": "top.fa1.ab.b"
+          },
+          {
+            "from": "top.fa1.xp.y",
+            "to": "top.fa1.xs.a"
+          },
+          {
+            "from": "top.fa1.ci",
+            "to": "top.fa1.xs.b"
+          },
+          {
+            "from": "top.fa1.xp.y",
+            "to": "top.fa1.pc.a"
+          },
+          {
+            "from": "top.fa1.ci",
+            "to": "top.fa1.pc.b"
+          },
+          {
+            "from": "top.fa1.xs.y",
+            "to": "top.fa1.s"
+          },
+          {
+            "from": "top.fa1.ab.y",
+            "to": "top.fa1.oc.a"
+          },
+          {
+            "from": "top.fa1.pc.y",
+            "to": "top.fa1.oc.b"
+          },
+          {
+            "from": "top.fa1.oc.y",
+            "to": "top.fa1.co"
+          }
+        ]
+      },
+      {
+        "shape": "box",
+        "id": "top.fa2",
+        "title": "fa2",
+        "swatch": "family:cell",
+        "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "ci",
+            "side": "west",
+            "dir": "in",
+            "label": "ci"
+          },
+          {
+            "name": "s",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "co",
+            "side": "east",
+            "dir": "out",
+            "label": "co"
+          }
+        ],
+        "children": [
+          {
+            "shape": "xor",
+            "id": "top.fa2.xp",
+            "title": "p",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "xor2"
+            }
+          },
+          {
+            "shape": "xor",
+            "id": "top.fa2.xs",
+            "title": "s",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "xor2"
+            }
+          },
+          {
+            "shape": "and",
+            "id": "top.fa2.ab",
+            "title": "g",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "and2"
+            }
+          },
+          {
+            "shape": "and",
+            "id": "top.fa2.pc",
+            "title": "t",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "and2"
+            }
+          },
+          {
+            "shape": "or",
+            "id": "top.fa2.oc",
+            "title": "co",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "or2"
+            }
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.fa2.a",
+            "to": "top.fa2.xp.a"
+          },
+          {
+            "from": "top.fa2.b",
+            "to": "top.fa2.xp.b"
+          },
+          {
+            "from": "top.fa2.a",
+            "to": "top.fa2.ab.a"
+          },
+          {
+            "from": "top.fa2.b",
+            "to": "top.fa2.ab.b"
+          },
+          {
+            "from": "top.fa2.xp.y",
+            "to": "top.fa2.xs.a"
+          },
+          {
+            "from": "top.fa2.ci",
+            "to": "top.fa2.xs.b"
+          },
+          {
+            "from": "top.fa2.xp.y",
+            "to": "top.fa2.pc.a"
+          },
+          {
+            "from": "top.fa2.ci",
+            "to": "top.fa2.pc.b"
+          },
+          {
+            "from": "top.fa2.xs.y",
+            "to": "top.fa2.s"
+          },
+          {
+            "from": "top.fa2.ab.y",
+            "to": "top.fa2.oc.a"
+          },
+          {
+            "from": "top.fa2.pc.y",
+            "to": "top.fa2.oc.b"
+          },
+          {
+            "from": "top.fa2.oc.y",
+            "to": "top.fa2.co"
+          }
+        ]
+      },
+      {
+        "shape": "box",
+        "id": "top.fa3",
+        "title": "fa3",
+        "swatch": "family:cell",
+        "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "ci",
+            "side": "west",
+            "dir": "in",
+            "label": "ci"
+          },
+          {
+            "name": "s",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "co",
+            "side": "east",
+            "dir": "out",
+            "label": "co"
+          }
+        ],
+        "children": [
+          {
+            "shape": "xor",
+            "id": "top.fa3.xp",
+            "title": "p",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "xor2"
+            }
+          },
+          {
+            "shape": "xor",
+            "id": "top.fa3.xs",
+            "title": "s",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "xor2"
+            }
+          },
+          {
+            "shape": "and",
+            "id": "top.fa3.ab",
+            "title": "g",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "and2"
+            }
+          },
+          {
+            "shape": "and",
+            "id": "top.fa3.pc",
+            "title": "t",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "and2"
+            }
+          },
+          {
+            "shape": "or",
+            "id": "top.fa3.oc",
+            "title": "co",
+            "swatch": "gate",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "y",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "meta": {
+              "kind": "cell",
+              "lib": "or2"
+            }
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.fa3.a",
+            "to": "top.fa3.xp.a"
+          },
+          {
+            "from": "top.fa3.b",
+            "to": "top.fa3.xp.b"
+          },
+          {
+            "from": "top.fa3.a",
+            "to": "top.fa3.ab.a"
+          },
+          {
+            "from": "top.fa3.b",
+            "to": "top.fa3.ab.b"
+          },
+          {
+            "from": "top.fa3.xp.y",
+            "to": "top.fa3.xs.a"
+          },
+          {
+            "from": "top.fa3.ci",
+            "to": "top.fa3.xs.b"
+          },
+          {
+            "from": "top.fa3.xp.y",
+            "to": "top.fa3.pc.a"
+          },
+          {
+            "from": "top.fa3.ci",
+            "to": "top.fa3.pc.b"
+          },
+          {
+            "from": "top.fa3.xs.y",
+            "to": "top.fa3.s"
+          },
+          {
+            "from": "top.fa3.ab.y",
+            "to": "top.fa3.oc.a"
+          },
+          {
+            "from": "top.fa3.pc.y",
+            "to": "top.fa3.oc.b"
+          },
+          {
+            "from": "top.fa3.oc.y",
+            "to": "top.fa3.co"
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "from": "top.ci",
+        "to": "top.fa0.ci"
+      },
+      {
+        "from": "top.a0",
+        "to": "top.fa0.a"
+      },
+      {
+        "from": "top.b0",
+        "to": "top.fa0.b"
+      },
+      {
+        "from": "top.fa0.s",
+        "to": "top.s0"
+      },
+      {
+        "from": "top.fa0.co",
+        "to": "top.fa1.ci"
+      },
+      {
+        "from": "top.a1",
+        "to": "top.fa1.a"
+      },
+      {
+        "from": "top.b1",
+        "to": "top.fa1.b"
+      },
+      {
+        "from": "top.fa1.s",
+        "to": "top.s1"
+      },
+      {
+        "from": "top.fa1.co",
+        "to": "top.fa2.ci"
+      },
+      {
+        "from": "top.a2",
+        "to": "top.fa2.a"
+      },
+      {
+        "from": "top.b2",
+        "to": "top.fa2.b"
+      },
+      {
+        "from": "top.fa2.s",
+        "to": "top.s2"
+      },
+      {
+        "from": "top.fa2.co",
+        "to": "top.fa3.ci"
+      },
+      {
+        "from": "top.a3",
+        "to": "top.fa3.a"
+      },
+      {
+        "from": "top.b3",
+        "to": "top.fa3.b"
+      },
+      {
+        "from": "top.fa3.s",
+        "to": "top.s3"
+      },
+      {
+        "from": "top.fa3.co",
+        "to": "top.co"
+      }
+    ]
+  }
+}

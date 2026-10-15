@@ -1,0 +1,117 @@
+{
+  "modules": {
+    "processor_core_rtl2_tessent_occ_tdr": {
+      "title": "occ_tdr",
+      "shape": "box",
+      "swatch": "family:tdr",
+      "note": "6-bit IJTAG TDR + SIB; fields map to OCC control",
+      "ports": [
+        {"name": "ijtag_tck", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_reset", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_sel", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_ce", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_se", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_ue", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_si", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+        {"name": "ijtag_so", "side": "east", "dir": "out", "swatch": "port:ijtag"},
+        {"name": "inject_tck", "side": "east", "dir": "out", "swatch": "port:ijtag"},
+        {"name": "test_mode", "side": "east", "dir": "out"},
+        {"name": "fast_capture_mode", "side": "east", "dir": "out"},
+        {"name": "active_upstream_parent_occ", "side": "east", "dir": "out", "label": "parent_occ"},
+        {"name": "capture_cycle_width", "side": "east", "dir": "out", "label": "cap_w[1:0]"}
+      ],
+      "edges": [
+        {"from": "ijtag_tck", "to": "sib.clock", "swatch": "port:ijtag"},
+        {"from": "ijtag_reset", "to": "sib.reset", "swatch": "port:ijtag"},
+        {"from": "ijtag_sel", "to": "sib.enable", "swatch": "port:ijtag"},
+        {"from": "ijtag_ce", "to": "sib.capture_en", "swatch": "port:ijtag"},
+        {"from": "ijtag_se", "to": "sib.shift_en", "swatch": "port:ijtag"},
+        {"from": "ijtag_ue", "to": "sib.update_en", "swatch": "port:ijtag"},
+        {"from": "ijtag_si", "to": "sib.scan_in", "swatch": "port:ijtag"},
+        {"from": "retime.q", "to": "sib.from_scan_out", "swatch": "port:ijtag"},
+        {"from": "sib.scan_out", "to": "ijtag_so", "swatch": "port:ijtag"},
+        {"from": "sib.to_enable", "to": "tdr_shift.en", "swatch": "port:ijtag"},
+        {"from": "ijtag_tck", "to": "tdr_shift.clk", "swatch": "port:ijtag"},
+        {"from": "ijtag_si", "to": "tdr_shift.si", "swatch": "port:ijtag"},
+        {"from": "ijtag_se", "to": "tdr_shift.se", "swatch": "port:ijtag"},
+        {"from": "ijtag_ce", "to": "tdr_shift.ce", "swatch": "port:ijtag"},
+        {"from": "tdr_shift.so", "to": "retime.d", "swatch": "port:ijtag"},
+        {"from": "ijtag_tck", "to": "retime.clk", "swatch": "port:ijtag"},
+        {"from": "tdr_shift.q0", "to": "decode.test0"},
+        {"from": "tdr_shift.q1", "to": "decode.test1"},
+        {"from": "tdr_shift.q2", "to": "decode.test2"},
+        {"from": "tdr_shift.q3", "to": "decode.test3"},
+        {"from": "tdr_shift.q4", "to": "decode.test4"},
+        {"from": "tdr_shift.q5", "to": "decode.test5"},
+        {"from": "ijtag_ue", "to": "decode.ue", "swatch": "port:ijtag"},
+        {"from": "sib.to_enable", "to": "decode.en", "swatch": "port:ijtag"},
+        {"from": "ijtag_reset", "to": "decode.rst", "swatch": "port:ijtag"},
+        {"from": "decode.inject_tck", "to": "inject_tck", "swatch": "port:ijtag"},
+        {"from": "decode.test_mode", "to": "test_mode"},
+        {"from": "decode.fast_capture_mode", "to": "fast_capture_mode"},
+        {"from": "decode.active_upstream_parent_occ", "to": "active_upstream_parent_occ"},
+        {"from": "decode.capture_cycle_width", "to": "capture_cycle_width"}
+      ],
+      "children": [
+        {"id": "sib", "use": "processor_core_rtl2_tessent_occ_sib", "title": "tdr_sib"},
+        {
+          "id": "tdr_shift",
+          "title": "tdr[5:0]",
+          "shape": "reg",
+          "swatch": "family:tdr",
+          "note": "shift/capture on posedge tck when tdr_en",
+          "ports": [
+            {"name": "clk", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "si", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "se", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "ce", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "en", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "so", "side": "east", "dir": "out", "swatch": "port:ijtag", "label": "tdr[0]"},
+            {"name": "q0", "side": "east", "dir": "out", "label": "[0]"},
+            {"name": "q1", "side": "east", "dir": "out", "label": "[1]"},
+            {"name": "q2", "side": "east", "dir": "out", "label": "[2]"},
+            {"name": "q3", "side": "east", "dir": "out", "label": "[3]"},
+            {"name": "q4", "side": "east", "dir": "out", "label": "[4]"},
+            {"name": "q5", "side": "east", "dir": "out", "label": "[5]"}
+          ]
+        },
+        {
+          "id": "retime",
+          "title": "tdr_so_retime",
+          "shape": "reg",
+          "swatch": "family:tdr",
+          "ports": [
+            {"name": "clk", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "d", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "q", "side": "east", "dir": "out", "swatch": "port:ijtag"}
+          ]
+        },
+        {
+          "id": "decode",
+          "title": "tdr_update",
+          "shape": "logic",
+          "kind": "seq",
+          "swatch": "family:tdr",
+          "note": "negedge ijtag_tck; ue & tdr_en 时从 tdr[] 锁存各控制位",
+          "expr": "ue→test_mode,fast_cap,parent,cap_w,inject_tck",
+          "ports": [
+            {"name": "ue", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "en", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "rst", "side": "west", "dir": "in", "swatch": "port:ijtag"},
+            {"name": "test0", "side": "west", "dir": "in"},
+            {"name": "test1", "side": "west", "dir": "in"},
+            {"name": "test2", "side": "west", "dir": "in"},
+            {"name": "test3", "side": "west", "dir": "in"},
+            {"name": "test4", "side": "west", "dir": "in"},
+            {"name": "test5", "side": "west", "dir": "in"},
+            {"name": "test_mode", "side": "east", "dir": "out"},
+            {"name": "fast_capture_mode", "side": "east", "dir": "out"},
+            {"name": "active_upstream_parent_occ", "side": "east", "dir": "out"},
+            {"name": "capture_cycle_width", "side": "east", "dir": "out"},
+            {"name": "inject_tck", "side": "east", "dir": "out", "swatch": "port:ijtag"}
+          ]
+        }
+      ]
+    }
+  }
+}

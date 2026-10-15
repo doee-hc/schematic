@@ -1,0 +1,27 @@
+{
+  "root": {
+    "id": "top",
+    "title": "acme_demo",
+    "shape": "box",
+    "swatch": "family:top",
+    "ports": [
+      {"name": "a", "side": "west", "dir": "in"},
+      {"name": "b", "side": "west", "dir": "in"},
+      {"name": "c", "side": "west", "dir": "in"},
+      {"name": "d", "side": "west", "dir": "in"},
+      {"name": "y", "side": "east", "dir": "out"}
+    ],
+    "edges": [
+      {"from": "top.a", "to": "top.u1.a"},
+      {"from": "top.b", "to": "top.u1.b"},
+      {"from": "top.c", "to": "top.u1.c"},
+      {"from": "top.u1.y", "to": "top.u2.a"},
+      {"from": "top.d", "to": "top.u2.b"},
+      {"from": "top.u2.y", "to": "top.y"}
+    ],
+    "children": [
+      {"id": "u1", "use_lib": "acme_and3", "title": "U1"},
+      {"id": "u2", "use_lib": "acme_or2", "title": "U2"}
+    ]
+  }
+}

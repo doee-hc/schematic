@@ -1,0 +1,92 @@
+{
+  "palette": {
+    "family:top": "#F4F6F8",
+    "family:compute": "#E3F2FD",
+    "family:memory": "#FFF3E0",
+    "family:io": "#E8F5E9",
+    "family:mm": "#F3E5F5",
+    "family:sec": "#FFEBEE",
+    "family:sys": "#ECEFF1",
+    "family:noc": "#FFFDE7",
+    "bus:axi": "#5B8DEF",
+    "clock:clk": "#E6A23C",
+    "reset:rst": "#E35D6A",
+    "port:debug": "#7B68EE"
+  },
+  "swatches": [
+    {"key": "family:top", "label": "SoC Top", "group": "Modules"},
+    {"key": "family:compute", "label": "Compute", "group": "Modules"},
+    {"key": "family:memory", "label": "Memory", "group": "Modules"},
+    {"key": "family:io", "label": "IO", "group": "Modules"},
+    {"key": "family:mm", "label": "Multimedia", "group": "Modules"},
+    {"key": "family:sec", "label": "Security", "group": "Modules"},
+    {"key": "family:sys", "label": "System", "group": "Modules"},
+    {"key": "family:noc", "label": "NoC", "group": "Modules"},
+    {"key": "bus:axi", "label": "AXI/NoC", "group": "Interconnect"},
+    {"key": "clock:clk", "label": "Clock", "group": "Clocks"},
+    {"key": "reset:rst", "label": "Reset", "group": "Reset"},
+    {"key": "port:debug", "label": "Debug", "group": "Ports"}
+  ],
+  "modules": {
+    "atlas_soc": {
+      "title": "Atlas-SoC",
+      "desc": "典型高端移动 SoC 框图（参考 Arm 移动平台类架构：APSS + GPU + NPU + CMN NoC + LPDDR5 + 多媒体与安全岛）",
+      "shape": "box",
+      "swatch": "family:top",
+      "ports": [
+        {"name": "xtal", "side": "west", "dir": "in", "label": "XTAL", "keep": true},
+        {"name": "jtag", "side": "west", "dir": "in", "label": "JTAG", "keep": true, "swatch": "port:debug"},
+        {"name": "lpddr5", "side": "east", "dir": "out", "label": "LPDDR5", "keep": true},
+        {"name": "pcie", "side": "east", "dir": "out", "label": "PCIe", "keep": true},
+        {"name": "usb", "side": "east", "dir": "out", "label": "USB", "keep": true},
+        {"name": "ufs", "side": "east", "dir": "out", "label": "UFS", "keep": true},
+        {"name": "dsi", "side": "east", "dir": "out", "label": "MIPI DSI", "keep": true},
+        {"name": "csi", "side": "west", "dir": "in", "label": "MIPI CSI", "keep": true}
+      ],
+      "edges": [
+        {"from": "xtal", "to": "syss.xtal"},
+        {"from": "jtag", "to": "syss.jtag", "swatch": "port:debug"},
+        {"from": "syss.clk_tree", "to": "apss.clk", "swatch": "clock:clk"},
+        {"from": "syss.clk_tree", "to": "gpu.clk", "swatch": "clock:clk"},
+        {"from": "syss.clk_tree", "to": "npu.clk", "swatch": "clock:clk"},
+        {"from": "syss.clk_tree", "to": "noc.clk", "swatch": "clock:clk"},
+        {"from": "syss.clk_tree", "to": "memss.clk", "swatch": "clock:clk"},
+        {"from": "syss.clk_tree", "to": "ioss.clk", "swatch": "clock:clk"},
+        {"from": "syss.clk_tree", "to": "mmss.clk", "swatch": "clock:clk"},
+        {"from": "syss.clk_tree", "to": "secss.clk", "swatch": "clock:clk"},
+        {"from": "syss.clk_tree", "to": "dma.clk", "swatch": "clock:clk"},
+        {"from": "syss.rst_n", "to": "apss.rst_n", "swatch": "reset:rst"},
+        {"from": "apss.noc_m", "to": "noc.s_apss", "swatch": "bus:axi"},
+        {"from": "gpu.axi_m", "to": "noc.s_gpu", "swatch": "bus:axi"},
+        {"from": "npu.axi_m", "to": "noc.s_npu", "swatch": "bus:axi"},
+        {"from": "dma.axi_m", "to": "noc.s_dma", "swatch": "bus:axi"},
+        {"from": "noc.m_mem", "to": "memss.noc_s", "swatch": "bus:axi"},
+        {"from": "noc.m_io", "to": "ioss.noc_s", "swatch": "bus:axi"},
+        {"from": "noc.m_mm", "to": "mmss.noc_s", "swatch": "bus:axi"},
+        {"from": "noc.m_sec", "to": "secss.noc_s", "swatch": "bus:axi"},
+        {"from": "noc.m_dbg", "to": "syss.noc_s", "swatch": "bus:axi"},
+        {"from": "syss.noc_m", "to": "noc.s_dbg", "swatch": "bus:axi"},
+        {"from": "mmss.noc_m", "to": "noc.s_mm", "swatch": "bus:axi"},
+        {"from": "memss.lpddr5", "to": "lpddr5"},
+        {"from": "ioss.pcie", "to": "pcie"},
+        {"from": "ioss.usb", "to": "usb"},
+        {"from": "ioss.ufs", "to": "ufs"},
+        {"from": "mmss.dsi", "to": "dsi"},
+        {"from": "csi", "to": "mmss.csi"}
+      ],
+      "children": [
+        {"id": "apss", "use": "apss", "title": "APSS"},
+        {"id": "gpu", "use": "gpu", "title": "GPU"},
+        {"id": "npu", "use": "npu", "title": "NPU"},
+        {"id": "dma", "use": "system_dma", "title": "DMA"},
+        {"id": "noc", "use": "system_noc", "title": "NoC"},
+        {"id": "memss", "use": "memss", "title": "MEM"},
+        {"id": "ioss", "use": "ioss", "title": "IO"},
+        {"id": "mmss", "use": "mmss", "title": "MM"},
+        {"id": "secss", "use": "secss", "title": "SEC"},
+        {"id": "syss", "use": "syss", "title": "SYS"}
+      ]
+    }
+  },
+  "root": "atlas_soc"
+}

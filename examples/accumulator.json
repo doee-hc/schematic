@@ -1,0 +1,1719 @@
+{
+  "palette": {
+    "family:top": "#F4F6F8",
+    "family:cell": "#EEF2F6",
+    "gate": "#E7F0FB",
+    "clock:clk": "#E6A23C",
+    "reset:rst": "#E35D6A",
+    "port:scan": "#3D7ECC"
+  },
+  "swatches": [
+    {
+      "key": "family:top",
+      "label": "Top",
+      "group": "Modules"
+    },
+    {
+      "key": "family:cell",
+      "label": "Cell",
+      "group": "Modules"
+    },
+    {
+      "key": "gate",
+      "label": "Gate",
+      "group": "Gates"
+    },
+    {
+      "key": "clock:clk",
+      "label": "clk",
+      "group": "Clocks"
+    },
+    {
+      "key": "reset:rst",
+      "label": "rst",
+      "group": "Reset"
+    },
+    {
+      "key": "port:scan",
+      "label": "Scan",
+      "group": "Ports"
+    }
+  ],
+  "root": {
+    "id": "top",
+    "title": "acc4",
+    "shape": "box",
+    "swatch": "family:top",
+    "ports": [
+      {
+        "name": "clk",
+        "side": "west",
+        "dir": "in",
+        "swatch": "clock:clk"
+      },
+      {
+        "name": "rst_n",
+        "side": "west",
+        "dir": "in",
+        "swatch": "reset:rst"
+      },
+      {
+        "name": "te",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "ce",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "scan_en",
+        "side": "west",
+        "dir": "in",
+        "swatch": "port:scan"
+      },
+      {
+        "name": "si",
+        "side": "west",
+        "dir": "in",
+        "swatch": "port:scan"
+      },
+      {
+        "name": "load",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "ci",
+        "side": "west",
+        "dir": "in",
+        "label": "ci"
+      },
+      {
+        "name": "d0",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "d1",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "d2",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "d3",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "gclk",
+        "side": "east",
+        "dir": "out",
+        "swatch": "clock:clk"
+      },
+      {
+        "name": "so",
+        "side": "east",
+        "dir": "out",
+        "swatch": "port:scan"
+      },
+      {
+        "name": "co",
+        "side": "east",
+        "dir": "out",
+        "label": "co"
+      },
+      {
+        "name": "y0",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "y1",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "y2",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "y3",
+        "side": "east",
+        "dir": "out"
+      }
+    ],
+    "edges": [
+      {
+        "from": "top.ce",
+        "to": "top.ice.a"
+      },
+      {
+        "from": "top.scan_en",
+        "to": "top.ice.b",
+        "swatch": "port:scan"
+      },
+      {
+        "from": "top.ice.y",
+        "to": "top.icg.en"
+      },
+      {
+        "from": "top.te",
+        "to": "top.icg.te"
+      },
+      {
+        "from": "top.clk",
+        "to": "top.icg.clk",
+        "swatch": "clock:clk"
+      },
+      {
+        "from": "top.icg.gclk",
+        "to": "top.gclk",
+        "swatch": "clock:clk"
+      },
+      {
+        "from": "top.icg.gclk",
+        "to": "top.bank.clk",
+        "swatch": "clock:clk"
+      },
+      {
+        "from": "top.rst_n",
+        "to": "top.rst.a",
+        "swatch": "reset:rst"
+      },
+      {
+        "from": "top.rst.y",
+        "to": "top.bank.rst",
+        "swatch": "reset:rst"
+      },
+      {
+        "from": "top.ci",
+        "to": "top.add.ci"
+      },
+      {
+        "from": "top.load",
+        "to": "top.bank.load"
+      },
+      {
+        "from": "top.scan_en",
+        "to": "top.bank.scan",
+        "swatch": "port:scan"
+      },
+      {
+        "from": "top.si",
+        "to": "top.bank.si",
+        "swatch": "port:scan"
+      },
+      {
+        "from": "top.bank.so",
+        "to": "top.so",
+        "swatch": "port:scan"
+      },
+      {
+        "from": "top.add.co",
+        "to": "top.co"
+      },
+      {
+        "from": "top.d0",
+        "to": "top.add.a0"
+      },
+      {
+        "from": "top.d0",
+        "to": "top.bank.d0"
+      },
+      {
+        "from": "top.bank.q0",
+        "to": "top.add.b0"
+      },
+      {
+        "from": "top.add.s0",
+        "to": "top.bank.s0"
+      },
+      {
+        "from": "top.bank.q0",
+        "to": "top.y0"
+      },
+      {
+        "from": "top.d1",
+        "to": "top.add.a1"
+      },
+      {
+        "from": "top.d1",
+        "to": "top.bank.d1"
+      },
+      {
+        "from": "top.bank.q1",
+        "to": "top.add.b1"
+      },
+      {
+        "from": "top.add.s1",
+        "to": "top.bank.s1"
+      },
+      {
+        "from": "top.bank.q1",
+        "to": "top.y1"
+      },
+      {
+        "from": "top.d2",
+        "to": "top.add.a2"
+      },
+      {
+        "from": "top.d2",
+        "to": "top.bank.d2"
+      },
+      {
+        "from": "top.bank.q2",
+        "to": "top.add.b2"
+      },
+      {
+        "from": "top.add.s2",
+        "to": "top.bank.s2"
+      },
+      {
+        "from": "top.bank.q2",
+        "to": "top.y2"
+      },
+      {
+        "from": "top.d3",
+        "to": "top.add.a3"
+      },
+      {
+        "from": "top.d3",
+        "to": "top.bank.d3"
+      },
+      {
+        "from": "top.bank.q3",
+        "to": "top.add.b3"
+      },
+      {
+        "from": "top.add.s3",
+        "to": "top.bank.s3"
+      },
+      {
+        "from": "top.bank.q3",
+        "to": "top.y3"
+      }
+    ],
+    "children": [
+      {
+        "id": "top.ice",
+        "title": "ice",
+        "shape": "and",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "bubble": false,
+            "label": "ce"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in",
+            "bubble": true,
+            "label": "scan",
+            "swatch": "port:scan"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out"
+          }
+        ]
+      },
+      {
+        "id": "top.icg",
+        "title": "icg",
+        "shape": "icg",
+        "ports": [
+          {
+            "name": "en",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "te",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "clk",
+            "side": "south",
+            "dir": "in",
+            "swatch": "clock:clk"
+          },
+          {
+            "name": "gclk",
+            "side": "east",
+            "dir": "out",
+            "swatch": "clock:clk"
+          }
+        ]
+      },
+      {
+        "id": "top.rst",
+        "title": "rst",
+        "shape": "buf",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "swatch": "reset:rst"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out",
+            "bubble": true,
+            "swatch": "reset:rst"
+          }
+        ]
+      },
+      {
+        "id": "top.add",
+        "title": "add",
+        "shape": "box",
+        "swatch": "family:cell",
+        "note": "4-bit ripple-carry adder",
+        "ports": [
+          {
+            "name": "a0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "a1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "a2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "a3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "ci",
+            "side": "west",
+            "dir": "in",
+            "label": "ci"
+          },
+          {
+            "name": "s0",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "s1",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "s2",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "s3",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "co",
+            "side": "east",
+            "dir": "out",
+            "label": "co"
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.add.ci",
+            "to": "top.add.fa0.ci"
+          },
+          {
+            "from": "top.add.a0",
+            "to": "top.add.fa0.a"
+          },
+          {
+            "from": "top.add.b0",
+            "to": "top.add.fa0.b"
+          },
+          {
+            "from": "top.add.fa0.s",
+            "to": "top.add.s0"
+          },
+          {
+            "from": "top.add.fa0.co",
+            "to": "top.add.fa1.ci"
+          },
+          {
+            "from": "top.add.a1",
+            "to": "top.add.fa1.a"
+          },
+          {
+            "from": "top.add.b1",
+            "to": "top.add.fa1.b"
+          },
+          {
+            "from": "top.add.fa1.s",
+            "to": "top.add.s1"
+          },
+          {
+            "from": "top.add.fa1.co",
+            "to": "top.add.fa2.ci"
+          },
+          {
+            "from": "top.add.a2",
+            "to": "top.add.fa2.a"
+          },
+          {
+            "from": "top.add.b2",
+            "to": "top.add.fa2.b"
+          },
+          {
+            "from": "top.add.fa2.s",
+            "to": "top.add.s2"
+          },
+          {
+            "from": "top.add.fa2.co",
+            "to": "top.add.fa3.ci"
+          },
+          {
+            "from": "top.add.a3",
+            "to": "top.add.fa3.a"
+          },
+          {
+            "from": "top.add.b3",
+            "to": "top.add.fa3.b"
+          },
+          {
+            "from": "top.add.fa3.s",
+            "to": "top.add.s3"
+          },
+          {
+            "from": "top.add.fa3.co",
+            "to": "top.add.co"
+          }
+        ],
+        "children": [
+          {
+            "id": "top.add.fa0",
+            "title": "fa0",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add.fa1",
+            "title": "fa1",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add.fa2",
+            "title": "fa2",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          },
+          {
+            "id": "top.add.fa3",
+            "title": "fa3",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "s = a ^ b ^ ci; co = (a & b) | (ci & (a ^ b))",
+            "ports": [
+              {
+                "name": "a",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "b",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "ci",
+                "side": "west",
+                "dir": "in",
+                "label": "ci"
+              },
+              {
+                "name": "s",
+                "side": "east",
+                "dir": "out"
+              },
+              {
+                "name": "co",
+                "side": "east",
+                "dir": "out",
+                "label": "co"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "top.bank",
+        "title": "bank",
+        "shape": "box",
+        "swatch": "family:cell",
+        "note": "load=1 captures d; load=0 stores the sum. Scan shifts si to so.",
+        "ports": [
+          {
+            "name": "d0",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "d1",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "d2",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "d3",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "s0",
+            "side": "west",
+            "dir": "in",
+            "label": "s0"
+          },
+          {
+            "name": "s1",
+            "side": "west",
+            "dir": "in",
+            "label": "s1"
+          },
+          {
+            "name": "s2",
+            "side": "west",
+            "dir": "in",
+            "label": "s2"
+          },
+          {
+            "name": "s3",
+            "side": "west",
+            "dir": "in",
+            "label": "s3"
+          },
+          {
+            "name": "si",
+            "side": "west",
+            "dir": "in",
+            "swatch": "port:scan"
+          },
+          {
+            "name": "load",
+            "side": "south",
+            "dir": "in"
+          },
+          {
+            "name": "scan",
+            "side": "south",
+            "dir": "in",
+            "swatch": "port:scan"
+          },
+          {
+            "name": "clk",
+            "side": "south",
+            "dir": "in",
+            "swatch": "clock:clk"
+          },
+          {
+            "name": "rst",
+            "side": "south",
+            "dir": "in",
+            "swatch": "reset:rst"
+          },
+          {
+            "name": "q0",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "q1",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "q2",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "q3",
+            "side": "east",
+            "dir": "out"
+          },
+          {
+            "name": "so",
+            "side": "east",
+            "dir": "out",
+            "swatch": "port:scan"
+          }
+        ],
+        "edges": [
+          {
+            "from": "top.bank.d0",
+            "to": "top.bank.b0.d"
+          },
+          {
+            "from": "top.bank.s0",
+            "to": "top.bank.b0.sum"
+          },
+          {
+            "from": "top.bank.b0.q",
+            "to": "top.bank.q0"
+          },
+          {
+            "from": "top.bank.load",
+            "to": "top.bank.b0.load"
+          },
+          {
+            "from": "top.bank.scan",
+            "to": "top.bank.b0.scan",
+            "swatch": "port:scan"
+          },
+          {
+            "from": "top.bank.clk",
+            "to": "top.bank.b0.clk",
+            "swatch": "clock:clk"
+          },
+          {
+            "from": "top.bank.rst",
+            "to": "top.bank.b0.rst",
+            "swatch": "reset:rst"
+          },
+          {
+            "from": "top.bank.si",
+            "to": "top.bank.b0.si",
+            "swatch": "port:scan"
+          },
+          {
+            "from": "top.bank.d1",
+            "to": "top.bank.b1.d"
+          },
+          {
+            "from": "top.bank.s1",
+            "to": "top.bank.b1.sum"
+          },
+          {
+            "from": "top.bank.b1.q",
+            "to": "top.bank.q1"
+          },
+          {
+            "from": "top.bank.load",
+            "to": "top.bank.b1.load"
+          },
+          {
+            "from": "top.bank.scan",
+            "to": "top.bank.b1.scan",
+            "swatch": "port:scan"
+          },
+          {
+            "from": "top.bank.clk",
+            "to": "top.bank.b1.clk",
+            "swatch": "clock:clk"
+          },
+          {
+            "from": "top.bank.rst",
+            "to": "top.bank.b1.rst",
+            "swatch": "reset:rst"
+          },
+          {
+            "from": "top.bank.b0.q",
+            "to": "top.bank.b1.si",
+            "swatch": "port:scan"
+          },
+          {
+            "from": "top.bank.d2",
+            "to": "top.bank.b2.d"
+          },
+          {
+            "from": "top.bank.s2",
+            "to": "top.bank.b2.sum"
+          },
+          {
+            "from": "top.bank.b2.q",
+            "to": "top.bank.q2"
+          },
+          {
+            "from": "top.bank.load",
+            "to": "top.bank.b2.load"
+          },
+          {
+            "from": "top.bank.scan",
+            "to": "top.bank.b2.scan",
+            "swatch": "port:scan"
+          },
+          {
+            "from": "top.bank.clk",
+            "to": "top.bank.b2.clk",
+            "swatch": "clock:clk"
+          },
+          {
+            "from": "top.bank.rst",
+            "to": "top.bank.b2.rst",
+            "swatch": "reset:rst"
+          },
+          {
+            "from": "top.bank.b1.q",
+            "to": "top.bank.b2.si",
+            "swatch": "port:scan"
+          },
+          {
+            "from": "top.bank.d3",
+            "to": "top.bank.b3.d"
+          },
+          {
+            "from": "top.bank.s3",
+            "to": "top.bank.b3.sum"
+          },
+          {
+            "from": "top.bank.b3.q",
+            "to": "top.bank.q3"
+          },
+          {
+            "from": "top.bank.load",
+            "to": "top.bank.b3.load"
+          },
+          {
+            "from": "top.bank.scan",
+            "to": "top.bank.b3.scan",
+            "swatch": "port:scan"
+          },
+          {
+            "from": "top.bank.clk",
+            "to": "top.bank.b3.clk",
+            "swatch": "clock:clk"
+          },
+          {
+            "from": "top.bank.rst",
+            "to": "top.bank.b3.rst",
+            "swatch": "reset:rst"
+          },
+          {
+            "from": "top.bank.b2.q",
+            "to": "top.bank.b3.si",
+            "swatch": "port:scan"
+          },
+          {
+            "from": "top.bank.b3.q",
+            "to": "top.bank.so",
+            "swatch": "port:scan"
+          }
+        ],
+        "children": [
+          {
+            "id": "top.bank.b0",
+            "title": "b0",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "load selects d, otherwise the adder sum; scan shifts si toward q",
+            "ports": [
+              {
+                "name": "d",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "sum",
+                "side": "west",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "si",
+                "side": "west",
+                "dir": "in",
+                "swatch": "port:scan"
+              },
+              {
+                "name": "load",
+                "side": "south",
+                "dir": "in"
+              },
+              {
+                "name": "scan",
+                "side": "south",
+                "dir": "in",
+                "swatch": "port:scan"
+              },
+              {
+                "name": "clk",
+                "side": "south",
+                "dir": "in",
+                "swatch": "clock:clk"
+              },
+              {
+                "name": "rst",
+                "side": "south",
+                "dir": "in",
+                "swatch": "reset:rst"
+              },
+              {
+                "name": "q",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "edges": [
+              {
+                "from": "top.bank.b0.d",
+                "to": "top.bank.b0.ld.b"
+              },
+              {
+                "from": "top.bank.b0.sum",
+                "to": "top.bank.b0.ld.a"
+              },
+              {
+                "from": "top.bank.b0.load",
+                "to": "top.bank.b0.ld.sel"
+              },
+              {
+                "from": "top.bank.b0.ld.y",
+                "to": "top.bank.b0.sc.a"
+              },
+              {
+                "from": "top.bank.b0.si",
+                "to": "top.bank.b0.sc.b",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b0.scan",
+                "to": "top.bank.b0.sc.sel",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b0.sc.y",
+                "to": "top.bank.b0.q.d",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b0.clk",
+                "to": "top.bank.b0.q.clk",
+                "swatch": "clock:clk"
+              },
+              {
+                "from": "top.bank.b0.rst",
+                "to": "top.bank.b0.q.rst",
+                "swatch": "reset:rst"
+              },
+              {
+                "from": "top.bank.b0.q.q",
+                "to": "top.bank.b0.q"
+              }
+            ],
+            "children": [
+              {
+                "id": "top.bank.b0.ld",
+                "title": "ld",
+                "shape": "mux",
+                "badge": "LOAD",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "0"
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "1"
+                  },
+                  {
+                    "name": "sel",
+                    "side": "south",
+                    "dir": "in",
+                    "label": "s"
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.bank.b0.sc",
+                "title": "sc",
+                "shape": "mux",
+                "badge": "SCAN",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "0"
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "1"
+                  },
+                  {
+                    "name": "sel",
+                    "side": "south",
+                    "dir": "in",
+                    "label": "s"
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.bank.b0.q",
+                "title": "q",
+                "shape": "reg",
+                "ports": [
+                  {
+                    "name": "clk",
+                    "side": "west",
+                    "dir": "in",
+                    "swatch": "clock:clk"
+                  },
+                  {
+                    "name": "d",
+                    "side": "west",
+                    "dir": "in"
+                  },
+                  {
+                    "name": "rst",
+                    "side": "west",
+                    "dir": "in",
+                    "swatch": "reset:rst"
+                  },
+                  {
+                    "name": "q",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "top.bank.b1",
+            "title": "b1",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "load selects d, otherwise the adder sum; scan shifts si toward q",
+            "ports": [
+              {
+                "name": "d",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "sum",
+                "side": "west",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "si",
+                "side": "west",
+                "dir": "in",
+                "swatch": "port:scan"
+              },
+              {
+                "name": "load",
+                "side": "south",
+                "dir": "in"
+              },
+              {
+                "name": "scan",
+                "side": "south",
+                "dir": "in",
+                "swatch": "port:scan"
+              },
+              {
+                "name": "clk",
+                "side": "south",
+                "dir": "in",
+                "swatch": "clock:clk"
+              },
+              {
+                "name": "rst",
+                "side": "south",
+                "dir": "in",
+                "swatch": "reset:rst"
+              },
+              {
+                "name": "q",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "edges": [
+              {
+                "from": "top.bank.b1.d",
+                "to": "top.bank.b1.ld.b"
+              },
+              {
+                "from": "top.bank.b1.sum",
+                "to": "top.bank.b1.ld.a"
+              },
+              {
+                "from": "top.bank.b1.load",
+                "to": "top.bank.b1.ld.sel"
+              },
+              {
+                "from": "top.bank.b1.ld.y",
+                "to": "top.bank.b1.sc.a"
+              },
+              {
+                "from": "top.bank.b1.si",
+                "to": "top.bank.b1.sc.b",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b1.scan",
+                "to": "top.bank.b1.sc.sel",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b1.sc.y",
+                "to": "top.bank.b1.q.d",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b1.clk",
+                "to": "top.bank.b1.q.clk",
+                "swatch": "clock:clk"
+              },
+              {
+                "from": "top.bank.b1.rst",
+                "to": "top.bank.b1.q.rst",
+                "swatch": "reset:rst"
+              },
+              {
+                "from": "top.bank.b1.q.q",
+                "to": "top.bank.b1.q"
+              }
+            ],
+            "children": [
+              {
+                "id": "top.bank.b1.ld",
+                "title": "ld",
+                "shape": "mux",
+                "badge": "LOAD",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "0"
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "1"
+                  },
+                  {
+                    "name": "sel",
+                    "side": "south",
+                    "dir": "in",
+                    "label": "s"
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.bank.b1.sc",
+                "title": "sc",
+                "shape": "mux",
+                "badge": "SCAN",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "0"
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "1"
+                  },
+                  {
+                    "name": "sel",
+                    "side": "south",
+                    "dir": "in",
+                    "label": "s"
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.bank.b1.q",
+                "title": "q",
+                "shape": "reg",
+                "ports": [
+                  {
+                    "name": "clk",
+                    "side": "west",
+                    "dir": "in",
+                    "swatch": "clock:clk"
+                  },
+                  {
+                    "name": "d",
+                    "side": "west",
+                    "dir": "in"
+                  },
+                  {
+                    "name": "rst",
+                    "side": "west",
+                    "dir": "in",
+                    "swatch": "reset:rst"
+                  },
+                  {
+                    "name": "q",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "top.bank.b2",
+            "title": "b2",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "load selects d, otherwise the adder sum; scan shifts si toward q",
+            "ports": [
+              {
+                "name": "d",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "sum",
+                "side": "west",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "si",
+                "side": "west",
+                "dir": "in",
+                "swatch": "port:scan"
+              },
+              {
+                "name": "load",
+                "side": "south",
+                "dir": "in"
+              },
+              {
+                "name": "scan",
+                "side": "south",
+                "dir": "in",
+                "swatch": "port:scan"
+              },
+              {
+                "name": "clk",
+                "side": "south",
+                "dir": "in",
+                "swatch": "clock:clk"
+              },
+              {
+                "name": "rst",
+                "side": "south",
+                "dir": "in",
+                "swatch": "reset:rst"
+              },
+              {
+                "name": "q",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "edges": [
+              {
+                "from": "top.bank.b2.d",
+                "to": "top.bank.b2.ld.b"
+              },
+              {
+                "from": "top.bank.b2.sum",
+                "to": "top.bank.b2.ld.a"
+              },
+              {
+                "from": "top.bank.b2.load",
+                "to": "top.bank.b2.ld.sel"
+              },
+              {
+                "from": "top.bank.b2.ld.y",
+                "to": "top.bank.b2.sc.a"
+              },
+              {
+                "from": "top.bank.b2.si",
+                "to": "top.bank.b2.sc.b",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b2.scan",
+                "to": "top.bank.b2.sc.sel",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b2.sc.y",
+                "to": "top.bank.b2.q.d",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b2.clk",
+                "to": "top.bank.b2.q.clk",
+                "swatch": "clock:clk"
+              },
+              {
+                "from": "top.bank.b2.rst",
+                "to": "top.bank.b2.q.rst",
+                "swatch": "reset:rst"
+              },
+              {
+                "from": "top.bank.b2.q.q",
+                "to": "top.bank.b2.q"
+              }
+            ],
+            "children": [
+              {
+                "id": "top.bank.b2.ld",
+                "title": "ld",
+                "shape": "mux",
+                "badge": "LOAD",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "0"
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "1"
+                  },
+                  {
+                    "name": "sel",
+                    "side": "south",
+                    "dir": "in",
+                    "label": "s"
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.bank.b2.sc",
+                "title": "sc",
+                "shape": "mux",
+                "badge": "SCAN",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "0"
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "1"
+                  },
+                  {
+                    "name": "sel",
+                    "side": "south",
+                    "dir": "in",
+                    "label": "s"
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.bank.b2.q",
+                "title": "q",
+                "shape": "reg",
+                "ports": [
+                  {
+                    "name": "clk",
+                    "side": "west",
+                    "dir": "in",
+                    "swatch": "clock:clk"
+                  },
+                  {
+                    "name": "d",
+                    "side": "west",
+                    "dir": "in"
+                  },
+                  {
+                    "name": "rst",
+                    "side": "west",
+                    "dir": "in",
+                    "swatch": "reset:rst"
+                  },
+                  {
+                    "name": "q",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "top.bank.b3",
+            "title": "b3",
+            "shape": "box",
+            "swatch": "family:cell",
+            "note": "load selects d, otherwise the adder sum; scan shifts si toward q",
+            "ports": [
+              {
+                "name": "d",
+                "side": "west",
+                "dir": "in"
+              },
+              {
+                "name": "sum",
+                "side": "west",
+                "dir": "in",
+                "label": "s"
+              },
+              {
+                "name": "si",
+                "side": "west",
+                "dir": "in",
+                "swatch": "port:scan"
+              },
+              {
+                "name": "load",
+                "side": "south",
+                "dir": "in"
+              },
+              {
+                "name": "scan",
+                "side": "south",
+                "dir": "in",
+                "swatch": "port:scan"
+              },
+              {
+                "name": "clk",
+                "side": "south",
+                "dir": "in",
+                "swatch": "clock:clk"
+              },
+              {
+                "name": "rst",
+                "side": "south",
+                "dir": "in",
+                "swatch": "reset:rst"
+              },
+              {
+                "name": "q",
+                "side": "east",
+                "dir": "out"
+              }
+            ],
+            "edges": [
+              {
+                "from": "top.bank.b3.d",
+                "to": "top.bank.b3.ld.b"
+              },
+              {
+                "from": "top.bank.b3.sum",
+                "to": "top.bank.b3.ld.a"
+              },
+              {
+                "from": "top.bank.b3.load",
+                "to": "top.bank.b3.ld.sel"
+              },
+              {
+                "from": "top.bank.b3.ld.y",
+                "to": "top.bank.b3.sc.a"
+              },
+              {
+                "from": "top.bank.b3.si",
+                "to": "top.bank.b3.sc.b",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b3.scan",
+                "to": "top.bank.b3.sc.sel",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b3.sc.y",
+                "to": "top.bank.b3.q.d",
+                "swatch": "port:scan"
+              },
+              {
+                "from": "top.bank.b3.clk",
+                "to": "top.bank.b3.q.clk",
+                "swatch": "clock:clk"
+              },
+              {
+                "from": "top.bank.b3.rst",
+                "to": "top.bank.b3.q.rst",
+                "swatch": "reset:rst"
+              },
+              {
+                "from": "top.bank.b3.q.q",
+                "to": "top.bank.b3.q"
+              }
+            ],
+            "children": [
+              {
+                "id": "top.bank.b3.ld",
+                "title": "ld",
+                "shape": "mux",
+                "badge": "LOAD",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "0"
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "1"
+                  },
+                  {
+                    "name": "sel",
+                    "side": "south",
+                    "dir": "in",
+                    "label": "s"
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.bank.b3.sc",
+                "title": "sc",
+                "shape": "mux",
+                "badge": "SCAN",
+                "ports": [
+                  {
+                    "name": "a",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "0"
+                  },
+                  {
+                    "name": "b",
+                    "side": "west",
+                    "dir": "in",
+                    "label": "1"
+                  },
+                  {
+                    "name": "sel",
+                    "side": "south",
+                    "dir": "in",
+                    "label": "s"
+                  },
+                  {
+                    "name": "y",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              },
+              {
+                "id": "top.bank.b3.q",
+                "title": "q",
+                "shape": "reg",
+                "ports": [
+                  {
+                    "name": "clk",
+                    "side": "west",
+                    "dir": "in",
+                    "swatch": "clock:clk"
+                  },
+                  {
+                    "name": "d",
+                    "side": "west",
+                    "dir": "in"
+                  },
+                  {
+                    "name": "rst",
+                    "side": "west",
+                    "dir": "in",
+                    "swatch": "reset:rst"
+                  },
+                  {
+                    "name": "q",
+                    "side": "east",
+                    "dir": "out"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "note": "Clock-gated accumulator. load=1 captures d; load=0 adds d into q. scan_en shifts si into the register chain."
+  }
+}

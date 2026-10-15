@@ -1,0 +1,31 @@
+{
+  "modules": {
+    "mmss": {
+      "title": "Multimedia SS",
+      "desc": "显示、相机与视频处理子系统",
+      "shape": "box",
+      "swatch": "family:mm",
+      "ports": [
+        {"name": "noc_m", "side": "east", "dir": "out", "swatch": "bus:axi", "keep": true},
+        {"name": "noc_s", "side": "west", "dir": "in", "swatch": "bus:axi"},
+        {"name": "dsi", "side": "east", "dir": "out", "label": "DSI", "keep": true},
+        {"name": "csi", "side": "west", "dir": "in", "label": "CSI-2", "keep": true},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ],
+      "edges": [
+        {"from": "noc_s", "to": "disp.axi_s", "swatch": "bus:axi"},
+        {"from": "csi", "to": "isp.csi"},
+        {"from": "clk", "to": "isp.clk", "swatch": "clock:clk"},
+        {"from": "clk", "to": "vpu.clk", "swatch": "clock:clk"},
+        {"from": "isp.axi_m", "to": "noc_m", "swatch": "bus:axi"},
+        {"from": "vpu.axi_m", "to": "noc_m", "swatch": "bus:axi"},
+        {"from": "disp.dsi", "to": "dsi"}
+      ],
+      "children": [
+        {"id": "disp", "use": "mipi_dsi", "title": "DSI"},
+        {"id": "isp", "use": "isp", "title": "ISP"},
+        {"id": "vpu", "use": "video_codec", "title": "VPU"}
+      ]
+    }
+  }
+}

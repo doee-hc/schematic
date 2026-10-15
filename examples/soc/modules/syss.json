@@ -1,0 +1,35 @@
+{
+  "modules": {
+    "syss": {
+      "title": "System SS",
+      "desc": "时钟复位、电源管理与调试基础设施",
+      "shape": "box",
+      "swatch": "family:sys",
+      "ports": [
+        {"name": "xtal", "side": "west", "dir": "in", "label": "XTAL", "keep": true},
+        {"name": "clk_tree", "side": "east", "dir": "out", "swatch": "clock:clk", "keep": true},
+        {"name": "rst_n", "side": "east", "dir": "out", "swatch": "reset:rst", "keep": true},
+        {"name": "noc_s", "side": "west", "dir": "in", "swatch": "bus:axi"},
+        {"name": "noc_m", "side": "east", "dir": "out", "swatch": "bus:axi"},
+        {"name": "jtag", "side": "west", "dir": "in", "label": "JTAG", "keep": true, "swatch": "port:debug"},
+        {"name": "pwr", "side": "east", "dir": "out", "label": "PWR"}
+      ],
+      "edges": [
+        {"from": "xtal", "to": "crg.xtal"},
+        {"from": "crg.clk_tree", "to": "clk_tree", "swatch": "clock:clk"},
+        {"from": "crg.rst_n", "to": "rst_n", "swatch": "reset:rst"},
+        {"from": "noc_s", "to": "pmu.axi_s", "swatch": "bus:axi"},
+        {"from": "clk_tree", "to": "pmu.clk", "swatch": "clock:clk"},
+        {"from": "pmu.pwr_req", "to": "pwr"},
+        {"from": "jtag", "to": "dap.jtag", "swatch": "port:debug"},
+        {"from": "clk_tree", "to": "dap.clk", "swatch": "clock:clk"},
+        {"from": "dap.axi_m", "to": "noc_m", "swatch": "bus:axi"}
+      ],
+      "children": [
+        {"id": "crg", "use": "crg", "title": "CRG"},
+        {"id": "pmu", "use": "pmu", "title": "PMU"},
+        {"id": "dap", "use": "dap_debug", "title": "DAP"}
+      ]
+    }
+  }
+}

@@ -2,17 +2,32 @@ import unittest
 
 from schematic.engine import layout
 from schematic.graph import (
+    AND_W,
+    BUF_W,
+    ICG_H,
+    ICG_H_TE,
+    ICG_W,
+    OR_W,
+    XOR_GAP,
+    XOR_W,
     PortFilter,
     document_to_elk,
     port_id,
 )
+from schematic.document import load_document, normalize_document
 from schematic.render import draw
+from schematic.server import QuietThreadingHTTPServer, document_api_payload, make_handler
 from schematic.svg import (
+    BUBBLE_R,
+    GATE_MARGIN,
     _abs_origins,
     _attach,
     _collect_ports,
+    _gate_border_point,
     _mux_border_point,
     _mux_polygon,
+    _or_back_point,
+    _or_metrics,
     render_svg,
 )
 
@@ -289,11 +304,475 @@ class SvgTests(unittest.TestCase):
             self.assertGreaterEqual(tx, pts[0][0])
             self.assertLessEqual(tx, pts[1][0])
         snap = pins[port_id("m.mux", "a")]
+        other = pins[port_id("m.mux", "b")]
+        self.assertLess(snap["tip"][1], other["tip"][1])
+        south = next(item for item in labels if item[3] == "sib")
+        self.assertLess(south[1], max(pts[2][1], pts[3][1]))
         self.assertEqual(snap.get("shape"), "snap")
         expected = _mux_border_point(x, y, w, h, snap["side"], snap["tip"][1])
         self.assertAlmostEqual(snap["tip"][0], expected[0], places=2)
         self.assertAlmostEqual(snap["tip"][1], expected[1], places=2)
         self.assertEqual(_attach(snap, (snap["tip"][0] - 40, snap["tip"][1])), snap["tip"])
+
+
+def _wrap(children, edges=None, ports=None):
+    return {
+        "root": {
+            "id": "top",
+            "title": "top",
+            "shape": "box",
+            "ports": ports or [],
+            "edges": edges or [],
+            "children": children,
+        }
+    }
+
+
+def _and_ports(count, bubble_at=None, out_bubble=False):
+    ports = []
+    for index in range(count):
+        port = {"name": "i%d" % index, "side": "west", "dir": "in"}
+        if bubble_at is not None and index == bubble_at:
+            port["bubble"] = True
+        ports.append(port)
+    out = {"name": "y", "side": "east", "dir": "out"}
+    if out_bubble:
+        out["bubble"] = True
+    ports.append(out)
+    return ports
+
+
+class GateTests(unittest.TestCase):
+    def test_rejects_bad_pins(self):
+        cases = [
+            (_wrap([{
+                "id": "top.and", "shape": "and",
+                "ports": _and_ports(1),
+            }]), "至少需要两个西侧输入"),
+            (_wrap([{
+                "id": "top.or", "shape": "or",
+                "ports": _and_ports(2) + [{"name": "sel", "side": "south", "dir": "in"}],
+            }]), "只允许西侧输入和东侧输出"),
+            (_wrap([{
+                "id": "top.buf", "shape": "buf",
+                "ports": _and_ports(2),
+            }]), "恰好一个西侧输入"),
+            (_wrap([{
+                "id": "top.and", "shape": "and",
+                "ports": _and_ports(2),
+                "children": [{"id": "top.and.x", "shape": "box"}],
+            }]), "不能有子节点"),
+            (_wrap([{
+                "id": "top.icg", "shape": "icg",
+                "ports": [
+                    {"name": "clk", "side": "south", "dir": "in"},
+                    {"name": "gclk", "side": "east", "dir": "out"},
+                ],
+            }]), "en 必须在西侧"),
+            (_wrap([{
+                "id": "top.icg", "shape": "icg",
+                "ports": [
+                    {"name": "en", "side": "west", "dir": "in"},
+                    {"name": "clk", "side": "south", "dir": "in"},
+                    {"name": "y", "side": "east", "dir": "out"},
+                    {"name": "z", "side": "east", "dir": "out"},
+                ],
+            }]), "恰好一个东侧输出"),
+            (_wrap([{
+                "id": "top.icg", "shape": "icg",
+                "ports": [
+                    {"name": "en", "side": "west", "dir": "in"},
+                    {"name": "te", "side": "south", "dir": "in"},
+                    {"name": "clk", "side": "south", "dir": "in"},
+                    {"name": "gclk", "side": "east", "dir": "out"},
+                ],
+            }]), "te 必须在西侧"),
+            (_wrap([{
+                "id": "top.icg", "shape": "icg",
+                "ports": [
+                    {"name": "en", "side": "west", "dir": "in"},
+                    {"name": "se", "side": "west", "dir": "in"},
+                    {"name": "clk", "side": "south", "dir": "in"},
+                    {"name": "gclk", "side": "east", "dir": "out"},
+                ],
+            }]), "未约定的端口"),
+        ]
+        for doc, text in cases:
+            with self.assertRaises(ValueError) as caught:
+                document_to_elk(doc)
+            self.assertIn(text, str(caught.exception))
+
+    def test_size_bubble_and_order(self):
+        wide = "streaming_through_ijtag_en_and"
+        doc = _wrap([
+            {"id": "top.and", "title": wide, "shape": "and", "ports": _and_ports(2, bubble_at=1, out_bubble=True)},
+            {"id": "top.and_short", "title": "a", "shape": "and", "ports": _and_ports(2, bubble_at=1, out_bubble=True)},
+            {"id": "top.wide", "title": wide, "shape": "and", "ports": _and_ports(8)},
+            {"id": "top.buf", "title": wide, "shape": "buf", "ports": [
+                {"name": "a", "side": "west", "dir": "in"},
+                {"name": "y", "side": "east", "dir": "out", "bubble": True},
+            ]},
+            {"id": "top.or", "shape": "or", "ports": _and_ports(2)},
+            {"id": "top.xor", "shape": "xor", "ports": _and_ports(2)},
+            {"id": "top.icg", "shape": "icg", "ports": [
+                {"name": "en", "side": "west", "dir": "in"},
+                {"name": "clk", "side": "south", "dir": "in"},
+                {"name": "gclk", "side": "east", "dir": "out"},
+            ]},
+            {"id": "top.icg_te", "shape": "icg", "ports": [
+                {"name": "en", "side": "west", "dir": "in"},
+                {"name": "te", "side": "west", "dir": "in"},
+                {"name": "clk", "side": "south", "dir": "in"},
+                {"name": "gclk", "side": "east", "dir": "out"},
+            ]},
+        ])
+        nodes = _nodes(document_to_elk(doc))
+        and_node = nodes["top.and"]
+        self.assertEqual(and_node["width"], nodes["top.and_short"]["width"])
+        self.assertGreater(nodes["top.wide"]["width"], and_node["width"])
+        self.assertGreater(nodes["top.wide"]["height"], and_node["height"])
+        self.assertEqual(nodes["top.buf"]["width"], BUF_W)
+        self.assertGreater(nodes["top.or"]["width"], nodes["top.or"]["height"])
+        self.assertGreater(nodes["top.xor"]["width"], nodes["top.or"]["width"])
+        self.assertEqual(nodes["top.icg"]["width"], ICG_W)
+        self.assertEqual(nodes["top.icg"]["height"], ICG_H)
+        self.assertEqual(nodes["top.icg_te"]["height"], ICG_H_TE)
+        bubbled = [
+            port for port in and_node["ports"]
+            if (port.get("properties") or {}).get("bubble") == "true"
+        ]
+        self.assertEqual(sorted(port["properties"]["name"] for port in bubbled), ["i1", "y"])
+        west = [port for port in and_node["ports"] if port["layoutOptions"]["elk.port.side"] == "WEST"]
+        first = next(port for port in west if port["properties"]["name"] == "i0")
+        second = next(port for port in west if port["properties"]["name"] == "i1")
+        self.assertLess(first["y"], second["y"])
+
+    def test_boxes_only_and_port_filter(self):
+        doc = _wrap([
+            {"id": "top.and", "shape": "and", "ports": _and_ports(2)},
+            {"id": "top.leaf", "shape": "box", "ports": [{"name": "x", "side": "west", "dir": "in"}]},
+        ])
+        hidden = _nodes(document_to_elk(doc, {"boxes_only": True}))
+        self.assertIn("top.leaf", hidden)
+        self.assertNotIn("top.and", hidden)
+        kept = _nodes(document_to_elk(doc, {"port_exclude": ["*"]}))
+        names = {port["properties"]["name"] for port in kept["top.and"]["ports"]}
+        self.assertEqual(names, {"i0", "i1", "y"})
+
+    def test_logic_seq_kind_clock_notch(self):
+        doc = _wrap([{
+            "id": "top.ue",
+            "title": "tdr_update",
+            "shape": "logic",
+            "kind": "seq",
+            "expr": "ue & tdr_en → fields",
+            "ports": [
+                {"name": "ue", "side": "west", "dir": "in"},
+                {"name": "y", "side": "east", "dir": "out"},
+            ],
+        }])
+        node = _nodes(document_to_elk(doc))["top.ue"]
+        self.assertEqual(node["properties"].get("kind"), "seq")
+        svg = draw(doc)
+        self.assertIn('data-logic-kind="seq"', svg)
+        start = svg.find('data-logic-kind="seq"')
+        chunk = svg[start : start + 900]
+        self.assertIn('rx="14"', chunk)
+        self.assertIn("<polygon", chunk)
+
+    def test_logic_kind_invalid(self):
+        doc = _wrap([{"id": "top.x", "shape": "logic", "kind": "flop", "ports": []}])
+        with self.assertRaises(ValueError):
+            document_to_elk(doc)
+
+    def test_logic_ports_are_spaced(self):
+        doc = _wrap([{
+            "id": "top.fn",
+            "shape": "logic",
+            "expr": "(a & ~b & c) | q ^ c",
+            "ports": [
+                {"name": "a", "side": "west", "dir": "in"},
+                {"name": "b", "side": "west", "dir": "in"},
+                {"name": "c", "side": "west", "dir": "in"},
+                {"name": "q", "side": "west", "dir": "in"},
+                {"name": "y", "side": "east", "dir": "out"},
+            ],
+        }])
+        node = _nodes(document_to_elk(doc))["top.fn"]
+        west = [
+            port for port in node["ports"]
+            if port["layoutOptions"]["elk.port.side"] == "WEST"
+        ]
+        ys = [port["y"] for port in west]
+        gaps = [b - a for a, b in zip(ys, ys[1:])]
+        self.assertGreaterEqual(min(gaps), 18.0)
+        self.assertLess(ys[0], ys[-1])
+
+    def test_outline_bulges_the_right_way(self):
+        metrics = _or_metrics(0, 0, OR_W, 48, False)
+        mid = _or_back_point(metrics, metrics["mid"])
+        self.assertGreater(mid[0], metrics["end_x"])
+        xor = _or_metrics(0, 0, XOR_W, 48, True)
+        self.assertLess(xor["left"] - xor["xor_gap"], xor["left"])
+        east = _gate_border_point(0, 0, AND_W, 48, "and", "EAST", 24)
+        west = _gate_border_point(0, 0, AND_W, 48, "and", "WEST", 24, "i0")
+        self.assertGreater(east[0], west[0])
+        self.assertAlmostEqual(west[0], GATE_MARGIN, places=2)
+        xor_border = _gate_border_point(0, 0, XOR_W, 56, "xor", "WEST", 28, "a")
+        inner = _or_back_point(_or_metrics(0, 0, XOR_W, 56, True), xor_border[1])
+        self.assertAlmostEqual(inner[0] - xor_border[0], XOR_GAP, places=2)
+
+    def test_drawing_and_wire_ends(self):
+        graph = {
+            "id": "root",
+            "width": 520,
+            "height": 160,
+            "children": [
+                {
+                    "id": "and", "x": 10, "y": 30, "width": AND_W, "height": 48,
+                    "labels": [{"text": "and3"}],
+                    "properties": {"shape": "and"},
+                    "ports": [{
+                        "id": "and__b", "x": 0, "y": 16, "width": 0, "height": 0,
+                        "labels": [{"text": "b"}],
+                        "properties": {"name": "b", "bubble": "true"},
+                        "layoutOptions": {"elk.port.side": "WEST"},
+                    }],
+                },
+                {
+                    "id": "or", "x": 90, "y": 30, "width": OR_W, "height": 48,
+                    "labels": [{"text": "or2"}],
+                    "properties": {"shape": "or"},
+                    "ports": [],
+                },
+                {
+                    "id": "xor", "x": 170, "y": 30, "width": XOR_W, "height": 48,
+                    "labels": [{"text": "xor2"}],
+                    "properties": {"shape": "xor"},
+                    "ports": [],
+                },
+                {
+                    "id": "buf", "x": 260, "y": 30, "width": BUF_W, "height": 40,
+                    "labels": [{"text": "inv"}],
+                    "properties": {"shape": "buf"},
+                    "ports": [],
+                },
+                {
+                    "id": "icg", "x": 330, "y": 20, "width": ICG_W, "height": ICG_H_TE,
+                    "labels": [{"text": "icg"}],
+                    "properties": {"shape": "icg"},
+                    "ports": [
+                        {"id": "icg__te", "properties": {"name": "te"}, "labels": [{"text": "te"}]},
+                    ],
+                },
+            ],
+            "edges": [],
+        }
+        svg = render_svg(graph)
+        for shape in ("and", "or", "xor", "buf", "icg"):
+            self.assertIn('data-shape="%s"' % shape, svg)
+        self.assertIn('class="gate-title"', svg)
+        self.assertIn('class="gate-bubble"', svg)
+        self.assertIn('class="gate-stroke"', svg)
+        self.assertIn("#e7f0fb", svg)
+        self.assertIn("#fff3e0", svg)
+
+        doc = _wrap(
+            [{
+                "id": "top.and",
+                "title": "and3",
+                "shape": "and",
+                "ports": [
+                    {"name": "a", "side": "west", "dir": "in"},
+                    {"name": "b", "side": "west", "dir": "in", "bubble": True},
+                    {"name": "c", "side": "west", "dir": "in"},
+                    {"name": "y", "side": "east", "dir": "out", "bubble": True},
+                ],
+            }],
+            edges=[
+                {"from": "top.a", "to": "top.and.a"},
+                {"from": "top.b", "to": "top.and.b"},
+                {"from": "top.c", "to": "top.and.c"},
+                {"from": "top.and.y", "to": "top.y"},
+            ],
+            ports=[
+                {"name": "a", "side": "west", "dir": "in"},
+                {"name": "b", "side": "west", "dir": "in"},
+                {"name": "c", "side": "west", "dir": "in"},
+                {"name": "y", "side": "east", "dir": "out"},
+            ],
+        )
+        laid = layout(document_to_elk(doc))
+        origins = _abs_origins(laid)
+        pins, labels = _collect_ports(laid, origins)
+        node = _nodes(laid)["top.and"]
+        x, y = origins["top.and"]
+        w = float(node["width"])
+        h = float(node["height"])
+        plain = pins[port_id("top.and", "a")]
+        bubbled = pins[port_id("top.and", "b")]
+        output = pins[port_id("top.and", "y")]
+        plain_border = _gate_border_point(x, y, w, h, "and", "WEST", plain["tip"][1], "a")
+        bubbled_border = _gate_border_point(x, y, w, h, "and", "WEST", bubbled["tip"][1], "b")
+        out_border = _gate_border_point(x, y, w, h, "and", "EAST", output["tip"][1], "y")
+        self.assertAlmostEqual(plain["tip"][0], plain_border[0], places=2)
+        self.assertAlmostEqual(plain["tip"][0], x + GATE_MARGIN, places=2)
+        self.assertAlmostEqual(bubbled["tip"][0], bubbled_border[0] - 2.0 * BUBBLE_R, places=2)
+        self.assertAlmostEqual(output["tip"][0], out_border[0] + 2.0 * BUBBLE_R, places=2)
+        self.assertAlmostEqual(out_border[0], x + w - GATE_MARGIN, places=2)
+        self.assertTrue(any(item[3] == "a" for item in labels))
+        self.assertTrue(any(item[3] == "y" for item in labels))
+        drawn = draw(doc)
+        self.assertEqual(drawn.count('class="gate-bubble"'), 2)
+
+    def test_compound_south_port_lays_out(self):
+        doc = {
+            "root": {
+                "id": "top",
+                "title": "t",
+                "shape": "box",
+                "ports": [
+                    {"name": "d", "side": "west", "dir": "in"},
+                    {"name": "dir", "side": "south", "dir": "in"},
+                    {"name": "y", "side": "east", "dir": "out"},
+                ],
+                "edges": [
+                    {"from": "top.d", "to": "top.m.a"},
+                    {"from": "top.dir", "to": "top.m.sel"},
+                    {"from": "top.m.y", "to": "top.y"},
+                ],
+                "children": [{
+                    "id": "top.m",
+                    "shape": "mux",
+                    "ports": [
+                        {"name": "a", "side": "west", "dir": "in"},
+                        {"name": "b", "side": "west", "dir": "in"},
+                        {"name": "sel", "side": "south", "dir": "in"},
+                        {"name": "y", "side": "east", "dir": "out"},
+                    ],
+                }],
+            }
+        }
+        graph = document_to_elk(doc)
+        self.assertEqual(
+            graph["layoutOptions"]["elk.layered.nodePlacement.strategy"],
+            "BRANDES_KOEPF",
+        )
+        laid = layout(graph)
+        self.assertGreater(laid.get("width") or 0, 0)
+        ports = _nodes(laid)["top"]["ports"]
+        south = [port for port in ports if port["layoutOptions"]["elk.port.side"] == "SOUTH"]
+        self.assertEqual(len(south), 1)
+        self.assertGreater(south[0].get("x") or 0, 0)
+
+    def test_complex_examples_draw(self):
+        import os
+        root = os.path.join(os.path.dirname(__file__), "..", "examples")
+        for name, title in (
+            ("adder.json", "adder4"),
+            ("multiplier.json", "mul4"),
+            ("shifter.json", "barrel4"),
+            ("comparator.json", "cmp4"),
+            ("accumulator.json", "acc4"),
+        ):
+            svg = draw(load_document(os.path.join(root, name)))
+            self.assertIn(title, svg)
+            self.assertIn("<svg", svg)
+
+
+    def test_inline_mux_title_hover_svg(self):
+        doc = normalize_document({
+            "root": {
+                "id": "top",
+                "title": "t",
+                "shape": "box",
+                "children": [{
+                    "id": "m",
+                    "title": "SCAN_OUT_d",
+                    "shape": "mux",
+                    "badge": "SO",
+                    "ports": [
+                        {"name": "a", "side": "west", "dir": "in", "label": "bypass"},
+                        {"name": "b", "side": "west", "dir": "in", "label": "shift"},
+                        {"name": "sel", "side": "south", "dir": "in"},
+                        {"name": "y", "side": "east", "dir": "out"},
+                    ],
+                }],
+            },
+        })
+        svg = draw(doc)
+        self.assertIn("<title>SCAN_OUT_d", svg)
+        self.assertIn("bypass", svg)
+
+    def test_cell_desc_hover_svg(self):
+        import os
+
+        from schematic.elaborate import load_schematic
+
+        root = os.path.join(os.path.dirname(__file__), "..", "examples")
+        doc = load_schematic(json_paths=[os.path.join(root, "gates.json")])
+        svg = draw(doc)
+        self.assertIn("<title>", svg)
+        self.assertIn("三输入与门", svg)
+        self.assertIn("输入 A", svg)
+        self.assertIn("data-module-lib=", svg)
+
+    def test_normalize_document_requires_root(self):
+        with self.assertRaises(ValueError):
+            normalize_document({})
+
+    def test_viewer_open_document_api(self):
+        import json
+        import os
+        import threading
+        import urllib.error
+        import urllib.request
+
+        server = QuietThreadingHTTPServer(
+            ("127.0.0.1", 0), make_handler(), log_to_stderr=False,
+        )
+        port = server.server_address[1]
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            base = "http://127.0.0.1:%s" % port
+            with urllib.request.urlopen(base + "/api/document") as resp:
+                payload = json.loads(resp.read().decode("utf-8"))
+            self.assertTrue(payload["ok"])
+            self.assertFalse(payload["loaded"])
+
+            doc = load_document(os.path.join(os.path.dirname(__file__), "..", "examples", "gates.json"))
+            body = json.dumps({"name": "gates.json", "document": doc}).encode("utf-8")
+            req = urllib.request.Request(
+                base + "/api/document",
+                data=body,
+                method="POST",
+                headers={"Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req) as resp:
+                opened = json.loads(resp.read().decode("utf-8"))
+            self.assertTrue(opened["loaded"])
+            self.assertEqual(opened["name"], "gates.json")
+            self.assertIsInstance(opened["tree"], dict)
+
+            draw_body = json.dumps({"include": [opened["tree"]["full_name"]]}).encode("utf-8")
+            draw_req = urllib.request.Request(
+                base + "/api/draw",
+                data=draw_body,
+                method="POST",
+                headers={"Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(draw_req) as resp:
+                drawn = json.loads(resp.read().decode("utf-8"))
+            self.assertTrue(drawn["ok"])
+            self.assertIn("<svg", drawn["svg"])
+
+            server.schematic_document = None
+            with self.assertRaises(urllib.error.HTTPError):
+                urllib.request.urlopen(draw_req)
+        finally:
+            server.shutdown()
+            thread.join(timeout=2)
 
 
 if __name__ == "__main__":

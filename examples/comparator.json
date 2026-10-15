@@ -1,0 +1,628 @@
+{
+  "palette": {
+    "family:top": "#F4F6F8",
+    "family:cell": "#EEF2F6",
+    "gate": "#E7F0FB"
+  },
+  "swatches": [
+    {
+      "key": "family:top",
+      "label": "Top",
+      "group": "Modules"
+    },
+    {
+      "key": "family:cell",
+      "label": "Cell",
+      "group": "Modules"
+    },
+    {
+      "key": "gate",
+      "label": "Gate",
+      "group": "Gates"
+    }
+  ],
+  "root": {
+    "id": "top",
+    "title": "cmp4",
+    "shape": "box",
+    "swatch": "family:top",
+    "ports": [
+      {
+        "name": "a0",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "a1",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "a2",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "a3",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b0",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b1",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b2",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "b3",
+        "side": "west",
+        "dir": "in"
+      },
+      {
+        "name": "eq",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "gt",
+        "side": "east",
+        "dir": "out"
+      },
+      {
+        "name": "lt",
+        "side": "east",
+        "dir": "out"
+      }
+    ],
+    "edges": [
+      {
+        "from": "top.a0",
+        "to": "top.x0.a"
+      },
+      {
+        "from": "top.b0",
+        "to": "top.x0.b"
+      },
+      {
+        "from": "top.a0",
+        "to": "top.g0.a"
+      },
+      {
+        "from": "top.b0",
+        "to": "top.g0.b"
+      },
+      {
+        "from": "top.a1",
+        "to": "top.x1.a"
+      },
+      {
+        "from": "top.b1",
+        "to": "top.x1.b"
+      },
+      {
+        "from": "top.a1",
+        "to": "top.g1.a"
+      },
+      {
+        "from": "top.b1",
+        "to": "top.g1.b"
+      },
+      {
+        "from": "top.a2",
+        "to": "top.x2.a"
+      },
+      {
+        "from": "top.b2",
+        "to": "top.x2.b"
+      },
+      {
+        "from": "top.a2",
+        "to": "top.g2.a"
+      },
+      {
+        "from": "top.b2",
+        "to": "top.g2.b"
+      },
+      {
+        "from": "top.a3",
+        "to": "top.x3.a"
+      },
+      {
+        "from": "top.b3",
+        "to": "top.x3.b"
+      },
+      {
+        "from": "top.a3",
+        "to": "top.g3.a"
+      },
+      {
+        "from": "top.b3",
+        "to": "top.g3.b"
+      },
+      {
+        "from": "top.x3.y",
+        "to": "top.eq.a"
+      },
+      {
+        "from": "top.x2.y",
+        "to": "top.eq.b"
+      },
+      {
+        "from": "top.x1.y",
+        "to": "top.eq.c"
+      },
+      {
+        "from": "top.x0.y",
+        "to": "top.eq.d"
+      },
+      {
+        "from": "top.x3.y",
+        "to": "top.t2.a"
+      },
+      {
+        "from": "top.g2.y",
+        "to": "top.t2.b"
+      },
+      {
+        "from": "top.x3.y",
+        "to": "top.t1.a"
+      },
+      {
+        "from": "top.x2.y",
+        "to": "top.t1.b"
+      },
+      {
+        "from": "top.g1.y",
+        "to": "top.t1.c"
+      },
+      {
+        "from": "top.x3.y",
+        "to": "top.t0.a"
+      },
+      {
+        "from": "top.x2.y",
+        "to": "top.t0.b"
+      },
+      {
+        "from": "top.x1.y",
+        "to": "top.t0.c"
+      },
+      {
+        "from": "top.g0.y",
+        "to": "top.t0.d"
+      },
+      {
+        "from": "top.g3.y",
+        "to": "top.gt.a"
+      },
+      {
+        "from": "top.t2.y",
+        "to": "top.gt.b"
+      },
+      {
+        "from": "top.t1.y",
+        "to": "top.gt.c"
+      },
+      {
+        "from": "top.t0.y",
+        "to": "top.gt.d"
+      },
+      {
+        "from": "top.gt.y",
+        "to": "top.gt"
+      },
+      {
+        "from": "top.eq.y",
+        "to": "top.eq"
+      },
+      {
+        "from": "top.eq.y",
+        "to": "top.ltg.a"
+      },
+      {
+        "from": "top.gt.y",
+        "to": "top.ltg.b"
+      },
+      {
+        "from": "top.ltg.y",
+        "to": "top.lt"
+      }
+    ],
+    "children": [
+      {
+        "id": "top.x0",
+        "title": "x0",
+        "shape": "xor",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out",
+            "bubble": true
+          }
+        ]
+      },
+      {
+        "id": "top.g0",
+        "title": "g0",
+        "shape": "and",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in",
+            "bubble": true
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out"
+          }
+        ]
+      },
+      {
+        "id": "top.x1",
+        "title": "x1",
+        "shape": "xor",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out",
+            "bubble": true
+          }
+        ]
+      },
+      {
+        "id": "top.g1",
+        "title": "g1",
+        "shape": "and",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in",
+            "bubble": true
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out"
+          }
+        ]
+      },
+      {
+        "id": "top.x2",
+        "title": "x2",
+        "shape": "xor",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out",
+            "bubble": true
+          }
+        ]
+      },
+      {
+        "id": "top.g2",
+        "title": "g2",
+        "shape": "and",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in",
+            "bubble": true
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out"
+          }
+        ]
+      },
+      {
+        "id": "top.x3",
+        "title": "x3",
+        "shape": "xor",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out",
+            "bubble": true
+          }
+        ]
+      },
+      {
+        "id": "top.g3",
+        "title": "g3",
+        "shape": "and",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in",
+            "bubble": true
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out"
+          }
+        ]
+      },
+      {
+        "id": "top.eq",
+        "title": "eq",
+        "shape": "and",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "c",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "d",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out"
+          }
+        ]
+      },
+      {
+        "id": "top.t2",
+        "title": "t2",
+        "shape": "and",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out"
+          }
+        ]
+      },
+      {
+        "id": "top.t1",
+        "title": "t1",
+        "shape": "and",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "c",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out"
+          }
+        ]
+      },
+      {
+        "id": "top.t0",
+        "title": "t0",
+        "shape": "and",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "c",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "d",
+            "side": "west",
+            "dir": "in",
+            "bubble": false
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out"
+          }
+        ]
+      },
+      {
+        "id": "top.gt",
+        "title": "gt",
+        "shape": "or",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "c",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "d",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out",
+            "bubble": false
+          }
+        ]
+      },
+      {
+        "id": "top.ltg",
+        "title": "lt",
+        "shape": "or",
+        "swatch": "gate",
+        "ports": [
+          {
+            "name": "a",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "b",
+            "side": "west",
+            "dir": "in"
+          },
+          {
+            "name": "y",
+            "side": "east",
+            "dir": "out",
+            "bubble": true
+          }
+        ]
+      }
+    ],
+    "note": "Unsigned 4-bit comparator. Exactly one of eq, gt, lt is high."
+  }
+}

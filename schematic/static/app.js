@@ -6,6 +6,7 @@ const MAX_PORT_PATTERN_LEN = 80;
 
 const els = {
   fileMeta: document.getElementById("file-meta"),
+  fileOpen: document.getElementById("file-open"),
   portFilterReset: document.getElementById("port-filter-reset"),
   portIncludeList: document.getElementById("port-include-list"),
   portExcludeList: document.getElementById("port-exclude-list"),
@@ -15,7 +16,6 @@ const els = {
   portExcludeForm: document.getElementById("port-exclude-form"),
   portIncludeInput: document.getElementById("port-include-input"),
   portExcludeInput: document.getElementById("port-exclude-input"),
-  simpleMode: document.getElementById("simple-mode"),
   toolbar: document.getElementById("toolbar"),
   toolbarFold: document.getElementById("toolbar-fold"),
   palette: document.getElementById("palette"),
@@ -35,6 +35,13 @@ const els = {
   zoomResetBtn: document.getElementById("zoom-reset-btn"),
   zoomLabel: document.getElementById("zoom-label"),
   fullscreenBtn: document.getElementById("fullscreen-btn"),
+  portMenu: document.getElementById("port-menu"),
+  portMenuDriver: document.getElementById("port-menu-driver"),
+  portMenuLoad: document.getElementById("port-menu-load"),
+  navActions: document.getElementById("nav-actions"),
+  goInBtn: document.getElementById("go-in-btn"),
+  goOutBtn: document.getElementById("go-out-btn"),
+  navCrumb: document.getElementById("nav-crumb"),
 };
 
 const VIEW_MIN = 0.1;
@@ -49,20 +56,34 @@ let view = { scale: 1, x: 0, y: 0 };
 let pointers = new Map();
 let pinchStart = null;
 let panSession = null;
+let clickGesture = null;
 let edgeGraph = null;
 /** @type {{ ports: object[], edges: { el: Element, pts: Float32Array }[] } | null} */
 let pickCache = null;
 let cursorPickRaf = 0;
 let cursorPickXY = { x: 0, y: 0 };
 let driverHopCursor = { portId: "", index: 0 };
+let loadHopCursor = { portId: "", index: 0 };
+let hopStack = [];
+let hopAnchorId = "";
+let focusedPortId = "";
 
 const CLICK_MOVE_PX = 5;
-const EDGE_HIT_PX = 24;
+const DBLCLICK_MS = 500;
+const DBLCLICK_PX = 10;
+const EDGE_HIT_PX = 12;
 const PORT_HIT_PX = 12;
 let swatches = [];
 let palette = loadPalette();
 let portInclude = [];
 let portExclude = [];
+let hierarchical = false;
+let viewModule = "";
+/** @type {Set<string>} */
+let expandedPaths = new Set();
+/** @type {{ viewModule: string, expandedPaths: string[], label: string }[]} */
+let navStack = [];
+let selectedInstance = { path: "", moduleUse: "" };
 
 function loadPalette() {
   try {
@@ -261,12 +282,16 @@ function applyPaletteTo(root) {
       });
       return;
     }
-    const fillable = el.classList.contains("swatch-fill")
-      ? el
-      : el.querySelector(".swatch-fill");
-    if (!fillable) return;
-    fillable.setAttribute("fill", color);
-    fillable.setAttribute("stroke", darkenHex(color, 0.35));
+    const fillables = el.classList.contains("swatch-fill")
+      ? [el]
+      : Array.from(el.querySelectorAll(".swatch-fill"));
+    fillables.forEach((fillable) => {
+      fillable.setAttribute("fill", color);
+      fillable.setAttribute("stroke", darkenHex(color, 0.35));
+    });
+    el.querySelectorAll(".gate-stroke, .gate-bubble").forEach((shape) => {
+      shape.setAttribute("stroke", darkenHex(color, 0.35));
+    });
   });
 }
 
@@ -276,8 +301,7 @@ function applyPalette() {
 }
 
 function visibleSwatches() {
-  const boxesOnly = Boolean(els.simpleMode && els.simpleMode.checked);
-  return swatches.filter((item) => !boxesOnly || item.group !== "内部逻辑");
+  return swatches;
 }
 
 function renderPalette() {
@@ -343,7 +367,93 @@ function setStatus(message, kind) {
 function updateCheckedCount() {
   const count = els.tree.querySelectorAll('input[type="checkbox"]:checked').length;
   els.checkedCount.textContent = `${count} selected`;
+  if (hierarchical) {
+    els.drawBtn.disabled = false;
+    return;
+  }
   els.drawBtn.disabled = count === 0;
+}
+
+function syncNavUi() {
+  if (els.navActions) els.navActions.hidden = !hierarchical;
+  if (els.goInBtn) {
+    els.goInBtn.disabled = !hierarchical || !selectedInstance.moduleUse;
+  }
+  if (els.goOutBtn) {
+    els.goOutBtn.disabled = !hierarchical || navStack.length === 0;
+  }
+  if (els.navCrumb) {
+    const parts = [...navStack.map((frame) => frame.label), viewModule].filter(Boolean);
+    els.navCrumb.textContent = parts.join(" › ");
+  }
+}
+
+function syncInstanceSelectionVisual() {
+  const svg = els.previewContent.querySelector("svg");
+  if (!svg) return;
+  svg.querySelectorAll("g.node.node-selected").forEach((el) => {
+    el.classList.remove("node-selected");
+  });
+  if (!selectedInstance.path) return;
+  const node = svg.querySelector(`g.node[data-id="${cssEscape(selectedInstance.path)}"]`);
+  if (node) node.classList.add("node-selected");
+}
+
+function cssEscape(value) {
+  if (typeof CSS !== "undefined" && CSS.escape) return CSS.escape(value);
+  return String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
+function pickInstanceNodeAt(clientX, clientY) {
+  const stack = document.elementsFromPoint(clientX, clientY);
+  for (let i = 0; i < stack.length; i += 1) {
+    const el = stack[i];
+    if (el.closest && el.closest("g.edge")) return null;
+    if (el.closest && el.closest("g.port")) return null;
+  }
+  for (let i = 0; i < stack.length; i += 1) {
+    const node = stack[i].closest && stack[i].closest("g.node[data-module-use]");
+    if (node) return node;
+  }
+  return null;
+}
+
+function toggleInstanceExpand(path) {
+  const next = new Set(expandedPaths);
+  if (next.has(path)) {
+    next.delete(path);
+    Array.from(next).forEach((item) => {
+      if (item.startsWith(`${path}.`)) next.delete(item);
+    });
+  } else {
+    next.add(path);
+  }
+  expandedPaths = next;
+  runDraw(false);
+}
+
+function goIn() {
+  if (!hierarchical || !selectedInstance.moduleUse) return;
+  navStack.push({
+    viewModule,
+    expandedPaths: Array.from(expandedPaths),
+    label: viewModule,
+  });
+  viewModule = selectedInstance.moduleUse;
+  expandedPaths = new Set();
+  selectedInstance = { path: "", moduleUse: "" };
+  syncNavUi();
+  runDraw(false);
+}
+
+function goOut() {
+  if (!hierarchical || !navStack.length) return;
+  const frame = navStack.pop();
+  viewModule = frame.viewModule;
+  expandedPaths = new Set(frame.expandedPaths);
+  selectedInstance = { path: "", moduleUse: "" };
+  syncNavUi();
+  runDraw(false);
 }
 
 function getCheckedInstances() {
@@ -488,6 +598,82 @@ function zoomBy(factor) {
   zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, factor);
 }
 
+function elementBoxInRoot(el) {
+  const svg = el.ownerSVGElement;
+  if (!svg || !el.getBBox) return null;
+  let box;
+  try {
+    box = el.getBBox();
+  } catch (err) {
+    return null;
+  }
+  if (!box || (!box.width && !box.height)) return null;
+  const ctm = el.getCTM && el.getCTM();
+  const corners = [
+    [box.x, box.y],
+    [box.x + box.width, box.y],
+    [box.x, box.y + box.height],
+    [box.x + box.width, box.y + box.height],
+  ];
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  corners.forEach(([x, y]) => {
+    const p = svgPointToRoot(svg, x, y, ctm);
+    minX = Math.min(minX, p.x);
+    minY = Math.min(minY, p.y);
+    maxX = Math.max(maxX, p.x);
+    maxY = Math.max(maxY, p.y);
+  });
+  return { minX, minY, maxX, maxY };
+}
+
+function fitHighlighted() {
+  const svg = els.previewContent.querySelector("svg");
+  if (!svg || !svg.classList.contains("path-dim")) {
+    setStatus("请先高亮一条通路", "ok");
+    return;
+  }
+  const bounds = { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity };
+  svg.querySelectorAll("g.edge.path-hl, g.port.port-hl, g.port.port-onpath").forEach((el) => {
+    const box = elementBoxInRoot(el);
+    if (!box) return;
+    bounds.minX = Math.min(bounds.minX, box.minX);
+    bounds.minY = Math.min(bounds.minY, box.minY);
+    bounds.maxX = Math.max(bounds.maxX, box.maxX);
+    bounds.maxY = Math.max(bounds.maxY, box.maxY);
+  });
+  if (!Number.isFinite(bounds.minX)) {
+    setStatus("当前高亮没有可适应的范围", "ok");
+    return;
+  }
+  const minSpan = 64;
+  if (bounds.maxX - bounds.minX < minSpan) {
+    const mid = (bounds.minX + bounds.maxX) / 2;
+    bounds.minX = mid - minSpan / 2;
+    bounds.maxX = mid + minSpan / 2;
+  }
+  if (bounds.maxY - bounds.minY < minSpan) {
+    const mid = (bounds.minY + bounds.maxY) / 2;
+    bounds.minY = mid - minSpan / 2;
+    bounds.maxY = mid + minSpan / 2;
+  }
+  const rect = els.preview.getBoundingClientRect();
+  const pad = 48;
+  const w = bounds.maxX - bounds.minX;
+  const h = bounds.maxY - bounds.minY;
+  const scale = clampScale(Math.min(
+    Math.max(rect.width - pad, 1) / w,
+    Math.max(rect.height - pad, 1) / h,
+  ));
+  setView(
+    scale,
+    (rect.width - w * scale) / 2 - bounds.minX * scale,
+    (rect.height - h * scale) / 2 - bounds.minY * scale,
+  );
+}
+
 function fitView() {
   const svg = els.previewContent.querySelector("svg");
   if (!svg) return;
@@ -595,6 +781,52 @@ function upstreamDriverPortIds(portId) {
   return out.sort();
 }
 
+function outgoingPortIds(portId) {
+  const seen = new Set();
+  const out = [];
+  (edgeGraph.bySrc.get(portId) || []).forEach((edgeEl) => {
+    const dst = edgeEl.getAttribute("data-dst") || "";
+    if (!dst || dst === portId || seen.has(dst)) return;
+    seen.add(dst);
+    out.push(dst);
+  });
+  return out;
+}
+
+/** 输出脚的下一级就是负载；输入脚则取直接驱动的扇出，去掉自己。 */
+function downstreamLoadPortIds(portId) {
+  if (!edgeGraph || !portId) return [];
+  const direct = outgoingPortIds(portId);
+  if (direct.length) return direct.sort();
+  const seen = new Set();
+  const out = [];
+  (edgeGraph.byDst.get(portId) || []).forEach((edgeEl) => {
+    const src = edgeEl.getAttribute("data-src") || "";
+    if (!src) return;
+    outgoingPortIds(src).forEach((dst) => {
+      if (!dst || dst === portId || seen.has(dst)) return;
+      seen.add(dst);
+      out.push(dst);
+    });
+  });
+  return out.sort();
+}
+
+function nodeIdOfPort(portId) {
+  const cut = String(portId).lastIndexOf("__");
+  return cut > 0 ? portId.slice(0, cut) : "";
+}
+
+function resetHopState() {
+  driverHopCursor = { portId: "", index: 0 };
+  loadHopCursor = { portId: "", index: 0 };
+  hopStack = [];
+  hopAnchorId = "";
+  focusedPortId = "";
+  clickGesture = null;
+  closePortMenu();
+}
+
 function findPortElement(portId) {
   const svg = els.previewContent.querySelector("svg");
   if (!svg || !portId) return null;
@@ -645,31 +877,139 @@ function focusPortInView(portEl) {
   setView(scale, rect.width / 2 - center.x * scale, rect.height / 2 - center.y * scale);
 }
 
-function jumpToUpstreamDriver(portEl) {
-  const portId = portEl.getAttribute("data-id") || "";
-  const drivers = upstreamDriverPortIds(portId);
-  if (!drivers.length) {
-    setStatus("该端口没有上游驱动", "ok");
-    return;
-  }
-  if (driverHopCursor.portId !== portId) {
-    driverHopCursor = { portId, index: 0 };
-  } else {
-    driverHopCursor.index = (driverHopCursor.index + 1) % drivers.length;
-  }
-  const targetId = drivers[driverHopCursor.index];
+function portDisplayName(portEl, portId) {
+  return portEl?.querySelector(".port-label")?.textContent
+    || String(portId || "").split("__").pop()
+    || portId
+    || "port";
+}
+
+function rememberHop(fromId) {
+  if (!fromId) return;
+  if (hopStack[hopStack.length - 1] === fromId) return;
+  hopStack.push(fromId);
+  if (hopStack.length > 64) hopStack.shift();
+}
+
+function jumpToRelatedPort(fromEl, targetId, label, index, total, missingMsg) {
   const target = findPortElement(targetId);
   if (!target) {
-    setStatus("上游端口不在当前视图中", "error");
-    return;
+    setStatus(missingMsg, "error");
+    return false;
   }
+  const fromId = fromEl?.getAttribute("data-id") || "";
+  if (fromId && fromId !== targetId) rememberHop(fromId);
   focusPortInView(target);
   applyPortPathHighlight(target);
-  const name = target.querySelector(".port-label")?.textContent
-    || targetId.split("__").pop()
-    || targetId;
-  const suffix = drivers.length > 1 ? ` (${driverHopCursor.index + 1}/${drivers.length})` : "";
-  setStatus(`已跳转到上游驱动 · ${name}${suffix}`, "ok");
+  const name = portDisplayName(target, targetId);
+  const suffix = total > 1 ? ` (${index + 1}/${total})` : "";
+  setStatus(`已跳转到${label} · ${name}${suffix}`, "ok");
+  return true;
+}
+
+function hopFromPort(portEl, direction) {
+  if (!portEl) return;
+  closePortMenu();
+  const portId = portEl.getAttribute("data-id") || "";
+  hopAnchorId = portId;
+  const goingLoad = direction === "load";
+  const targets = goingLoad ? downstreamLoadPortIds(portId) : upstreamDriverPortIds(portId);
+  if (!targets.length) {
+    setStatus(goingLoad ? "该端口没有下游负载" : "该端口没有上游驱动", "ok");
+    return;
+  }
+  const cursor = goingLoad ? loadHopCursor : driverHopCursor;
+  let index;
+  if (cursor.portId !== portId) {
+    index = 0;
+  } else {
+    index = (cursor.index + 1) % targets.length;
+  }
+  const next = { portId, index };
+  if (goingLoad) loadHopCursor = next;
+  else driverHopCursor = next;
+  jumpToRelatedPort(
+    portEl,
+    targets[index],
+    goingLoad ? "下游负载" : "上游驱动",
+    index,
+    targets.length,
+    goingLoad ? "下游端口不在当前视图中" : "上游端口不在当前视图中",
+  );
+}
+
+function hopAnchored(direction) {
+  const portEl = findPortElement(hopAnchorId) || findPortElement(focusedPortId);
+  if (!portEl) {
+    setStatus("请先点选一个端口", "ok");
+    return;
+  }
+  hopFromPort(portEl, direction);
+}
+
+function hopBack() {
+  closePortMenu();
+  if (!hopStack.length) {
+    setStatus("没有可回退的跳转", "ok");
+    return;
+  }
+  const portId = hopStack.pop();
+  const portEl = findPortElement(portId);
+  if (!portEl) {
+    setStatus("上一个端口不在当前视图中", "error");
+    return;
+  }
+  hopAnchorId = portId;
+  focusPortInView(portEl);
+  applyPortPathHighlight(portEl);
+  setStatus(`已回到 · ${portDisplayName(portEl, portId)}`, "ok");
+}
+
+function closePortMenu() {
+  if (!els.portMenu || els.portMenu.hidden) return;
+  els.portMenu.hidden = true;
+  delete els.portMenu.dataset.portId;
+}
+
+function openPortMenu(portEl, clientX, clientY) {
+  if (!els.portMenu) return;
+  const portId = portEl.getAttribute("data-id") || "";
+  hopAnchorId = portId;
+  applyPortPathHighlight(portEl);
+  const drivers = upstreamDriverPortIds(portId);
+  const loads = downstreamLoadPortIds(portId);
+  els.portMenuDriver.textContent = `上游驱动 (${drivers.length})`;
+  els.portMenuLoad.textContent = `下游负载 (${loads.length})`;
+  els.portMenuDriver.disabled = !drivers.length;
+  els.portMenuLoad.disabled = !loads.length;
+  els.portMenu.dataset.portId = portId;
+  els.portMenu.hidden = false;
+  els.portMenu.style.left = "0px";
+  els.portMenu.style.top = "0px";
+  const box = els.portMenu.getBoundingClientRect();
+  const left = Math.max(8, Math.min(clientX, window.innerWidth - box.width - 8));
+  const top = Math.max(8, Math.min(clientY, window.innerHeight - box.height - 8));
+  els.portMenu.style.left = `${left}px`;
+  els.portMenu.style.top = `${top}px`;
+}
+
+function svgMarkupForDownload() {
+  const live = els.previewContent.querySelector("svg");
+  if (!live) return lastSvg;
+  const clone = live.cloneNode(true);
+  clone.classList.remove("path-dim");
+  clone.querySelectorAll("g.edge.path-hl").forEach((el) => {
+    restoreEdgeStroke(el);
+    el.classList.remove("path-hl");
+  });
+  clone.querySelectorAll("g.port").forEach((el) => {
+    if (el.classList.contains("port-hl")) restorePortStroke(el);
+    el.classList.remove("port-hl", "port-onpath");
+  });
+  clone.querySelectorAll("g.node.node-hl").forEach((el) => {
+    el.classList.remove("node-hl");
+  });
+  return new XMLSerializer().serializeToString(clone);
 }
 
 function clientToSvgRoot(clientX, clientY) {
@@ -922,9 +1262,10 @@ function emphasizePortStroke(el) {
   shape.setAttribute("stroke-width", PATH_HL_PORT_WIDTH);
 }
 
-function clearPathHighlight() {
+function clearPathHighlightVisuals() {
   const svg = els.previewContent.querySelector("svg");
   if (!svg) return;
+  svg.classList.remove("path-dim");
   svg.querySelectorAll("g.edge.path-hl").forEach((el) => {
     restoreEdgeStroke(el);
     el.classList.remove("path-hl");
@@ -933,6 +1274,57 @@ function clearPathHighlight() {
     restorePortStroke(el);
     el.classList.remove("port-hl");
   });
+  svg.querySelectorAll("g.port.port-onpath").forEach((el) => {
+    el.classList.remove("port-onpath");
+  });
+  svg.querySelectorAll("g.node.node-hl").forEach((el) => {
+    el.classList.remove("node-hl");
+  });
+}
+
+function clearPathHighlight() {
+  clearPathHighlightVisuals();
+  focusedPortId = "";
+  hopAnchorId = "";
+}
+
+function raiseHighlighted(svg) {
+  const layer = svg.querySelector("g");
+  if (!layer) return;
+  layer.querySelectorAll("g.edge.path-hl").forEach((el) => layer.appendChild(el));
+  layer.querySelectorAll("g.port.port-onpath").forEach((el) => layer.appendChild(el));
+  layer.querySelectorAll("g.port.port-hl").forEach((el) => layer.appendChild(el));
+}
+
+function syncPathDim(edgeSet, focusId) {
+  const svg = els.previewContent.querySelector("svg");
+  if (!svg) return;
+  const portIds = new Set();
+  if (focusId) portIds.add(focusId);
+  edgeSet.forEach((el) => {
+    const src = el.getAttribute("data-src") || "";
+    const dst = el.getAttribute("data-dst") || "";
+    if (src) portIds.add(src);
+    if (dst) portIds.add(dst);
+  });
+  if (!portIds.size && !edgeSet.size) {
+    svg.classList.remove("path-dim");
+    return;
+  }
+  svg.classList.add("path-dim");
+  const nodeIds = new Set();
+  portIds.forEach((id) => {
+    const nid = nodeIdOfPort(id);
+    if (nid) nodeIds.add(nid);
+  });
+  svg.querySelectorAll("g.node").forEach((el) => {
+    el.classList.toggle("node-hl", nodeIds.has(el.getAttribute("data-id") || ""));
+  });
+  svg.querySelectorAll("g.port").forEach((el) => {
+    const id = el.getAttribute("data-id") || "";
+    el.classList.toggle("port-onpath", Boolean(id) && portIds.has(id) && id !== focusId);
+  });
+  raiseHighlighted(svg);
 }
 
 function highlightEdgeSet(edgeEls) {
@@ -943,7 +1335,7 @@ function highlightEdgeSet(edgeEls) {
 }
 
 function applyPathHighlightFromEdges(edgeSet) {
-  clearPathHighlight();
+  clearPathHighlightVisuals();
   highlightEdgeSet(edgeSet);
   return edgeSet.size;
 }
@@ -956,11 +1348,11 @@ function applyPortPathHighlight(portEl) {
     closureEdgesFromPort(portId, edgeGraph).forEach((el) => edges.add(el));
   }
   const edgeCount = applyPathHighlightFromEdges(edges);
+  focusedPortId = portId;
   portEl.classList.add("port-hl");
   emphasizePortStroke(portEl);
-  const name = portEl.querySelector(".port-label")?.textContent
-    || portEl.getAttribute("data-id")?.split("__").pop()
-    || "port";
+  syncPathDim(edges, portId);
+  const name = portDisplayName(portEl, portId);
   if (edgeCount) {
     setStatus(`已高亮 ${name} · ${edgeCount} 条连线`, "ok");
   } else {
@@ -977,13 +1369,17 @@ function applyEdgePathHighlight(edgeEl) {
     if (src) closureEdgesFromPort(src, edgeGraph).forEach((el) => edges.add(el));
     if (dst) closureEdgesFromPort(dst, edgeGraph).forEach((el) => edges.add(el));
   }
+  focusedPortId = "";
+  hopAnchorId = "";
   const edgeCount = applyPathHighlightFromEdges(edges);
+  syncPathDim(edges, "");
   setStatus(`已高亮通路 · ${edgeCount} 条连线`, "ok");
 }
 
 function handlePickAt(clientX, clientY) {
   const hit = pickAt(clientX, clientY);
   if (hit?.port) {
+    hopAnchorId = hit.port.getAttribute("data-id") || "";
     applyPortPathHighlight(hit.port);
     return;
   }
@@ -995,6 +1391,57 @@ function handlePickAt(clientX, clientY) {
   setStatus("");
 }
 
+function notePreviewClick(clientX, clientY) {
+  const now = performance.now();
+  const hit = pickAt(clientX, clientY);
+  const portId = hit?.port?.getAttribute("data-id") || "";
+  const edgeHit = Boolean(hit?.edge);
+  const instNode = !portId && !edgeHit ? pickInstanceNodeAt(clientX, clientY) : null;
+  const instanceId = instNode?.getAttribute("data-id") || "";
+  const previous = clickGesture;
+  clickGesture = { x: clientX, y: clientY, t: now, portId, instanceId };
+  if (
+    previous
+    && previous.portId
+    && now - previous.t <= DBLCLICK_MS
+    && Math.hypot(clientX - previous.x, clientY - previous.y) <= DBLCLICK_PX
+  ) {
+    const portEl = findPortElement(previous.portId);
+    clickGesture = null;
+    if (portEl) {
+      hopFromPort(portEl, "driver");
+      return;
+    }
+  }
+  if (
+    hierarchical
+    && instanceId
+    && previous
+    && previous.instanceId === instanceId
+    && !portId
+    && !previous.portId
+    && !edgeHit
+    && now - previous.t <= DBLCLICK_MS
+    && Math.hypot(clientX - previous.x, clientY - previous.y) <= DBLCLICK_PX
+  ) {
+    clickGesture = null;
+    toggleInstanceExpand(instanceId);
+    return;
+  }
+  if (hierarchical && instNode && !portId && !edgeHit) {
+    selectedInstance = {
+      path: instanceId,
+      moduleUse: instNode.getAttribute("data-module-use") || "",
+    };
+    syncNavUi();
+    syncInstanceSelectionVisual();
+    clearPathHighlight();
+    setStatus(`已选 instance ${instanceId}`, "ok");
+    return;
+  }
+  handlePickAt(clientX, clientY);
+}
+
 function resetPreview() {
   lastSvg = "";
   pointers.clear();
@@ -1002,7 +1449,7 @@ function resetPreview() {
   panSession = null;
   edgeGraph = null;
   pickCache = null;
-  driverHopCursor = { portId: "", index: 0 };
+  resetHopState();
   els.preview.style.cursor = "";
   els.preview.classList.remove("panning");
   els.previewPlaceholder.hidden = false;
@@ -1016,17 +1463,6 @@ function wireSvgInteraction(svg) {
   if (!svg || svg.dataset.wiredInteraction === "1") return;
   svg.dataset.wiredInteraction = "1";
   svg.style.pointerEvents = "auto";
-  const onPick = (event) => {
-    if (!hasSvg()) return;
-    handlePickAt(event.clientX, event.clientY);
-  };
-  svg.addEventListener("click", onPick);
-  svg.addEventListener("dblclick", (event) => {
-    if (!hasSvg()) return;
-    event.preventDefault();
-    const hit = pickAt(event.clientX, event.clientY);
-    if (hit?.port) jumpToUpstreamDriver(hit.port);
-  });
 }
 
 function renderSvg(svgText) {
@@ -1042,14 +1478,86 @@ function renderSvg(svgText) {
   const live = els.previewContent.querySelector("svg");
   edgeGraph = live ? buildEdgeGraph(live) : null;
   pickCache = live ? buildPickCache(live) : null;
-  driverHopCursor = { portId: "", index: 0 };
+  resetHopState();
   wireSvgInteraction(live);
   applyPalette();
   setViewControls(true);
   requestAnimationFrame(() => {
     fitView();
     if (live) pickCache = buildPickCache(live);
+    syncInstanceSelectionVisual();
   });
+}
+
+async function runDraw(manual) {
+  if (hierarchical) {
+    els.drawBtn.disabled = true;
+    setStatus("正在出图…");
+    try {
+      const resp = await fetch("/api/draw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          view_module: viewModule,
+          expanded_paths: Array.from(expandedPaths),
+          port_include: portInclude,
+          port_exclude: portExclude,
+          palette,
+        }),
+      });
+      const data = await resp.json();
+      if (!resp.ok || !data.ok) throw new Error(data.error || "出图失败");
+      lastSvg = data.svg;
+      lastSvgName = data.filename || "graph.svg";
+      renderSvg(lastSvg);
+      if (data.tree) {
+        renderTree(data.tree);
+        checkAll();
+      }
+      if (data.view_module) viewModule = data.view_module;
+      if (Array.isArray(data.expanded_paths)) {
+        expandedPaths = new Set(data.expanded_paths);
+      }
+      syncNavUi();
+      setStatus(manual ? "出图完成" : "层次视图已更新", "ok");
+    } catch (err) {
+      setStatus(err.message, "error");
+    } finally {
+      updateCheckedCount();
+    }
+    return;
+  }
+
+  const include = getCheckedInstances();
+  if (!include.length) {
+    setStatus("请至少勾选一个节点", "error");
+    return;
+  }
+
+  els.drawBtn.disabled = true;
+  setStatus("正在出图…");
+  try {
+    const resp = await fetch("/api/draw", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        port_include: portInclude,
+        port_exclude: portExclude,
+        include,
+        palette,
+      }),
+    });
+    const data = await resp.json();
+    if (!resp.ok || !data.ok) throw new Error(data.error || "出图失败");
+    lastSvg = data.svg;
+    lastSvgName = data.filename || "graph.svg";
+    renderSvg(lastSvg);
+    setStatus("出图完成", "ok");
+  } catch (err) {
+    setStatus(err.message, "error");
+  } finally {
+    updateCheckedCount();
+  }
 }
 
 function checkAll() {
@@ -1068,37 +1576,114 @@ function swatchesFromPalette(colors) {
   }));
 }
 
+function showDocumentEmpty() {
+  hierarchical = false;
+  viewModule = "";
+  expandedPaths = new Set();
+  navStack = [];
+  selectedInstance = { path: "", moduleUse: "" };
+  syncNavUi();
+  basePalette = {};
+  baseSwatches = [];
+  swatches = [];
+  palette = { ...loadPalette() };
+  const label = "未打开文件";
+  els.fileMeta.textContent = label;
+  els.fileMeta.title = label;
+  renderPalette();
+  els.tree.replaceChildren();
+  els.tree.classList.add("empty");
+  els.tree.textContent = "打开 JSON 后显示层次";
+  updateCheckedCount();
+  resetPreview();
+}
+
+async function applyDocumentPayload(data) {
+  basePalette = data.palette || {};
+  baseSwatches = (data.swatches && data.swatches.length)
+    ? data.swatches
+    : swatchesFromPalette(basePalette);
+  swatches = baseSwatches.map((item) => ({
+    ...item,
+    color: basePalette[item.key] || item.color || "#cccccc",
+  }));
+  const stored = loadPalette();
+  palette = { ...basePalette };
+  Object.keys(stored).forEach((key) => {
+    if (palette[key] || swatches.some((item) => item.key === key)) palette[key] = stored[key];
+  });
+  const name = data.name || "design.json";
+  els.fileMeta.textContent = name;
+  els.fileMeta.title = name;
+  hierarchical = Boolean(data.hierarchical);
+  viewModule = data.view_module || "";
+  expandedPaths = new Set(data.expanded_paths || []);
+  navStack = [];
+  selectedInstance = { path: "", moduleUse: "" };
+  syncNavUi();
+  renderPalette();
+  renderTree(data.tree);
+  checkAll();
+  resetPreview();
+  if (hierarchical) {
+    setStatus("双击 instance 展开一层 · Go in 进入 module", "ok");
+    await runDraw(false);
+    return;
+  }
+  setStatus("勾选要绘制的节点后点击 Draw", "ok");
+}
+
 async function loadDocument() {
   setStatus("正在加载电路图…");
   try {
     const resp = await fetch("/api/document");
     const data = await resp.json();
     if (!resp.ok || !data.ok) throw new Error(data.error || "无法加载电路图");
-    basePalette = data.palette || {};
-    baseSwatches = (data.swatches && data.swatches.length)
-      ? data.swatches
-      : swatchesFromPalette(basePalette);
-    swatches = baseSwatches.map((item) => ({
-      ...item,
-      color: basePalette[item.key] || item.color || "#cccccc",
-    }));
-    const stored = loadPalette();
-    palette = { ...basePalette };
-    Object.keys(stored).forEach((key) => {
-      if (palette[key] || swatches.some((item) => item.key === key)) palette[key] = stored[key];
-    });
-    els.fileMeta.textContent = data.name || "design.json";
-    renderPalette();
-    renderTree(data.tree);
-    checkAll();
-    resetPreview();
-    setStatus("勾选要绘制的节点后点击 Draw", "ok");
+    if (data.loaded === false) {
+      showDocumentEmpty();
+      setStatus("点击顶栏「打开文件」选择 JSON，或启动时传入 schematic view 路径", "ok");
+      return;
+    }
+    applyDocumentPayload(data);
   } catch (err) {
     setStatus(err.message, "error");
   }
 }
 
+async function openDocumentFile(file) {
+  if (!file) return;
+  setStatus(`正在打开 ${file.name}…`);
+  let document;
+  try {
+    document = JSON.parse(await file.text());
+  } catch (err) {
+    setStatus("JSON 解析失败", "error");
+    return;
+  }
+  try {
+    const resp = await fetch("/api/document", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: file.name, document }),
+    });
+    const data = await resp.json();
+    if (!resp.ok || !data.ok) throw new Error(data.error || "无法打开文件");
+    applyDocumentPayload(data);
+  } catch (err) {
+    setStatus(err.message, "error");
+  } finally {
+    if (els.fileOpen) els.fileOpen.value = "";
+  }
+}
+
 loadDocument();
+
+if (els.fileOpen) {
+  els.fileOpen.addEventListener("change", () => {
+    const file = els.fileOpen.files && els.fileOpen.files[0];
+    openDocumentFile(file);
+  });
+}
 
 setToolbarCollapsed(Boolean(loadUi().toolbarCollapsed));
 
@@ -1115,12 +1700,6 @@ els.paletteReset.addEventListener("click", () => {
   renderPalette();
   applyPalette();
 });
-
-if (els.simpleMode) {
-  els.simpleMode.addEventListener("change", () => {
-    renderPalette();
-  });
-}
 
 els.portIncludeForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -1140,43 +1719,15 @@ els.portFilterReset.addEventListener("click", () => {
   setStatus("已清空 Port filter", "ok");
 });
 
-els.drawBtn.addEventListener("click", async () => {
-  const include = getCheckedInstances();
-  if (!include.length) {
-    setStatus("请至少勾选一个节点", "error");
-    return;
-  }
-
-  els.drawBtn.disabled = true;
-  setStatus("正在出图…");
-  try {
-    const resp = await fetch("/api/draw", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        port_include: portInclude,
-        port_exclude: portExclude,
-        include,
-        boxes_only: Boolean(els.simpleMode && els.simpleMode.checked),
-        palette,
-      }),
-    });
-    const data = await resp.json();
-    if (!resp.ok || !data.ok) throw new Error(data.error || "出图失败");
-    lastSvg = data.svg;
-    lastSvgName = data.filename || "graph.svg";
-    renderSvg(lastSvg);
-    setStatus("出图完成", "ok");
-  } catch (err) {
-    setStatus(err.message, "error");
-  } finally {
-    updateCheckedCount();
-  }
+els.drawBtn.addEventListener("click", () => {
+  runDraw(true);
 });
 
+if (els.goInBtn) els.goInBtn.addEventListener("click", goIn);
+if (els.goOutBtn) els.goOutBtn.addEventListener("click", goOut);
+
 els.downloadBtn.addEventListener("click", () => {
-  const live = els.previewContent.querySelector("svg");
-  const text = live ? new XMLSerializer().serializeToString(live) : lastSvg;
+  const text = svgMarkupForDownload();
   if (!text) return;
   const blob = new Blob([text], { type: "image/svg+xml;charset=utf-8" });
   const url = URL.createObjectURL(blob);
@@ -1295,13 +1846,14 @@ function endPointer(event) {
   if (pointers.size < 2) pinchStart = null;
   if (pointers.size === 0) {
     if (panSession && panSession.dragging) {
+      clickGesture = null;
       try {
         els.preview.releasePointerCapture(event.pointerId);
       } catch (err) {
         /* ignore */
       }
     } else if (panSession) {
-      handlePickAt(event.clientX, event.clientY);
+      notePreviewClick(event.clientX, event.clientY);
     }
     els.preview.classList.remove("panning");
     panSession = null;
@@ -1313,24 +1865,85 @@ els.preview.addEventListener("pointerup", endPointer);
 els.preview.addEventListener("pointercancel", endPointer);
 els.preview.addEventListener("lostpointercapture", endPointer);
 
+function typingTarget(event) {
+  if (event.isComposing) return true;
+  const tag = (event.target && event.target.tagName) || "";
+  return tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA";
+}
+
+els.preview.addEventListener("contextmenu", (event) => {
+  if (!hasSvg()) return;
+  event.preventDefault();
+  const hit = pickAt(event.clientX, event.clientY);
+  if (!hit?.port) {
+    closePortMenu();
+    return;
+  }
+  openPortMenu(hit.port, event.clientX, event.clientY);
+});
+
+if (els.portMenu) {
+  els.portMenu.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+  });
+  els.portMenu.addEventListener("click", (event) => {
+    const btn = event.target.closest("button");
+    if (!btn || btn.disabled) return;
+    const portEl = findPortElement(els.portMenu.dataset.portId || hopAnchorId);
+    const direction = btn.dataset.hop === "load" ? "load" : "driver";
+    closePortMenu();
+    if (!portEl) {
+      setStatus("该端口不在当前视图中", "error");
+      return;
+    }
+    hopFromPort(portEl, direction);
+  });
+}
+
+document.addEventListener("pointerdown", (event) => {
+  if (!els.portMenu || els.portMenu.hidden) return;
+  if (els.portMenu.contains(event.target)) return;
+  closePortMenu();
+});
+
 document.addEventListener("keydown", (event) => {
   if (!hasSvg()) return;
-  const tag = (event.target && event.target.tagName) || "";
-  if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+  if (typingTarget(event)) return;
+  const chord = event.ctrlKey || event.metaKey || event.altKey;
+  if (event.key === "Escape") {
+    if (els.portMenu && !els.portMenu.hidden) {
+      closePortMenu();
+      return;
+    }
+    clearPathHighlight();
+    setStatus("");
+    return;
+  }
+  if (chord) return;
   if (event.key === "+" || event.key === "=") {
     event.preventDefault();
     zoomBy(ZOOM_STEP);
   } else if (event.key === "-" || event.key === "_") {
     event.preventDefault();
     zoomBy(1 / ZOOM_STEP);
+  } else if ((event.code === "Digit0" || event.code === "Numpad0") && event.shiftKey) {
+    event.preventDefault();
+    fitHighlighted();
   } else if (event.key === "0") {
     event.preventDefault();
     fitView();
   } else if (event.key === "f" || event.key === "F") {
     event.preventDefault();
     toggleFullscreen();
-  } else if (event.key === "Escape") {
-    clearPathHighlight();
+  } else if (event.key === "[") {
+    event.preventDefault();
+    hopAnchored("driver");
+  } else if (event.key === "]") {
+    event.preventDefault();
+    hopAnchored("load");
+  } else if (event.key === "Backspace") {
+    event.preventDefault();
+    hopBack();
   }
 });
 

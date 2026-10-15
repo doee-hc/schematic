@@ -1,0 +1,81 @@
+{
+  "palette": {
+    "bus:axi": "#5B8DEF",
+    "family:compute": "#E3F2FD",
+    "family:memory": "#FFF3E0",
+    "family:io": "#E8F5E9",
+    "family:mm": "#F3E5F5",
+    "family:sec": "#FFEBEE",
+    "family:sys": "#ECEFF1",
+    "family:noc": "#FFFDE7"
+  },
+  "libs": {
+    "bus_master": {
+      "shape": "box",
+      "title": "Master",
+      "desc": "AMBA AXI 主端口抽象（系统框图用，非逐信号展开）",
+      "swatch": "family:compute",
+      "ports": [
+        {
+          "name": "axi_m",
+          "side": "east",
+          "dir": "out",
+          "label": "M_AXI",
+          "swatch": "bus:axi",
+          "desc": "主设备到互连的读写请求通道"
+        },
+        {
+          "name": "clk",
+          "side": "west",
+          "dir": "in",
+          "swatch": "clock:clk",
+          "desc": "功能时钟"
+        }
+      ]
+    },
+    "bus_slave": {
+      "shape": "box",
+      "title": "Slave",
+      "desc": "AMBA AXI 从端口抽象",
+      "swatch": "family:io",
+      "ports": [
+        {
+          "name": "axi_s",
+          "side": "west",
+          "dir": "in",
+          "label": "S_AXI",
+          "swatch": "bus:axi",
+          "desc": "从互连接收的主设备事务"
+        },
+        {
+          "name": "clk",
+          "side": "west",
+          "dir": "in",
+          "swatch": "clock:clk",
+          "desc": "功能时钟"
+        }
+      ]
+    },
+    "pad_if": {
+      "shape": "box",
+      "title": "Pad",
+      "desc": "芯片焊盘 / 封装引脚侧抽象接口块",
+      "swatch": "family:io",
+      "ports": [
+        {
+          "name": "core",
+          "side": "west",
+          "dir": "in",
+          "desc": "来自片上 IP 或 PHY 的芯侧信号"
+        },
+        {
+          "name": "pad",
+          "side": "east",
+          "dir": "out",
+          "label": "PAD",
+          "desc": "到封装引脚或 bump 的边界"
+        }
+      ]
+    }
+  }
+}

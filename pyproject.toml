@@ -16,4 +16,4 @@ schematic = "schematic.cli:main"
 include = ["schematic*"]
 
 [tool.setuptools.package-data]
-schematic = ["static/*", "vendor/elkjs/*"]
+schematic = ["static/*", "vendor/elkjs/*", "lib/*"]

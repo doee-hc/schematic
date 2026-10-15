@@ -1,0 +1,29 @@
+{
+  "modules": {
+    "apss": {
+      "title": "APSS",
+      "desc": "应用处理器子系统：CPU 簇、共享 L2 与 GIC",
+      "shape": "box",
+      "swatch": "family:compute",
+      "ports": [
+        {"name": "noc_m", "side": "east", "dir": "out", "label": "M_AXI", "swatch": "bus:axi", "keep": true},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+        {"name": "rst_n", "side": "west", "dir": "in", "swatch": "reset:rst"}
+      ],
+      "edges": [
+        {"from": "clk", "to": "cpu.clk", "swatch": "clock:clk"},
+        {"from": "clk", "to": "l2.clk", "swatch": "clock:clk"},
+        {"from": "clk", "to": "gic.clk", "swatch": "clock:clk"},
+        {"from": "rst_n", "to": "cpu.rst_n", "swatch": "reset:rst"},
+        {"from": "cpu.axi_m", "to": "l2.cpu", "swatch": "bus:axi"},
+        {"from": "l2.noc", "to": "noc_m", "swatch": "bus:axi"},
+        {"from": "gic.irq_out", "to": "cpu.gic"}
+      ],
+      "children": [
+        {"id": "cpu", "use": "cpu_cluster", "title": "CPU"},
+        {"id": "l2", "use": "l2_cache", "title": "L2"},
+        {"id": "gic", "use": "gic", "title": "GIC"}
+      ]
+    }
+  }
+}

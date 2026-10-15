@@ -1,0 +1,50 @@
+{
+  "modules": {
+    "processor_core_rtl2_tessent_occ_shift_reg": {
+      "title": "ShiftReg",
+      "shape": "box",
+      "swatch": "family:ctrl",
+      "note": "3-bit capture shift; some_ones_left = |FF",
+      "ports": [
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+        {"name": "scan_en", "side": "west", "dir": "in", "swatch": "port:scan"},
+        {"name": "capture_cycle_width", "side": "west", "dir": "in", "label": "cap_w[1:0]"},
+        {"name": "some_ones_left", "side": "east", "dir": "out", "label": "ShiftReg_EN"},
+        {"name": "scan_in", "side": "west", "dir": "in", "swatch": "port:scan"},
+        {"name": "scan_out", "side": "east", "dir": "out", "swatch": "port:scan"}
+      ],
+      "edges": [
+        {"from": "scan_in", "to": "gate_si.a", "swatch": "port:scan"},
+        {"from": "scan_en", "to": "gate_si.b", "swatch": "port:scan"},
+        {"from": "gate_si.y", "to": "ff.d", "swatch": "port:scan"},
+        {"from": "clk", "to": "ff.clk", "swatch": "clock:clk"},
+        {"from": "capture_cycle_width", "to": "ff.cap"},
+        {"from": "ff.q0", "to": "scan_out", "swatch": "port:scan"},
+        {"from": "ff.q0", "to": "reduce_or.a"},
+        {"from": "ff.q1", "to": "reduce_or.b"},
+        {"from": "ff.q2", "to": "reduce_or2.a"},
+        {"from": "reduce_or.y", "to": "reduce_or2.b"},
+        {"from": "reduce_or2.y", "to": "some_ones_left"}
+      ],
+      "children": [
+        {"id": "gate_si", "use_lib": "and2", "title": "scan_in&en", "swatch": "gate"},
+        {
+          "id": "ff",
+          "title": "FF[2:0]",
+          "shape": "reg",
+          "note": "case(capture_cycle_width) load 1..3 bits",
+          "ports": [
+            {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"},
+            {"name": "d", "side": "west", "dir": "in", "swatch": "port:scan"},
+            {"name": "cap", "side": "west", "dir": "in", "label": "cap_w"},
+            {"name": "q0", "side": "east", "dir": "out", "swatch": "port:scan", "label": "FF[0]"},
+            {"name": "q1", "side": "east", "dir": "out", "label": "FF[1]"},
+            {"name": "q2", "side": "east", "dir": "out", "label": "FF[2]"}
+          ]
+        },
+        {"id": "reduce_or", "use_lib": "or2", "title": "|01", "swatch": "gate"},
+        {"id": "reduce_or2", "use_lib": "or2", "title": "|FF", "swatch": "gate"}
+      ]
+    }
+  }
+}

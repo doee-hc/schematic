@@ -1,0 +1,35 @@
+{
+  "palette": {
+    "acme:alu": "#FFE8F0",
+    "acme:ctrl": "#E8FFF4"
+  },
+  "swatches": [
+    {"key": "acme:alu", "label": "ALU", "group": "Acme lib"},
+    {"key": "acme:ctrl", "label": "Control", "group": "Acme lib"}
+  ],
+  "libs": {
+    "acme_and3": {
+      "title": "AND3",
+      "desc": "Acme 三输入与门",
+      "shape": "and",
+      "swatch": "acme:alu",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in", "desc": "输入 A"},
+        {"name": "b", "side": "west", "dir": "in", "desc": "输入 B"},
+        {"name": "c", "side": "west", "dir": "in", "desc": "输入 C"},
+        {"name": "y", "side": "east", "dir": "out", "desc": "与输出"}
+      ]
+    },
+    "acme_or2": {
+      "title": "OR2",
+      "desc": "Acme 两输入或门（输出反相）",
+      "shape": "or",
+      "swatch": "acme:ctrl",
+      "ports": [
+        {"name": "a", "side": "west", "dir": "in", "desc": "输入 A"},
+        {"name": "b", "side": "west", "dir": "in", "desc": "输入 B"},
+        {"name": "y", "side": "east", "dir": "out", "bubble": true, "desc": "或非输出"}
+      ]
+    }
+  }
+}

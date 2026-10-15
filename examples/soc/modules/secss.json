@@ -1,0 +1,26 @@
+{
+  "modules": {
+    "secss": {
+      "title": "Security SS",
+      "desc": "安全启动、ROM 与硬件加密加速器",
+      "shape": "box",
+      "swatch": "family:sec",
+      "ports": [
+        {"name": "noc_s", "side": "west", "dir": "in", "swatch": "bus:axi", "keep": true},
+        {"name": "boot", "side": "east", "dir": "out", "label": "BOOT"},
+        {"name": "clk", "side": "west", "dir": "in", "swatch": "clock:clk"}
+      ],
+      "edges": [
+        {"from": "noc_s", "to": "crypto.axi_s", "swatch": "bus:axi"},
+        {"from": "clk", "to": "rom.clk", "swatch": "clock:clk"},
+        {"from": "clk", "to": "crypto.clk", "swatch": "clock:clk"},
+        {"from": "rom.boot", "to": "boot"},
+        {"from": "rom.boot", "to": "crypto.otp"}
+      ],
+      "children": [
+        {"id": "rom", "use": "rom_secure", "title": "ROM"},
+        {"id": "crypto", "use": "crypto_accel", "title": "Crypto"}
+      ]
+    }
+  }
+}
