@@ -18,6 +18,7 @@ JUMP_R = 2.0
 EPS = 0.6
 ARROW_LEN = 8.0
 ARROW_HALF = 3.0
+PORT_APPROACH_STUB = 14.0
 LOGIC_TITLE_Y = 16.0
 LOGIC_BODY_TOP = 20.0
 LOGIC_SEQ_NOTCH = 9.0
@@ -460,17 +461,50 @@ def _attach(geom, other):
     return geom["tip"] if other[0] <= geom["tip"][0] + 0.5 else geom["back"]
 
 
-def _snap_end(pts, attach, at_start):
+def _snap_end(pts, geom, at_start):
+    if not pts:
+        return pts
+    other = pts[1] if at_start and len(pts) > 1 else (pts[-2] if len(pts) > 1 else pts[0])
+    tip = _attach(geom, other)
+    side = (geom.get("side") or "EAST").upper()
+    stub = PORT_APPROACH_STUB
+
     if at_start:
+        pts[0] = tip
+        if len(pts) < 2:
+            return pts
         nxt = pts[1]
-        pts[0] = attach
-        if abs(attach[0] - nxt[0]) > EPS and abs(attach[1] - nxt[1]) > EPS:
-            pts.insert(1, (nxt[0], attach[1]))
+        if side in ("WEST", "EAST"):
+            if abs(tip[1] - nxt[1]) >= EPS:
+                stub_x = tip[0] - stub if side == "WEST" else tip[0] + stub
+                pts.insert(1, (stub_x, tip[1]))
+                if abs(nxt[0] - stub_x) > EPS and abs(nxt[1] - tip[1]) > EPS:
+                    pts.insert(2, (nxt[0], tip[1]))
+        elif abs(tip[0] - nxt[0]) >= EPS:
+            stub_y = tip[1] - stub if side == "NORTH" else tip[1] + stub
+            pts.insert(1, (tip[0], stub_y))
+            if abs(nxt[0] - tip[0]) > EPS and abs(nxt[1] - stub_y) > EPS:
+                pts.insert(2, (tip[0], nxt[1]))
+        return pts
+
+    prev = pts[-2] if len(pts) > 1 else tip
+    pts[-1] = tip
+    if side in ("WEST", "EAST"):
+        if abs(prev[1] - tip[1]) < EPS and abs(prev[0] - tip[0]) > EPS:
+            return pts
+        if abs(prev[0] - tip[0]) < EPS:
+            stub_x = tip[0] - stub if side == "WEST" else tip[0] + stub
+            pts.insert(-1, (stub_x, tip[1]))
+        elif abs(prev[1] - tip[1]) > EPS:
+            pts.insert(-1, (prev[0], tip[1]))
     else:
-        prev = pts[-2]
-        pts[-1] = attach
-        if abs(attach[0] - prev[0]) > EPS and abs(attach[1] - prev[1]) > EPS:
-            pts.insert(-1, (prev[0], attach[1]))
+        if abs(prev[0] - tip[0]) < EPS and abs(prev[1] - tip[1]) > EPS:
+            return pts
+        if abs(prev[1] - tip[1]) < EPS:
+            stub_y = tip[1] - stub if side == "NORTH" else tip[1] + stub
+            pts.insert(-1, (tip[0], stub_y))
+        elif abs(prev[0] - tip[0]) > EPS:
+            pts.insert(-1, (tip[0], prev[1]))
     return pts
 
 
@@ -1055,9 +1089,9 @@ def render_svg(graph, palette=None):
         if len(pts) < 2:
             continue
         if src_id in pins:
-            pts = _snap_end(pts, _attach(pins[src_id], pts[1]), True)
+            pts = _snap_end(pts, pins[src_id], True)
         if tgt_id in pins:
-            pts = _snap_end(pts, _attach(pins[tgt_id], pts[-2]), False)
+            pts = _snap_end(pts, pins[tgt_id], False)
         pts = _force_ortho(pts)
         if len(pts) < 2:
             continue
@@ -1099,7 +1133,8 @@ def render_svg(graph, palette=None):
 
     jumps = _collect_jumps([route["pts"] for route in routes])
 
-    parts = []
+    edge_over = []
+    node_parts = []
     for node in _iter_nodes(graph):
         if node.get("id") == "root":
             continue
@@ -1115,7 +1150,7 @@ def render_svg(graph, palette=None):
             tw = max(8.0, len(_node_title(node)) * 6.6)
             _expand_box(box, tx - tw / 2.0, ty - 12.0)
             _expand_box(box, tx + tw / 2.0, ty + 2.0)
-        parts.append(_node_svg(node, x, y, w, h, palette))
+        node_parts.append(_node_svg(node, x, y, w, h, palette))
 
     for idx, (route, hops) in enumerate(zip(routes, jumps)):
         pts = route["pts"]
@@ -1146,10 +1181,12 @@ def render_svg(graph, palette=None):
             % (_esc(swatch), stroke, stroke, _arrow(base, tip))
         )
         chunks.append(hit_path)
-        parts.append(
+        edge_over.append(
             '<g class="edge" data-swatch="%s" data-src="%s" data-dst="%s" data-edge-id="%d">%s</g>'
             % (_esc(swatch), _esc(route["src"]), _esc(route["dst"]), idx, "".join(chunks))
         )
+
+    parts = node_parts + edge_over
 
     for geom in pins.values():
         if geom.get("shape") == "snap":

@@ -38,12 +38,33 @@ def merged_palette(document, override=None):
     return palette
 
 
+def _preserve_edge_metadata(graph, laid):
+    """elkjs may drop custom edge fields; restore from pre-layout graph."""
+    by_id = {}
+    for edge in graph.get("edges") or []:
+        eid = edge.get("id")
+        if not eid:
+            continue
+        by_id[eid] = edge
+    for edge in laid.get("edges") or []:
+        src = by_id.get(edge.get("id"))
+        if not src:
+            continue
+        if src.get("properties"):
+            merged = dict(edge.get("properties") or {})
+            merged.update(src["properties"])
+            edge["properties"] = merged
+        if src.get("labels"):
+            edge["labels"] = src["labels"]
+
+
 def draw(document, options=None):
     """Return an SVG string for a schematic document."""
     options = dict(options or {})
     palette = merged_palette(document, options.get("palette"))
     graph = document_to_elk(document, options)
     laid = layout(graph)
+    _preserve_edge_metadata(graph, laid)
     return render_svg(laid, palette)
 
 
